@@ -9,15 +9,13 @@ package dontcrash;
  *
  * @author Saya
  */
-public class DontCrash
+public class Invincible extends Powerup
 {
-
     /**
-     * @param args the command line arguments
+     * Makes invincible
      */
-    public static void main(String[] args)
+    public Invincible()
     {
-        // TODO code application logic here
+        
     }
-    
 }

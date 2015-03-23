@@ -9,15 +9,14 @@ package dontcrash;
  *
  * @author Saya
  */
-public class DontCrash
+public interface Chatbox
 {
+    //deze interface wel nuttig ?
+    //wordt inderdaad nergens geimplementeerd.
+    public void Send(String Message);
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String[] args)
-    {
-        // TODO code application logic here
-    }
+    
+    public String[] Retrieve();
+    
     
 }

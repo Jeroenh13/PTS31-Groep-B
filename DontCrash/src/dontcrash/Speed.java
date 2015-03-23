@@ -9,15 +9,14 @@ package dontcrash;
  *
  * @author Saya
  */
-public class DontCrash
+public class Speed extends Powerup
 {
-
     /**
-     * @param args the command line arguments
+     * changes the speed
      */
-    public static void main(String[] args)
+    public Speed()
     {
-        // TODO code application logic here
+        
     }
     
 }

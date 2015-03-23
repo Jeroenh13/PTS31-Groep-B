@@ -9,15 +9,24 @@ package dontcrash;
  *
  * @author Saya
  */
-public class DontCrash
+public class Powerup
 {
-
+    int tijdsduur;
+    String naam;
+    float modifier;
+    int Effected;
+    
     /**
-     * @param args the command line arguments
+     * Initializes a new instance of powerup
      */
-    public static void main(String[] args)
+    public Powerup()
     {
-        // TODO code application logic here
+        
+    }
+    
+    public void Effect()
+    {
+        
     }
     
 }

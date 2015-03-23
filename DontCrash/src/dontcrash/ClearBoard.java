@@ -9,15 +9,14 @@ package dontcrash;
  *
  * @author Saya
  */
-public class DontCrash
+public class ClearBoard extends Powerup
 {
-
     /**
-     * @param args the command line arguments
+     * Clears the board of the current game
      */
-    public static void main(String[] args)
+    public ClearBoard()
     {
-        // TODO code application logic here
+        
     }
     
 }

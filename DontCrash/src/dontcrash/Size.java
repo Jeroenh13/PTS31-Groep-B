@@ -9,15 +9,13 @@ package dontcrash;
  *
  * @author Saya
  */
-public class DontCrash
+public class Size extends Powerup
 {
-
     /**
-     * @param args the command line arguments
+     * changes the size of the line
      */
-    public static void main(String[] args)
+    public Size()
     {
-        // TODO code application logic here
+        
     }
-    
 }

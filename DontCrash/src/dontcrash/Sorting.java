@@ -9,15 +9,7 @@ package dontcrash;
  *
  * @author Saya
  */
-public class DontCrash
+public enum Sorting
 {
-
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String[] args)
-    {
-        // TODO code application logic here
-    }
-    
+    //nog vullen
 }
