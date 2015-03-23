@@ -11,5 +11,9 @@ package dontcrash;
  */
 public enum Sorting
 {
-    //nog vullen
+    name,
+    ranking,
+    playerAmount,
+    latency;
+    
 }
