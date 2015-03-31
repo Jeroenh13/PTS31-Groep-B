@@ -80,15 +80,16 @@ public class Administration
      * @param name of the new player
      * @return null if the name is already taken, otherwise returns a new player with the given name
      */
-    public Player newPlayer(String name)
+    public Player newPlayer(String name, String email)
     {
         for (Player player : players)
-            if(player.name.equals(name))
+            if(player.name.equals(name) || player.email.equals(email))
                 return null;
-        //TODO fix new player. emailadres?
-        //players.add(); 
-        //nexPlayerID++;
-        return null;
+        
+        Player player = new Player(nextPlayerID,name, 0, email);
+        players.add(player); 
+        nextPlayerID++;
+        return player;
     }
     
     /**

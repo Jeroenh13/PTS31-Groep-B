@@ -45,11 +45,13 @@ public class AdministrationTest {
     @Test
     public void newPlayerTest(){
         //TODO emailadres checken als dat bij creatie nodig is.
-        Player player = admin.newPlayer("TestName");
+        Player player = admin.newPlayer("TestName", "Testemail");
         assertEquals("TestName", player.name);
         
-        Player failPlayer = admin.newPlayer("TestName");
+        Player failPlayer = admin.newPlayer("TestName", "anderEmail");
+        Player failPlayer2 = admin.newPlayer("Test", "Testemail");
         assertNull(failPlayer);
+        assertNull(failPlayer2);
     }
     
     @Test
@@ -75,7 +77,7 @@ public class AdministrationTest {
     @Test
     public void joinRoomTest(){
         Room room1 = admin.newRoom("TestName");
-        Player player = admin.newPlayer("TestName");
+        Player player = admin.newPlayer("TestName", "Testemail");
         
         assertTrue(admin.joinRoom(player, room1));
         assertFalse(admin.joinRoom(player, room1));
@@ -83,7 +85,7 @@ public class AdministrationTest {
     
     @Test 
     public void updateScoreTest(){
-        Player player = admin.newPlayer("TestName");
+        Player player = admin.newPlayer("TestName", "Testemail");
         
         admin.updateScore(player, 10);
         assertEquals(10,player.score);
