@@ -35,8 +35,8 @@ public class PlayerTest {
     public void addFriendTest(){
         Player friend = new Player(2,"Friend", 0, "Friend@email.com");
         
-        assertTrue(player.addFriend(friend));
-        assertFalse(player.addFriend(friend));
+        assertTrue("De vriend kan niet worden toegevoegd", player.addFriend(friend));
+        assertFalse("de vriend kan worden toegevoegd terwijl dit al is gebeurd", player.addFriend(friend));
     }
     
     @Test
@@ -45,6 +45,6 @@ public class PlayerTest {
         
         player.setCharacter(character);
         
-        assertEquals(character, player.currentCharacter);
+        assertEquals("de characters komen niet overeen", character, player.currentCharacter);
     }
 }

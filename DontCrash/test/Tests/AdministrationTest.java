@@ -35,40 +35,40 @@ public class AdministrationTest {
     @Test
     public void newPlayerTest(){
         Player player = admin.newPlayer("TestName", "Testemail");
-        assertEquals("TestName", player.name);
+        assertEquals("Name is incorrect","TestName", player.name);
         
         Player failPlayer1 = admin.newPlayer("TestName", "anderEmail");
         Player failPlayer2 = admin.newPlayer("Test", "Testemail");
         Player failPlayer3 = admin.newPlayer("", "Test");
         Player failPlayer4 = admin.newPlayer("Test", "");
         
-        assertNull(failPlayer1);
-        assertNull(failPlayer2);
-        assertNull(failPlayer3);
-        assertNull(failPlayer4);
+        assertNull("Name not unique",failPlayer1);
+        assertNull("Email not unique",failPlayer2);
+        assertNull("Name not empty",failPlayer3);
+        assertNull("Email not empty",failPlayer4);
     }
     
     @Test
     public void newRoomTest(){
         Room room = admin.newRoom("TestName");
-        assertEquals("TestName",room.name);
+        assertEquals("Name is incorrect","TestName",room.name);
         
         Room failRoom = admin.newRoom("TestName");
-        assertNull(failRoom);
+        assertNull("Name not unique",failRoom);
     }
     
     @Test
     public void getRoomsTest(){   
-        assertTrue(admin.getRooms().isEmpty());
+        assertTrue("Rooms exist",admin.getRooms().isEmpty());
         
         Room room1 = admin.newRoom("TestName");
         Room room2 = admin.newRoom("Test");
         
         List<Room> rooms = admin.getRooms();
         
-        assertTrue(rooms.contains(room1));
-        assertTrue(rooms.contains(room2));
-        assertEquals(rooms.size(), 2);
+        assertTrue("Room not in administration",rooms.contains(room1));
+        assertTrue("Room not in administration",rooms.contains(room2));
+        assertEquals("Too many rooms in administration",rooms.size(), 2);
     }
     
     @Test
@@ -76,8 +76,8 @@ public class AdministrationTest {
         Room room1 = admin.newRoom("TestName");
         Player player = admin.newPlayer("TestName", "Testemail");
         
-        assertTrue(admin.joinRoom(player, room1));
-        assertFalse(admin.joinRoom(player, room1));
+        assertTrue("Player already in room",admin.joinRoom(player, room1));
+        assertFalse("Player not yet in room",admin.joinRoom(player, room1));
     }
     
     @Test 
@@ -85,20 +85,20 @@ public class AdministrationTest {
         Player player = admin.newPlayer("TestName", "Testemail");
         
         admin.updateScore(player, 10);
-        assertEquals(10,player.score);
+        assertEquals("Score not 10",10,player.score);
         
         admin.updateScore(player, 10);
-        assertEquals(20,player.score);
+        assertEquals("Score not 20",20,player.score);
         
         admin.updateScore(player, -10);
-        assertEquals(10,player.score);        
+        assertEquals("Score not 10",10,player.score);        
     }
     
     @Test
     public void loginTest(){
         Player player = admin.newPlayer("TestName", "Testemail");
         
-        assertTrue(admin.login("TestName", "password"));
-        assertFalse(admin.login("asdf", "password"));
+        assertTrue("Player not in administration",admin.login("TestName", "password"));
+        assertFalse("Illegal player logged in",admin.login("asdf", "password"));
     }
 }

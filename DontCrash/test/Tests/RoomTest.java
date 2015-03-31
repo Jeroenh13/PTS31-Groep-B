@@ -34,17 +34,17 @@ public class RoomTest {
     public void addPlayerTest(){
         Player player = new Player(1, "Test", 0, "Test@email.com");
         
-        assertTrue(room.addPlayer(player));
-        assertFalse(room.addPlayer(player));
+        assertTrue("Player kan niet worden toegevoegd", room.addPlayer(player));
+        assertFalse("Player kan worden toegevoegd, maar bestaat al", room.addPlayer(player));
     }
     
     @Test
     public void verlaatRoomTest(){
         Player player = new Player(1, "Test", 0, "Test@email.com");
-        assertTrue(room.addPlayer(player));
+        assertTrue("Player kan niet worden toegevoegd", room.addPlayer(player));
         
         room.removePlayer(player);
-        assertTrue(room.addPlayer(player));
+        assertTrue("Player kan niet worden verwijderd", room.addPlayer(player));
     }
     
     @Test
@@ -55,14 +55,14 @@ public class RoomTest {
         room.addPlayer(player);
         
         Game game = room.startGame(1);
-        assertEquals(game.rounds, 1);
-        assertEquals(game, room.currentGame);
-        assertNull(room.startGame(1));
+        assertEquals("het aantal rondes komt niet overeen", game.rounds, 1);
+        assertEquals("de gemaakte game komt niet overeen", game, room.currentGame);
+        assertNull("room moet null zijn want de game is al gestart", room.startGame(1));
         
         Player player2 = new Player(2,"test", 0, "test");
         
-        assertTrue(game.players.contains(player));
-        assertFalse(game.players.contains(player2));
+        assertTrue("de player kan niet worden gevonden in de gemaakte game", game.players.contains(player));
+        assertFalse("de player kan niet worden gevonden in de gemaakte game", game.players.contains(player2));
         
         
     }
