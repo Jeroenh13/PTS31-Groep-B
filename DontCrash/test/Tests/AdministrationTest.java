@@ -21,25 +21,15 @@ import static org.junit.Assert.*;
  */
 public class AdministrationTest {
     
-    public AdministrationTest() {
-    }
     Administration admin;
     
-    @BeforeClass
-    public static void setUpClass() {
+    public AdministrationTest() {
     }
     
-    @AfterClass
-    public static void tearDownClass() {
-    }
     
     @Before
     public void setUp() {
         admin = new Administration();
-    }
-    
-    @After
-    public void tearDown() {
     }
 
     @Test
@@ -103,6 +93,7 @@ public class AdministrationTest {
     public void loginTest(){
         Player player = admin.newPlayer("TestName", "Testemail");
         
-        assertTrue(admin.login("TestName", "alkdj"));
+        assertTrue(admin.login("TestName", "password"));
+        assertFalse(admin.login("asdf", "password"));
     }
 }

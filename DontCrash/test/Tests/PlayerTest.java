@@ -20,25 +20,14 @@ import static org.junit.Assert.*;
  */
 public class PlayerTest {
     
-    public PlayerTest() {
-    }
     Player player;
     
-    @BeforeClass
-    public static void setUpClass() {
-    }
-    
-    @AfterClass
-    public static void tearDownClass() {
+    public PlayerTest() {
     }
     
     @Before
     public void setUp() {
         player = new Player(1, "Test", 0, "Test@email.com");
-    }
-    
-    @After
-    public void tearDown() {
     }
 
     @Test

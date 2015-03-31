@@ -20,27 +20,16 @@ import static org.junit.Assert.*;
  */
 public class RoomTest {
     
-    public RoomTest() {
-    }
     Room room;
     
-    @BeforeClass
-    public static void setUpClass() {
+    public RoomTest() {
     }
-    
-    @AfterClass
-    public static void tearDownClass() {
-    }
-    
+            
     @Before
     public void setUp() {
         room = new Room("TestRoom", 1);
     }
     
-    @After
-    public void tearDown() {
-    }
-
     @Test
     public void addPlayerTest(){
         Player player = new Player(1, "Test", 0, "Test@email.com");
@@ -61,8 +50,10 @@ public class RoomTest {
     @Test
     public void startGameTest(){
         assertNull(room.startGame());
+        
         Player player = new Player(1, "Test", 0, "Test@email.com");
         room.addPlayer(player);
+        
         Game game = room.startGame();
         assertEquals(game, room.currentGame);
         assertNull(room.startGame());

@@ -11,9 +11,9 @@ package dontcrash;
  */
 public class Settings
 {
-    int soundLevel;
-    int soundEffectLevel;
-    Sorting roomSorting;
+    public int soundLevel;
+    public int soundEffectLevel;
+    public Sorting roomSorting;
     
     /**
      * Initializes a new instance of settings
@@ -22,20 +22,4 @@ public class Settings
     {
         //TODO standaard waardes instellen
     }
-    
-    public void changeSound(int soundLevel)
-    {
-        this.soundLevel = soundLevel;
-    }
-    
-    public void changeEffectLevel(int soundEffectLevel)
-    {
-        this.soundEffectLevel = soundEffectLevel;
-    }
-   
-    public void changeSorting(Sorting sorting)
-    {
-        this.roomSorting = sorting;
-    }
-    
 }
