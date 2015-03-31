@@ -85,6 +85,9 @@ public class Administration
      */
     public Player newPlayer(String name, String email)
     {
+        if(name.trim().isEmpty() || email.trim().isEmpty())
+            return null;
+        
         for (Player player : players)
             if(player.name.equals(name) || player.email.equals(email))
                 return null;

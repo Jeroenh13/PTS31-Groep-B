@@ -43,19 +43,27 @@ public class RoomTest {
         Player player = new Player(1, "Test", 0, "Test@email.com");
         assertTrue(room.addPlayer(player));
         
-        room.verlaatRoom(player);
+        room.removePlayer(player);
         assertTrue(room.addPlayer(player));
     }
     
     @Test
     public void startGameTest(){
-        assertNull(room.startGame());
+        assertNull(room.startGame(1));
         
         Player player = new Player(1, "Test", 0, "Test@email.com");
         room.addPlayer(player);
         
-        Game game = room.startGame();
+        Game game = room.startGame(1);
+        assertEquals(game.rounds, 1);
         assertEquals(game, room.currentGame);
-        assertNull(room.startGame());
+        assertNull(room.startGame(1));
+        
+        Player player2 = new Player(2,"test", 0, "test");
+        
+        assertTrue(game.players.contains(player));
+        assertFalse(game.players.contains(player2));
+        
+        
     }
 }

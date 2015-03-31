@@ -35,11 +35,11 @@ public class Room
      * Starts a new game
      * @return null if couldnt start game, game if could start game
      */
-    public Game startGame()
+    public Game startGame(int rounds)
     {
         if(this.currentGame != null || this.players.isEmpty())
             return null;
-        Game game = new Game(this.players);
+        Game game = new Game(this.players, rounds);
         this.currentGame = game;
         return game;
     }
@@ -60,7 +60,7 @@ public class Room
      * removes the given player from this room
      * @param player to remove from room
      */
-    public void verlaatRoom(Player player)
+    public void removePlayer(Player player)
     {
         players.remove(player);
     }

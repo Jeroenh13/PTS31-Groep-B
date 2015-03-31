@@ -13,16 +13,19 @@ import java.util.List;
  */
 public class Game
 {
-    int gameID;
-    List<Player> players;
+    public int gameID;
+    public int rounds;
+    public int currentRound;
+    public List<Player> players;
     
     /**
      * Initializes a new game with the given players
      * @param players of the game
      */
-    public Game(List<Player> players)
+    public Game(List<Player> players, int rounds)
     {
         this.players = players;
+        this.rounds = rounds;
     }
     
     

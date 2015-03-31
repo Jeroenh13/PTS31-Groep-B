@@ -37,10 +37,15 @@ public class AdministrationTest {
         Player player = admin.newPlayer("TestName", "Testemail");
         assertEquals("TestName", player.name);
         
-        Player failPlayer = admin.newPlayer("TestName", "anderEmail");
+        Player failPlayer1 = admin.newPlayer("TestName", "anderEmail");
         Player failPlayer2 = admin.newPlayer("Test", "Testemail");
-        assertNull(failPlayer);
+        Player failPlayer3 = admin.newPlayer("", "Test");
+        Player failPlayer4 = admin.newPlayer("Test", "");
+        
+        assertNull(failPlayer1);
         assertNull(failPlayer2);
+        assertNull(failPlayer3);
+        assertNull(failPlayer4);
     }
     
     @Test

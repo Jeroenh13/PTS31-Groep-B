@@ -12,18 +12,18 @@ package dontcrash;
  */
 public class Character
 {
-    int characterID;
-    String name;
-    int cost;
+    public int characterID;
+    public String name;
+    public int cost;
     
     /**
      * Initializes a new character using a player and a characterid
      * @param player to use
      * @param characterID id of the character
      */
-    public Character(Player player, int characterID)
+    public Character(String name,int characterID)
     {
-        this.name = player.name;
+        this.name = name;
         this.characterID = characterID;
     }
     

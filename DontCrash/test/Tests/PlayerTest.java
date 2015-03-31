@@ -7,6 +7,7 @@ package Tests;
  */
 
 import dontcrash.*;
+import dontcrash.Character;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -36,5 +37,14 @@ public class PlayerTest {
         
         assertTrue(player.addFriend(friend));
         assertFalse(player.addFriend(friend));
+    }
+    
+    @Test
+    public void setCharacterTest(){
+        Character character = new Character("Naam", 1);
+        
+        player.setCharacter(character);
+        
+        assertEquals(character, player.currentCharacter);
     }
 }

@@ -19,6 +19,7 @@ public class Player {
     public int score;
     public String email;
     public List<Player> friends;
+    public Character currentCharacter;
 
     /**
      * Initializes a new instance of player
@@ -48,5 +49,9 @@ public class Player {
         }
         friends.add(friend);
         return true;
+    }
+    
+    public void setCharacter(Character character){
+        this.currentCharacter = character;
     }
 }
