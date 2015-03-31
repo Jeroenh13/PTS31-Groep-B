@@ -49,14 +49,17 @@ public class Administration
      * @param name of the player
      * @param password of the player
      */
-    public void login(String name, String password)
+    public boolean login(String name, String password)
     {
         //TODO returnvalue voor inloggen?
         for(Player player: players){
             if(player.name.equals(name)){
                 //TODO check password
+                //check in database
+                return true;
             }
         }
+        return false;
     }
     
     /**
@@ -109,6 +112,7 @@ public class Administration
      */
     public boolean joinRoom(Player player, Room room)
     {
+        
         return room.addPlayer(player);
     }
 }

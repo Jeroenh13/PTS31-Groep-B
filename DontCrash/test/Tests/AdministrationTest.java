@@ -44,7 +44,6 @@ public class AdministrationTest {
 
     @Test
     public void newPlayerTest(){
-        //TODO emailadres checken als dat bij creatie nodig is.
         Player player = admin.newPlayer("TestName", "Testemail");
         assertEquals("TestName", player.name);
         
@@ -66,12 +65,15 @@ public class AdministrationTest {
     @Test
     public void getRoomsTest(){   
         assertTrue(admin.getRooms().isEmpty());
+        
         Room room1 = admin.newRoom("TestName");
         Room room2 = admin.newRoom("Test");
         
         List<Room> rooms = admin.getRooms();
+        
         assertTrue(rooms.contains(room1));
         assertTrue(rooms.contains(room2));
+        assertEquals(rooms.size(), 2);
     }
     
     @Test
@@ -89,10 +91,18 @@ public class AdministrationTest {
         
         admin.updateScore(player, 10);
         assertEquals(10,player.score);
+        
+        admin.updateScore(player, 10);
+        assertEquals(20,player.score);
+        
+        admin.updateScore(player, -10);
+        assertEquals(10,player.score);        
     }
     
     @Test
     public void loginTest(){
-        //TODO
+        Player player = admin.newPlayer("TestName", "Testemail");
+        
+        assertTrue(admin.login("TestName", "alkdj"));
     }
 }
