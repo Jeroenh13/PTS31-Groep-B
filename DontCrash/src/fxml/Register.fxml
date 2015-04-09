@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="259.0" prefWidth="202.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <Button id="btnRegister" layoutX="31.0" layoutY="220.0" mnemonicParsing="false" text="Registreer" />
+      <Label layoutX="34.0" layoutY="14.0" text="Naam" />
+      <Label layoutX="34.0" layoutY="72.0" text="Email" />
+      <Label layoutX="34.0" layoutY="168.0" text="Wachtwoord herhalen" />
+      <Label layoutX="34.0" layoutY="120.0" text="Wachtwoord" />
+      <TextField id="txtNaam" layoutX="34.0" layoutY="38.0" />
+      <TextField id="txtEmail" layoutX="34.0" layoutY="89.0" />
+      <TextField id="txtWachtwoord" layoutX="34.0" layoutY="137.0" />
+      <TextField id="txtWachtwoordTest" layoutX="34.0" layoutY="185.0" />
+   </children>
+</Pane>

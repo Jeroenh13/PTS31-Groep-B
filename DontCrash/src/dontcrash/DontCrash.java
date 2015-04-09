@@ -5,19 +5,41 @@
  */
 package dontcrash;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javafx.application.Application;
+import static javafx.application.Application.launch;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
+import javafx.scene.control.SplitPane;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
+import javafx.stage.Stage;
+
 /**
  *
  * @author Saya
  */
-public class DontCrash
+public class DontCrash extends Application
 {
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String[] args)
-    {
-        // TODO code application logic here
+     public static void main(String[] args) {
+         launch(args);
+    }
+
+     @Override
+    public void start(Stage primaryStage) {
+         try {
+            //Pane page = (Pane) FXMLLoader.load(DontCrash.class.getResource("Login.fxml"));
+            SplitPane gamescreen = FXMLLoader.load(getClass().getResource("/fxml/GameScreen.fxml"));
+             
+            Scene scene = new Scene(gamescreen);
+            primaryStage.setScene(scene);
+            primaryStage.setTitle("Login");
+            primaryStage.show();
+        } catch (Exception ex) {
+            Logger.getLogger(DontCrash.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
 }

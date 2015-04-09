@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.image.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <Separator layoutX="162.0" layoutY="-4.0" orientation="VERTICAL" prefHeight="406.0" prefWidth="3.0" />
+      <ImageView fitHeight="193.0" fitWidth="219.0" layoutX="168.0" pickOnBounds="true" preserveRatio="true" />
+      <ImageView fitHeight="193.0" fitWidth="219.0" layoutX="162.0" layoutY="193.0" pickOnBounds="true" preserveRatio="true" />
+      <ImageView fitHeight="193.0" fitWidth="219.0" layoutX="375.0" pickOnBounds="true" preserveRatio="true" />
+      <ImageView fitHeight="193.0" fitWidth="219.0" layoutX="375.0" layoutY="200.0" pickOnBounds="true" preserveRatio="true" />
+      <Button id="btnStart" layoutX="343.0" layoutY="188.0" mnemonicParsing="false" text="Start" />
+      <Label layoutX="29.0" layoutY="24.0" text="Rondes" />
+      <TextField id="txtRondes" layoutX="14.0" layoutY="41.0" />
+   </children>
+</Pane>

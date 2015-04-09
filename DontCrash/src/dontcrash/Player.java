@@ -12,15 +12,13 @@ import java.util.List;
  *
  * @author Saya
  */
-public class Player implements Chatbox{
+public class Player {
 
     public int playerID;
     public String name;
     public int score;
     public String email;
     public List<Player> friends;
-    public Character currentCharacter;
-    public List<String> messages;
 
     /**
      * Initializes a new instance of player
@@ -31,8 +29,7 @@ public class Player implements Chatbox{
      * @param email of the new player
      */
     public Player(int playerID, String name, int score, String email) {
-        friends = new ArrayList<Player>();
-        messages = new ArrayList<String>();
+        friends = new ArrayList<>();
         this.name = name;
         this.playerID = playerID;
         this.score = score;
@@ -51,14 +48,5 @@ public class Player implements Chatbox{
         }
         friends.add(friend);
         return true;
-    }
-    
-    public void setCharacter(Character character){
-        this.currentCharacter = character;
-    }
-
-    @Override
-    public void Send(String message, Object reciever) {
-        //TODO
     }
 }

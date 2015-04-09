@@ -12,13 +12,12 @@ import java.util.List;
  *
  * @author Saya
  */
-public class Room implements Chatbox
+public class Room
 {
     public int roomID;
     public String name;
     public List<Player> players;
     public Game currentGame;
-    public List<String> messages;
     
     /**
      * Initializes a new instance of room;
@@ -28,7 +27,6 @@ public class Room implements Chatbox
     public Room(String name, int roomID)
     {
         players = new ArrayList<Player>();
-        messages = new ArrayList<String>();
         this.name = name;
         this.roomID = roomID;
     }
@@ -37,11 +35,11 @@ public class Room implements Chatbox
      * Starts a new game
      * @return null if couldnt start game, game if could start game
      */
-    public Game startGame(int rounds)
+    public Game startGame()
     {
         if(this.currentGame != null || this.players.isEmpty())
             return null;
-        Game game = new Game(this.players, rounds);
+        Game game = new Game(this.players);
         this.currentGame = game;
         return game;
     }
@@ -62,13 +60,8 @@ public class Room implements Chatbox
      * removes the given player from this room
      * @param player to remove from room
      */
-    public void removePlayer(Player player)
+    public void verlaatRoom(Player player)
     {
         players.remove(player);
-    }
-
-    @Override
-    public void Send(String message, Object reciever) {
-        //TODO
     }
 }

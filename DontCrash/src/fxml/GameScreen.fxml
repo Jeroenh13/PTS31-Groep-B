@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.canvas.*?>
+<?import javafx.scene.shape.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+<SplitPane dividerPositions="0.15213675213675212" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="734.0" prefWidth="1172.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="dontcrash.GameScreenController">
+  <items>
+    <AnchorPane id="apStats" minHeight="0.0" minWidth="0.0" prefHeight="732.0" prefWidth="260.0">
+         <children>
+            <Label fx:id="lblRound" layoutX="20.0" layoutY="14.0" text="Dont Crash Round 1!" />
+            <Label layoutX="20.0" layoutY="35.0" text="Player1 : 0" />
+            <Label layoutX="20.0" layoutY="55.0" text="Player2 : 0" />
+            <Label layoutX="20.0" layoutY="75.0" text="Player3 : 0" />
+            <Label layoutX="20.0" layoutY="145.0" text="Rounds to go: 1" />
+            <Label layoutX="20.0" layoutY="93.0" text="Player4 : 0" />
+            <TextArea layoutY="468.0" prefHeight="206.0" prefWidth="169.0" />
+            <TextField layoutY="676.0" prefHeight="25.0" prefWidth="169.0" />
+            <Button layoutY="701.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="169.0" text="Stuur" />
+            <Button id="btnToggle" fx:id="PLAY" layoutX="2.0" layoutY="274.0" mnemonicParsing="false" onAction="#btnToggleSoundPress" prefHeight="25.0" prefWidth="169.0" text="Toggle Sound" />
+         </children></AnchorPane>
+    <AnchorPane id="apGane" minHeight="0.0" minWidth="0.0" prefHeight="434.0" prefWidth="488.0">
+         <children>
+            <Circle fx:id="cCircle" fill="#ff931f" radius="5.0" stroke="BLACK" strokeType="INSIDE" />
+            <Pane layoutX="-9.0" layoutY="7.0" opacity="0.45" prefHeight="714.0" prefWidth="989.0" style="-fx-background-color: black;" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0">
+               <children>
+                  <Canvas fx:id="game" height="716.0" layoutX="-4.0" layoutY="-7.0" width="973.0" />
+                  <TextArea fx:id="gameArea" editable="false" layoutX="-10.0" layoutY="-10.0" onKeyPressed="#handleStuff" opacity="0.0" prefHeight="722.0" prefWidth="989.0" />
+               </children>
+            </Pane>
+         </children></AnchorPane>
+  </items>
+</SplitPane>

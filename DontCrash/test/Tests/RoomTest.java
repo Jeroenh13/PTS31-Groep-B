@@ -20,50 +20,51 @@ import static org.junit.Assert.*;
  */
 public class RoomTest {
     
-    Room room;
-    
     public RoomTest() {
     }
-            
+    Room room;
+    
+    @BeforeClass
+    public static void setUpClass() {
+    }
+    
+    @AfterClass
+    public static void tearDownClass() {
+    }
+    
     @Before
     public void setUp() {
         room = new Room("TestRoom", 1);
     }
     
+    @After
+    public void tearDown() {
+    }
+
     @Test
     public void addPlayerTest(){
         Player player = new Player(1, "Test", 0, "Test@email.com");
         
-        assertTrue("Player kan niet worden toegevoegd", room.addPlayer(player));
-        assertFalse("Player kan worden toegevoegd, maar bestaat al", room.addPlayer(player));
+        assertTrue(room.addPlayer(player));
+        assertFalse(room.addPlayer(player));
     }
     
     @Test
     public void verlaatRoomTest(){
         Player player = new Player(1, "Test", 0, "Test@email.com");
-        assertTrue("Player kan niet worden toegevoegd", room.addPlayer(player));
+        assertTrue(room.addPlayer(player));
         
-        room.removePlayer(player);
-        assertTrue("Player kan niet worden verwijderd", room.addPlayer(player));
+        room.verlaatRoom(player);
+        assertTrue(room.addPlayer(player));
     }
     
     @Test
     public void startGameTest(){
-        assertNull(room.startGame(1));
-        
+        assertNull(room.startGame());
         Player player = new Player(1, "Test", 0, "Test@email.com");
         room.addPlayer(player);
-        
-        Game game = room.startGame(1);
-        assertEquals("het aantal rondes komt niet overeen", game.rounds, 1);
-        assertEquals("de gemaakte game komt niet overeen", game, room.currentGame);
-        assertNull("room moet null zijn want de game is al gestart", room.startGame(1));
-        
-        Player player2 = new Player(2,"test", 0, "test");
-        
-        assertTrue("de player kan niet worden gevonden in de gemaakte game", game.players.contains(player));
-        assertFalse("de player kan niet worden gevonden in de gemaakte game", game.players.contains(player2));
-        
-        
+        Game game = room.startGame();
+        assertEquals(game, room.currentGame);
+        assertNull(room.startGame());
     }
 }

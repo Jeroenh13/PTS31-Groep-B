@@ -7,7 +7,6 @@ package Tests;
  */
 
 import dontcrash.*;
-import dontcrash.Character;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -21,30 +20,32 @@ import static org.junit.Assert.*;
  */
 public class PlayerTest {
     
+    public PlayerTest() {
+    }
     Player player;
     
-    public PlayerTest() {
+    @BeforeClass
+    public static void setUpClass() {
+    }
+    
+    @AfterClass
+    public static void tearDownClass() {
     }
     
     @Before
     public void setUp() {
         player = new Player(1, "Test", 0, "Test@email.com");
     }
+    
+    @After
+    public void tearDown() {
+    }
 
     @Test
     public void addFriendTest(){
         Player friend = new Player(2,"Friend", 0, "Friend@email.com");
         
-        assertTrue("De vriend kan niet worden toegevoegd", player.addFriend(friend));
-        assertFalse("de vriend kan worden toegevoegd terwijl dit al is gebeurd", player.addFriend(friend));
-    }
-    
-    @Test
-    public void setCharacterTest(){
-        Character character = new Character("Naam", 1);
-        
-        player.setCharacter(character);
-        
-        assertEquals("de characters komen niet overeen", character, player.currentCharacter);
+        assertTrue(player.addFriend(friend));
+        assertFalse(player.addFriend(friend));
     }
 }

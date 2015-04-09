@@ -13,7 +13,10 @@ public interface Chatbox
 {
     //deze interface wel nuttig ?
     //wordt inderdaad nergens geimplementeerd.
-    public void Send(String message, Object reciever);
+    public void Send(String Message);
+
+    
+    public String[] Retrieve();
     
     
 }

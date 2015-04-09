@@ -49,17 +49,14 @@ public class Administration
      * @param name of the player
      * @param password of the player
      */
-    public boolean login(String name, String password)
+    public void login(String name, String password)
     {
         //TODO returnvalue voor inloggen?
         for(Player player: players){
             if(player.name.equals(name)){
                 //TODO check password
-                //check in database
-                return true;
             }
         }
-        return false;
     }
     
     /**
@@ -83,19 +80,15 @@ public class Administration
      * @param name of the new player
      * @return null if the name is already taken, otherwise returns a new player with the given name
      */
-    public Player newPlayer(String name, String email)
+    public Player newPlayer(String name)
     {
-        if(name.trim().isEmpty() || email.trim().isEmpty())
-            return null;
-        
         for (Player player : players)
-            if(player.name.equals(name) || player.email.equals(email))
+            if(player.name.equals(name))
                 return null;
-        
-        Player player = new Player(nextPlayerID,name, 0, email);
-        players.add(player); 
-        nextPlayerID++;
-        return player;
+        //TODO fix new player. emailadres?
+        //players.add(); 
+        //nexPlayerID++;
+        return null;
     }
     
     /**
@@ -115,7 +108,6 @@ public class Administration
      */
     public boolean joinRoom(Player player, Room room)
     {
-        
         return room.addPlayer(player);
     }
 }
