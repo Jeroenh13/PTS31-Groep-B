@@ -11,17 +11,20 @@ package dontcrash;
  */
 public class Powerup
 {
-    int tijdsduur;
-    String naam;
-    float modifier;
-    int Effected;
+    private int tijdsduur;
+    private PowerupType type;
+    private float modifier;
+    private int effected;
     
     /**
      * Initializes a new instance of powerup
      */
-    public Powerup()
+    public Powerup(PowerupType type, int tijdsduur, float modifier, int effected)
     {
-        
+        this.type = type;
+        this.tijdsduur = tijdsduur;
+        this.modifier = modifier;
+        this.effected = effected;
     }
     
     public void Effect()

@@ -7,6 +7,7 @@ package dontcrash;
 
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Random;
 import java.util.ResourceBundle;
 import javafx.animation.AnimationTimer;
 import javafx.event.Event;
@@ -41,14 +42,18 @@ public class GameScreenController implements Initializable {
     TextArea gameArea;
     @FXML
     Canvas game;
-    int direction = 2;
+    int direction;
     @FXML
     Label lblRound;
 
     int speed = 1;
     ArrayList<Point> positions = new ArrayList<>();
+    ArrayList<DrawablePowerup> powerups = new ArrayList<>();
     double CurX;
     double CurY;
+
+    //Powerup Constants
+    private int spawnChancePowerUp = 30; // Between 0 and 10000 chance every tick to spawn powerup
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -77,12 +82,17 @@ public class GameScreenController implements Initializable {
                 if (!checkPoint(p)) {
                     positions.add(p);
                     cCircle.relocate(CurX, CurY);
-                    lblRound.setText(Integer.toString(direction));
+                    //lblRound.setText(Double.toString(CurX));
                 } else {
-                    lblRound.setText("AF");
-                    this.stop();
-                    positions.clear();
-                    Redraw();
+                    endGame(this);
+                }
+                DrawablePowerup hitdpu = checkPointPowerup(p);
+                if (hitdpu != null) {
+                    lblRound.setText(Double.toString(CurX));
+                }
+                DrawablePowerup dpu = spawnPowerUp();
+                if (dpu != null) {
+                    drawPowerup(dpu);
                 }
             }
 
@@ -96,11 +106,11 @@ public class GameScreenController implements Initializable {
             }
         };
         t.start();
+        PLAY.setDisable(true);
     }
 
     private boolean checkPoint(Point loc) {
-        if(loc.Y>= game.getHeight() || loc.Y<= 0  || loc.X >= game.getWidth()|| loc.X <= 0)
-        {
+        if (loc.Y >= game.getHeight() || loc.Y <= 0 || loc.X >= game.getWidth() || loc.X <= 0) {
             return true;
         }
         for (Point p : positions) {
@@ -111,18 +121,43 @@ public class GameScreenController implements Initializable {
         return false;
     }
 
+    private DrawablePowerup checkPointPowerup(Point loc) {
+        for (DrawablePowerup p : powerups) {
+            if (p.MinX <= loc.X && p.MaxX >= loc.X && p.MinY <= loc.Y && p.MaxY >= loc.Y) {
+                return p;
+            }
+        }
+
+        return null;
+    }
+
+    private void endGame(AnimationTimer t) {
+        GraphicsContext gc = game.getGraphicsContext2D();
+        //Stop timer
+        t.stop();
+        //Clear board for new round
+        lblRound.setText("AF");
+        game.getGraphicsContext2D().clearRect(0, 0, gc.getCanvas().getWidth(), gc.getCanvas().getHeight());
+        positions.clear();
+        powerups.clear();
+        PLAY.setDisable(false);
+    }
+
     public void draw() {
         GraphicsContext gc = game.getGraphicsContext2D();
         gc.setStroke(Color.ORANGE);
         gc.setLineWidth(1);
-        gc.fillOval(CurX, CurY, 1, 1);
+        //gc.fillOval(CurX, CurY, 1, 1);
         gc.strokeOval(CurX, CurY, 1, 1);
     }
-    
-    public void Redraw()
-    {
+
+    public void drawPowerup(DrawablePowerup dpu) {
         GraphicsContext gc = game.getGraphicsContext2D();
-        gc.clearRect(0, 0, game.getWidth(), game.getHeight());
+        this.powerups.add(dpu);
+        gc.setStroke(Color.CRIMSON);
+        gc.setFill(Color.CRIMSON);
+        gc.fillOval(dpu.MinX, dpu.MinY, dpu.MaxX - dpu.MinX, dpu.MaxY - dpu.MinY);
+        gc.strokeOval(dpu.MinX, dpu.MinY, dpu.MaxX - dpu.MinX, dpu.MaxY - dpu.MinY);
     }
 
     public void handleStuff(Event evt) {
@@ -145,6 +180,45 @@ public class GameScreenController implements Initializable {
         });
     }
 
+    public DrawablePowerup spawnPowerUp() {
+        Random random = new Random();
+
+        if (random.nextInt(10000) < spawnChancePowerUp) {
+            Powerup powerup;
+            int tijdsduur = 5 + random.nextInt(5);;
+            //Get a random powerup
+            switch (random.nextInt(6) + 1) {
+                case 1: //Speed up
+                    powerup = new Powerup(PowerupType.INCREASESPEED, tijdsduur, (float) 1.5, 1);
+                    break;
+                case 2: //Speed down
+                    powerup = new Powerup(PowerupType.DECREASESPEED, tijdsduur, (float) 0.5, 1);
+                    break;
+                case 3: //Size up
+                    powerup = new Powerup(PowerupType.INCREASESIZE, tijdsduur, (float) 2, 1);
+                    break;
+                case 4: //Size down
+                    powerup = new Powerup(PowerupType.DECREASESIZE, tijdsduur, (float) 0.5, 1);
+                    break;
+                case 5: //ClearBoard
+                    powerup = new Powerup(PowerupType.CLEARBOARD, 0, 0, 1);
+                    break;
+                case 6: //Invincible
+                    powerup = new Powerup(PowerupType.INVINCIBLE, tijdsduur, 0, 1);
+                    break;
+                default:
+                    return null;
+            }
+            GraphicsContext gc = game.getGraphicsContext2D();
+            DrawablePowerup dpu = new DrawablePowerup(
+                    powerup,
+                    random.nextInt((int) gc.getCanvas().getWidth()),
+                    random.nextInt((int) gc.getCanvas().getHeight()));
+            return dpu;
+        }
+        return null;
+    }
+
     private class Point {
 
         public int X;
@@ -153,6 +227,23 @@ public class GameScreenController implements Initializable {
         public Point(int X, int Y) {
             this.X = X;
             this.Y = Y;
+        }
+    }
+
+    private class DrawablePowerup {
+
+        public int MinX;
+        public int MinY;
+        public int MaxX;
+        public int MaxY;
+        public Powerup powerup;
+
+        public DrawablePowerup(Powerup powerup, int X, int Y) {
+            this.powerup = powerup;
+            this.MinX = X;
+            this.MinY = Y;
+            this.MaxX = X + 20;
+            this.MaxY = Y + 20;
         }
     }
 }
