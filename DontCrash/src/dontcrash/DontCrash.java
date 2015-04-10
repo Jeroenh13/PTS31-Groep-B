@@ -30,10 +30,10 @@ public class DontCrash extends Application
      @Override
     public void start(Stage primaryStage) {
          try {
-            //Pane page = (Pane) FXMLLoader.load(DontCrash.class.getResource("Login.fxml"));
-            SplitPane gamescreen = FXMLLoader.load(getClass().getResource("/fxml/GameScreen.fxml"));
+            Pane page = (Pane) FXMLLoader.load(DontCrash.class.getResource("/fxml/Login.fxml"));
+            //SplitPane gamescreen = FXMLLoader.load(getClass().getResource("/fxml/GameScreen.fxml"));
              
-            Scene scene = new Scene(gamescreen);
+            Scene scene = new Scene(page);
             primaryStage.setScene(scene);
             primaryStage.setTitle("Login");
             primaryStage.show();
