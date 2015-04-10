@@ -41,7 +41,7 @@ public class GameScreenController implements Initializable {
     TextArea gameArea;
     @FXML
     Canvas game;
-    int direction = 0;
+    int direction = 2;
     @FXML
     Label lblRound;
 
@@ -64,13 +64,13 @@ public class GameScreenController implements Initializable {
                 double X = 0;
                 double Y = 0;
                 if (direction == 0) {
-                    CurY = CurY + speed;
-                } else if (direction == 1) {
-                    CurX = CurX - speed;
-                } else if (direction == 2) {
                     CurY = CurY - speed;
-                } else if (direction == 3) {
+                } else if (direction == 1) {
                     CurX = CurX + speed;
+                } else if (direction == 2) {
+                    CurY = CurY + speed;
+                } else if (direction == 3) {
+                    CurX = CurX - speed;
                 }
                 draw();
                 Point p = new Point((int) CurX, (int) CurY);
@@ -80,6 +80,9 @@ public class GameScreenController implements Initializable {
                     lblRound.setText(Integer.toString(direction));
                 } else {
                     lblRound.setText("AF");
+                    this.stop();
+                    positions.clear();
+                    Redraw();
                 }
             }
 
@@ -89,12 +92,17 @@ public class GameScreenController implements Initializable {
                 CurX = cCircle.getLayoutX();
                 CurY = cCircle.getLayoutY();
                 super.start();
+                direction = 2;
             }
         };
         t.start();
     }
 
     private boolean checkPoint(Point loc) {
+        if(loc.Y>= game.getHeight() || loc.Y<= 0  || loc.X >= game.getWidth()|| loc.X <= 0)
+        {
+            return true;
+        }
         for (Point p : positions) {
             if (p.X == loc.X && p.Y == loc.Y) {
                 return true;
@@ -106,9 +114,15 @@ public class GameScreenController implements Initializable {
     public void draw() {
         GraphicsContext gc = game.getGraphicsContext2D();
         gc.setStroke(Color.ORANGE);
-        gc.setLineWidth(5);
+        gc.setLineWidth(1);
         gc.fillOval(CurX, CurY, 1, 1);
         gc.strokeOval(CurX, CurY, 1, 1);
+    }
+    
+    public void Redraw()
+    {
+        GraphicsContext gc = game.getGraphicsContext2D();
+        gc.clearRect(0, 0, game.getWidth(), game.getHeight());
     }
 
     public void handleStuff(Event evt) {
@@ -131,7 +145,7 @@ public class GameScreenController implements Initializable {
         });
     }
 
-    private static class Point {
+    private class Point {
 
         public int X;
         public int Y;
