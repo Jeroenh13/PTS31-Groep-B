@@ -19,7 +19,7 @@
             <TextArea layoutY="468.0" prefHeight="206.0" prefWidth="169.0" />
             <TextField layoutY="676.0" prefHeight="25.0" prefWidth="169.0" />
             <Button layoutY="701.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="169.0" text="Stuur" />
-            <Button id="btnToggle" fx:id="PLAY" layoutX="2.0" layoutY="274.0" mnemonicParsing="false" onAction="#btnToggleSoundPress" prefHeight="25.0" prefWidth="169.0" text="Toggle Sound" />
+            <Button id="btnToggle" fx:id="PLAY" layoutX="2.0" layoutY="274.0" mnemonicParsing="false" onAction="#btnToggleSoundPress" prefHeight="25.0" prefWidth="169.0" text="Start" />
          </children></AnchorPane>
     <AnchorPane id="apGane" minHeight="0.0" minWidth="0.0" prefHeight="434.0" prefWidth="488.0">
          <children>

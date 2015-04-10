@@ -55,7 +55,7 @@ public class GameScreenController implements Initializable {
     double CurY;
 
     //Powerup stuff
-    private int spawnChancePowerUp = 300; // Between 0 and 10000 chance every tick to spawn powerup
+    private int spawnChancePowerUp = 30; // Between 0 and 10000 chance every tick to spawn powerup
     private boolean invincible = false;
 
     @Override
@@ -91,6 +91,7 @@ public class GameScreenController implements Initializable {
                 }
                 DrawablePowerup hitdpu = checkPointPowerup(p);
                 if (hitdpu != null) {
+                    redraw();
                     applyPowerup(hitdpu.powerup);
                 }
                 DrawablePowerup dpu = spawnPowerUp();
@@ -125,7 +126,7 @@ public class GameScreenController implements Initializable {
                 }
             }
         } else{
-            lblRound.setText("SPECIAL");
+            lblRound.setText("INVINCIBLE");
         }
         return false;
     }
@@ -168,6 +169,22 @@ public class GameScreenController implements Initializable {
         gc.setFill(Color.CRIMSON);
         gc.fillOval(dpu.MinX, dpu.MinY, dpu.MaxX - dpu.MinX, dpu.MaxY - dpu.MinY);
         gc.strokeOval(dpu.MinX, dpu.MinY, dpu.MaxX - dpu.MinX, dpu.MaxY - dpu.MinY);
+    }
+    
+    public void redraw(){
+        GraphicsContext gc = game.getGraphicsContext2D();
+        gc.clearRect(0, 0, gc.getCanvas().getWidth(), gc.getCanvas().getHeight());
+        gc.setStroke(Color.ORANGE);
+        gc.setLineWidth(1);
+        for (Point p : positions) {
+             gc.strokeOval(p.X, p.Y, 1, 1);
+        }
+        gc.setStroke(Color.CRIMSON);
+        gc.setFill(Color.CRIMSON);
+        for (DrawablePowerup p : powerups) {
+            gc.fillOval(p.MinX, p.MinY, p.MaxX - p.MinX, p.MaxY - p.MinY);
+            gc.strokeOval(p.MinX, p.MinY, p.MaxX - p.MinX, p.MaxY - p.MinY);
+        }
     }
 
     public void handleStuff(Event evt) {
