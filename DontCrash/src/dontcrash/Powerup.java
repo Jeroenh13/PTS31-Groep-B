@@ -11,10 +11,10 @@ package dontcrash;
  */
 public class Powerup
 {
-    private int tijdsduur;
-    private PowerupType type;
-    private float modifier;
-    private int effected;
+    public int tijdsduur;
+    public PowerupType type;
+    public float modifier;
+    public int effected;
     
     /**
      * Initializes a new instance of powerup

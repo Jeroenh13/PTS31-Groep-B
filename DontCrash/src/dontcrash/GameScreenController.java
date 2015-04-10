@@ -9,6 +9,8 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.animation.AnimationTimer;
 import javafx.event.Event;
 import javafx.event.EventHandler;
@@ -46,14 +48,15 @@ public class GameScreenController implements Initializable {
     @FXML
     Label lblRound;
 
-    int speed = 1;
+    double speed = 2;
     ArrayList<Point> positions = new ArrayList<>();
     ArrayList<DrawablePowerup> powerups = new ArrayList<>();
     double CurX;
     double CurY;
 
-    //Powerup Constants
-    private int spawnChancePowerUp = 30; // Between 0 and 10000 chance every tick to spawn powerup
+    //Powerup stuff
+    private int spawnChancePowerUp = 300; // Between 0 and 10000 chance every tick to spawn powerup
+    private boolean invincible = false;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -88,7 +91,7 @@ public class GameScreenController implements Initializable {
                 }
                 DrawablePowerup hitdpu = checkPointPowerup(p);
                 if (hitdpu != null) {
-                    lblRound.setText(Double.toString(CurX));
+                    applyPowerup(hitdpu.powerup);
                 }
                 DrawablePowerup dpu = spawnPowerUp();
                 if (dpu != null) {
@@ -103,6 +106,7 @@ public class GameScreenController implements Initializable {
                 CurY = cCircle.getLayoutY();
                 super.start();
                 direction = 2;
+                speed = 2;
             }
         };
         t.start();
@@ -113,10 +117,15 @@ public class GameScreenController implements Initializable {
         if (loc.Y >= game.getHeight() || loc.Y <= 0 || loc.X >= game.getWidth() || loc.X <= 0) {
             return true;
         }
-        for (Point p : positions) {
-            if (p.X == loc.X && p.Y == loc.Y) {
-                return true;
+        if (!invincible) {
+            lblRound.setText("NORMAL");
+            for (Point p : positions) {
+                if (p.X == loc.X && p.Y == loc.Y) {
+                    return true;
+                }
             }
+        } else{
+            lblRound.setText("SPECIAL");
         }
         return false;
     }
@@ -124,6 +133,7 @@ public class GameScreenController implements Initializable {
     private DrawablePowerup checkPointPowerup(Point loc) {
         for (DrawablePowerup p : powerups) {
             if (p.MinX <= loc.X && p.MaxX >= loc.X && p.MinY <= loc.Y && p.MaxY >= loc.Y) {
+                powerups.remove(p);
                 return p;
             }
         }
@@ -137,7 +147,7 @@ public class GameScreenController implements Initializable {
         t.stop();
         //Clear board for new round
         lblRound.setText("AF");
-        game.getGraphicsContext2D().clearRect(0, 0, gc.getCanvas().getWidth(), gc.getCanvas().getHeight());
+        gc.clearRect(0, 0, gc.getCanvas().getWidth(), gc.getCanvas().getHeight());
         positions.clear();
         powerups.clear();
         PLAY.setDisable(false);
@@ -185,7 +195,7 @@ public class GameScreenController implements Initializable {
 
         if (random.nextInt(10000) < spawnChancePowerUp) {
             Powerup powerup;
-            int tijdsduur = 5 + random.nextInt(5);;
+            int tijdsduur = 2 + random.nextInt(5);;
             //Get a random powerup
             switch (random.nextInt(6) + 1) {
                 case 1: //Speed up
@@ -194,12 +204,12 @@ public class GameScreenController implements Initializable {
                 case 2: //Speed down
                     powerup = new Powerup(PowerupType.DECREASESPEED, tijdsduur, (float) 0.5, 1);
                     break;
-                case 3: //Size up
+                /*case 3: //Size up
                     powerup = new Powerup(PowerupType.INCREASESIZE, tijdsduur, (float) 2, 1);
                     break;
                 case 4: //Size down
                     powerup = new Powerup(PowerupType.DECREASESIZE, tijdsduur, (float) 0.5, 1);
-                    break;
+                    break;*/
                 case 5: //ClearBoard
                     powerup = new Powerup(PowerupType.CLEARBOARD, 0, 0, 1);
                     break;
@@ -217,6 +227,55 @@ public class GameScreenController implements Initializable {
             return dpu;
         }
         return null;
+    }
+
+    public void applyPowerup(Powerup powerup) {
+        if (powerup.type == PowerupType.INCREASESPEED) {
+            (new Thread() {
+                public void run() {
+                    speed = speed*powerup.modifier;
+                    try {
+                        Thread.sleep(powerup.tijdsduur*1000);
+                    } catch (Exception ex) {
+                        System.out.println(ex.getMessage());
+                    }
+                    speed = speed/powerup.modifier;
+                }
+            }).start();
+        } else if (powerup.type == PowerupType.DECREASESPEED) {
+            (new Thread() {
+                public void run() {
+                    speed = speed*powerup.modifier;
+                    try {
+                        Thread.sleep(powerup.tijdsduur*1000);
+                    } catch (Exception ex) {
+                        System.out.println(ex.getMessage());
+                    }
+                    speed = speed/powerup.modifier;
+                }
+            }).start();
+        } else if (powerup.type == PowerupType.INCREASESIZE) {
+            
+        } else if (powerup.type == PowerupType.DECREASESIZE) {
+            
+        } else if (powerup.type == PowerupType.INVINCIBLE) {
+            (new Thread() {
+                public void run() {
+                    invincible = true;
+                    try {
+                        Thread.sleep(powerup.tijdsduur*1000);
+                    } catch (Exception ex) {
+                        System.out.println(ex.getMessage());
+                    }
+                    invincible = false;
+                }
+            }).start();
+        } else if (powerup.type == PowerupType.CLEARBOARD) {
+            GraphicsContext gc = game.getGraphicsContext2D();
+            gc.clearRect(0, 0, gc.getCanvas().getWidth(), gc.getCanvas().getHeight());
+            positions.clear();
+            powerups.clear();
+        }
     }
 
     private class Point {
