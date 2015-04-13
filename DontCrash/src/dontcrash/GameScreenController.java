@@ -58,7 +58,7 @@ public class GameScreenController implements Initializable {
     boolean Player2 = true;
 
     //Powerup stuff
-    private int spawnChancePowerUp = 30; // Between 0 and 10000 chance every tick to spawn powerup
+    private int spawnChancePowerUp = 40; // Between 0 and 10000 chance every tick to spawn powerup
     private boolean invincible = false;
 
     @Override
@@ -93,8 +93,8 @@ public class GameScreenController implements Initializable {
                     CurXP2 = CurXP2 - speed;
                 }
                 draw();
-                Point p = new Point((int) CurX, (int) CurY);
-                Point p2 = new Point((int) CurXP2, (int) CurYP2);
+                Point p = new Point((int) CurX, (int) CurY, Color.ORANGE);
+                Point p2 = new Point((int) CurXP2, (int) CurYP2, Color.GREEN);
                 if (Player1) {
                     if (!checkPoint(p)) {
                         positions.add(p);
@@ -195,7 +195,7 @@ public class GameScreenController implements Initializable {
 
     public void draw() {
         GraphicsContext gc = game.getGraphicsContext2D();        
-        gc.setLineWidth(1);
+        gc.setLineWidth(2);
         if(Player1)
         {
             gc.setStroke(Color.ORANGE);
@@ -220,9 +220,10 @@ public class GameScreenController implements Initializable {
     public void redraw() {
         GraphicsContext gc = game.getGraphicsContext2D();
         gc.clearRect(0, 0, gc.getCanvas().getWidth(), gc.getCanvas().getHeight());
-        gc.setStroke(Color.ORANGE);
-        gc.setLineWidth(1);
+        //gc.setStroke(Color.ORANGE);
+        gc.setLineWidth(2);
         for (Point p : positions) {
+            gc.setStroke(p.color);
             gc.strokeOval(p.X, p.Y, 1, 1);
         }
         gc.setStroke(Color.CRIMSON);
@@ -357,10 +358,12 @@ public class GameScreenController implements Initializable {
 
         public int X;
         public int Y;
+        public Color color;
 
-        public Point(int X, int Y) {
+        public Point(int X, int Y, Color color) {
             this.X = X;
             this.Y = Y;
+            this.color = color;
         }
     }
 
