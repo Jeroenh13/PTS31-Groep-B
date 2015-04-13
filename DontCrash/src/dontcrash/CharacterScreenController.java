@@ -18,7 +18,7 @@ import javafx.stage.Stage;
  *
  * @author Kitty
  */
-public class CharacterController 
+public class CharacterScreenController 
 {
     @FXML Button btnstart;
     @FXML Parent root;
