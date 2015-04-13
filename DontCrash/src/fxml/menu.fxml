@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.text.*?>
 <?import javafx.scene.control.*?>
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
@@ -8,21 +9,30 @@
    <children>
       <Separator layoutX="157.0" orientation="VERTICAL" prefHeight="400.0" prefWidth="7.0" />
       <Separator layoutX="458.0" orientation="VERTICAL" prefHeight="400.0" prefWidth="7.0" />
-      <Label layoutX="32.0" layoutY="14.0" text="Label" />
-      <Label layoutX="485.0" layoutY="6.0" text="Label" />
-      <Label layoutX="485.0" layoutY="46.0" text="Label" />
-      <Label layoutX="485.0" layoutY="88.0" text="Label" />
+      <Label layoutX="10.0" layoutY="9.0" text="Options">
+         <font>
+            <Font size="18.0" />
+         </font></Label>
+      <Label layoutX="467.0" layoutY="28.0" text="Coins: 1500" />
       <Button fx:id="btnplay" layoutX="179.0" layoutY="350.0" mnemonicParsing="false" onAction="#Play" prefHeight="31.0" prefWidth="264.0" text="Play" />
-      <Slider layoutX="14.0" layoutY="74.0" />
-      <Label layoutX="24.0" layoutY="46.0" text="Label" />
-      <Label layoutX="18.0" layoutY="120.0" text="Label" />
-      <Slider layoutX="14.0" layoutY="137.0" />
-      <ChoiceBox layoutX="9.0" layoutY="188.0" prefWidth="150.0" />
-      <Label layoutX="10.0" layoutY="167.0" text="Label" />
+      <Slider layoutX="5.0" layoutY="55.0" value="100.0" />
+      <Label layoutX="10.0" layoutY="37.0" text="Music" />
+      <Label layoutX="10.0" layoutY="69.0" text="Effecten" />
+      <Slider layoutX="5.0" layoutY="86.0" value="100.0" />
+      <ChoiceBox fx:id="cbRoomSort" layoutX="6.0" layoutY="125.0" prefHeight="25.0" prefWidth="140.0" />
+      <Label layoutX="10.0" layoutY="107.0" text="Sort rooms on:" />
       <ScrollPane layoutX="161.0" layoutY="5.0" prefHeight="318.0" prefWidth="296.0">
          <content>
-            <Label text="Label" />
+            <Label contentDisplay="CENTER" prefHeight="17.0" prefWidth="293.0" text="Rooms:" textAlignment="CENTER">
+               <font>
+                  <Font size="23.0" />
+               </font></Label>
          </content>
       </ScrollPane>
+      <Label layoutX="465.0" layoutY="6.0" text="Welcome Jeroen!">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Label>
    </children>
 </Pane>
