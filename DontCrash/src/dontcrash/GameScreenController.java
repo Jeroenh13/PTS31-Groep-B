@@ -27,7 +27,6 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.ArcType;
 import javafx.scene.shape.Ellipse;
-import javafx.scene.shape.EllipseBuilder;
 import javafx.stage.*;
 
 /**
@@ -41,21 +40,15 @@ public class GameScreenController implements Initializable {
     @FXML TextArea gameArea;
     @FXML Canvas game;
     @FXML Label lblRound;
-    @FXML Circle cCircle2;
 
     int direction;
-    int directionp2;
 
     double speed = 2;
     ArrayList<Point> positions = new ArrayList<>();
-    ArrayList<Point> positionsp2 = new ArrayList<>();
     ArrayList<DrawablePowerup> powerups = new ArrayList<>();
     double CurX;
     double CurY;
-    double CurXP2;
-    double CurYP2;
     boolean Player1 = true;
-    boolean Player2 = true;
 
     //Powerup stuff
     private int spawnChancePowerUp = 40; // Between 0 and 10000 chance every tick to spawn powerup
@@ -63,7 +56,6 @@ public class GameScreenController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-
     }
 
     public void btnToggleSoundPress(Event envt) {
@@ -83,18 +75,8 @@ public class GameScreenController implements Initializable {
                 } else if (direction == 3) {
                     CurX = CurX - speed;
                 }
-                if (directionp2 == 0) {
-                    CurYP2 = CurYP2 - speed;
-                } else if (directionp2 == 1) {
-                    CurXP2 = CurXP2 + speed;
-                } else if (directionp2 == 2) {
-                    CurYP2 = CurYP2 + speed;
-                } else if (directionp2 == 3) {
-                    CurXP2 = CurXP2 - speed;
-                }
                 draw();
                 Point p = new Point((int) CurX, (int) CurY, Color.ORANGE);
-                Point p2 = new Point((int) CurXP2, (int) CurYP2, Color.GREEN);
                 if (Player1) {
                     if (!checkPoint(p)) {
                         positions.add(p);
@@ -105,25 +87,10 @@ public class GameScreenController implements Initializable {
                         endGame(this);
                     }
                 }
-                if (Player2) {
-                    if (!checkPoint(p2)) {
-                        positions.add(p2);
-                        cCircle2.relocate(CurXP2, CurYP2);
-                        //lblRound.setText(Double.toString(CurX));
-                    } else {
-                        Player2 = false;
-                        endGame(this);
-                    }
-                }
                 DrawablePowerup hitdpu = checkPointPowerup(p);
-                DrawablePowerup hitdpu2 = checkPointPowerup(p2);
                 if (hitdpu != null) {
                     redraw();
                     applyPowerup(hitdpu.powerup);
-                }
-                if (hitdpu2 != null) {
-                    redraw();
-                    applyPowerup(hitdpu2.powerup);
                 }
                 DrawablePowerup dpu = spawnPowerUp();
                 if (dpu != null) {
@@ -136,13 +103,10 @@ public class GameScreenController implements Initializable {
                 cCircle.relocate(50, 20);
                 CurX = cCircle.getLayoutX();
                 CurY = cCircle.getLayoutY();
-                cCircle2.relocate(250, 20);
-                CurXP2 = cCircle2.getLayoutX();
-                CurYP2 = cCircle2.getLayoutY();
                 super.start();
                 direction = 2;
-                directionp2 = 2;
                 speed = 2;
+                HandleKeyPress(null);
             }
         };
         t.start();
@@ -179,7 +143,7 @@ public class GameScreenController implements Initializable {
 
     private void endGame(AnimationTimer t) {
         GraphicsContext gc = game.getGraphicsContext2D();
-        if (!Player1 && !Player2) {
+        if (!Player1) {
             //Stop timer
             t.stop();
             //Clear board for new round
@@ -189,7 +153,6 @@ public class GameScreenController implements Initializable {
             powerups.clear();
             PLAY.setDisable(false);
             Player1 = true;
-            Player2 = true;
         }
     }
 
@@ -200,11 +163,6 @@ public class GameScreenController implements Initializable {
         {
             gc.setStroke(Color.ORANGE);
             gc.strokeOval(CurX, CurY, 1, 1);
-        }
-        if(Player2)
-         {
-            gc.setStroke(Color.GREEN);
-            gc.strokeOval(CurXP2, CurYP2, 1, 1);
         }
     }
 
@@ -234,7 +192,7 @@ public class GameScreenController implements Initializable {
         }
     }
 
-    public void handleStuff(Event evt) {
+    public void HandleKeyPress(Event evt) {
         gameArea.setOnKeyPressed(new EventHandler<KeyEvent>() {
             public void handle(KeyEvent ke) {
                 if (ke.getCode() == KeyCode.LEFT) {
@@ -249,19 +207,7 @@ public class GameScreenController implements Initializable {
                     } else {
                         direction++;
                     }
-                } else if (ke.getCode() == KeyCode.A) {
-                    if (directionp2 == 0) {
-                        directionp2 = 3;
-                    } else {
-                        directionp2--;
-                    }
-                } else if (ke.getCode() == KeyCode.D) {
-                    if (directionp2 == 3) {
-                        directionp2 = 0;
-                    } else {
-                        directionp2++;
-                    }
-                }
+                } 
             }
         });
     }
@@ -351,36 +297,6 @@ public class GameScreenController implements Initializable {
             gc.clearRect(0, 0, gc.getCanvas().getWidth(), gc.getCanvas().getHeight());
             positions.clear();
             powerups.clear();
-        }
-    }
-
-    private class Point {
-
-        public int X;
-        public int Y;
-        public Color color;
-
-        public Point(int X, int Y, Color color) {
-            this.X = X;
-            this.Y = Y;
-            this.color = color;
-        }
-    }
-
-    private class DrawablePowerup {
-
-        public int MinX;
-        public int MinY;
-        public int MaxX;
-        public int MaxY;
-        public Powerup powerup;
-
-        public DrawablePowerup(Powerup powerup, int X, int Y) {
-            this.powerup = powerup;
-            this.MinX = X;
-            this.MinY = Y;
-            this.MaxX = X + 20;
-            this.MaxY = Y + 20;
         }
     }
 }
