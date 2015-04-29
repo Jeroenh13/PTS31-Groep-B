@@ -5,31 +5,31 @@
  */
 package dontcrash;
 
+import java.io.Serializable;
+
 /**
  *
  * @author Saya
  */
-public class Powerup
-{
+public class Powerup implements Serializable {
+
     public int tijdsduur;
     public PowerupType type;
     public float modifier;
     public int effected;
-    
+
     /**
      * Initializes a new instance of powerup
      */
-    public Powerup(PowerupType type, int tijdsduur, float modifier, int effected)
-    {
+    public Powerup(PowerupType type, int tijdsduur, float modifier, int effected) {
         this.type = type;
         this.tijdsduur = tijdsduur;
         this.modifier = modifier;
         this.effected = effected;
     }
-    
-    public void Effect()
-    {
-        
+
+    public void Effect() {
+
     }
-    
+
 }
