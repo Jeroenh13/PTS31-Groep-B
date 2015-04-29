@@ -5,7 +5,7 @@
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="dontcrash.CharacterScreenController">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.CharacterScreenController">
    <children>
       <Separator layoutX="162.0" layoutY="-4.0" orientation="VERTICAL" prefHeight="406.0" prefWidth="3.0" />
       <ImageView fitHeight="193.0" fitWidth="219.0" layoutX="168.0" pickOnBounds="true" preserveRatio="true" />

@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package dontcrash;
+package Controllers;
 
 import java.io.IOException;
 import javafx.event.Event;
@@ -16,18 +16,19 @@ import javafx.stage.Stage;
 
 /**
  *
- * @author Bas
+ * @author Kitty
  */
-public class registerController {
-    @FXML Button btnRegister;
+public class CharacterScreenController 
+{
+    @FXML Button btnstart;
     @FXML Parent root;
     
-    public void btnRegisterClick (Event evnt) throws IOException
-    {        
-            Stage stage=(Stage) btnRegister.getScene().getWindow();
-            root = FXMLLoader.load(getClass().getResource("/fxml/Register.fxml"));
-            Scene scene = new Scene(root);
-            stage.setScene(scene);
-            stage.show();
-    }
+    public void Start(Event evnt) throws IOException
+    {
+        Stage stage=(Stage) btnstart.getScene().getWindow();
+        root = FXMLLoader.load(getClass().getResource("/fxml/GameScreen.fxml"));
+        Scene scene = new Scene(root);
+        stage.setScene(scene);
+        stage.show();
+    }    
 }

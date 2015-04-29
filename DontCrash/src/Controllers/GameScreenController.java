@@ -3,14 +3,14 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package dontcrash;
+package Controllers;
 
+import dontcrash.Powerup;
+import dontcrash.PowerupType;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.animation.AnimationTimer;
 import javafx.event.Event;
 import javafx.event.EventHandler;
@@ -23,12 +23,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.ArcType;
-import javafx.scene.shape.Ellipse;
-import javafx.scene.shape.EllipseBuilder;
-import javafx.stage.*;
 
 /**
  *

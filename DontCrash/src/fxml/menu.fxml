@@ -5,7 +5,7 @@
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="dontcrash.MenuController">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="647.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.MenuController">
    <children>
       <Separator layoutX="157.0" orientation="VERTICAL" prefHeight="400.0" prefWidth="7.0" />
       <Separator layoutX="458.0" orientation="VERTICAL" prefHeight="400.0" prefWidth="7.0" />
@@ -34,5 +34,7 @@
             <Font size="18.0" />
          </font>
       </Label>
+      <TextArea fx:id="taMessages" layoutX="463.0" layoutY="72.0" prefHeight="249.0" prefWidth="181.0" />
+      <TextField fx:id="txtMessage" layoutX="465.0" layoutY="321.0" onAction="#sendMessage" prefHeight="25.0" prefWidth="181.0" />
    </children>
 </Pane>
