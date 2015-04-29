@@ -28,10 +28,8 @@
             <Pane layoutX="-9.0" layoutY="7.0" prefHeight="714.0" prefWidth="989.0" style="-fx-background-color: black;" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0">
                <children>
                   <Canvas fx:id="game" height="716.0" layoutX="-4.0" layoutY="-7.0" width="973.0" />
-                  <TextArea fx:id="gameArea" editable="false" layoutX="-10.0" layoutY="-10.0" onKeyPressed="#handleStuff" opacity="0.0" prefHeight="722.0" prefWidth="989.0">
-                     <cursor>
-                        <Cursor fx:constant="NONE" />
-                     </cursor></TextArea>
+                  <TextArea fx:id="gameArea" editable="false" layoutX="-10.0" layoutY="-10.0" onKeyPressed="#HandleKeyPress" opacity="0.0" prefHeight="722.0" prefWidth="989.0">
+                    </TextArea>
                   <Circle fx:id="cCircle" fill="#00ff2f" layoutX="45.0" layoutY="41.0" radius="5.0" stroke="BLACK" strokeType="INSIDE" />
                </children>
             </Pane>
