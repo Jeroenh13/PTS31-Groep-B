@@ -4,16 +4,19 @@
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 
-<Pane fx:controller="Controllers.registerController" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="259.0" prefWidth="202.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="259.0" prefWidth="397.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.registerController">
    <children>
-      <Button id="btnRegister" fx:id="btnRegister" layoutX="31.0" layoutY="220.0" mnemonicParsing="false" onAction="#btnRegisterClick" text="Registreer" />
-      <Label layoutX="34.0" layoutY="14.0" text="Naam" />
+      <Button id="btnRegister" fx:id="btnRegister" layoutX="31.0" layoutY="220.0" mnemonicParsing="false" onAction="#btnRegisterClick" text="Register" />
+      <Label layoutX="34.0" layoutY="14.0" text="Username" />
       <Label layoutX="34.0" layoutY="72.0" text="Email" />
-      <Label layoutX="34.0" layoutY="168.0" text="Wachtwoord herhalen" />
-      <Label layoutX="34.0" layoutY="120.0" text="Wachtwoord" />
-      <TextField id="txtNaam" layoutX="34.0" layoutY="38.0" />
-      <TextField id="txtEmail" layoutX="34.0" layoutY="89.0" />
-      <TextField id="txtWachtwoord" layoutX="34.0" layoutY="137.0" />
-      <TextField id="txtWachtwoordTest" layoutX="34.0" layoutY="185.0" />
+      <Label layoutX="34.0" layoutY="168.0" text="Repeat Password" />
+      <Label layoutX="34.0" layoutY="120.0" text="Password" />
+      <TextField id="txtNaam" fx:id="txtUsername" layoutX="34.0" layoutY="38.0" />
+      <TextField id="txtEmail" fx:id="txtEmail" layoutX="34.0" layoutY="89.0" />
+      <TextField id="txtWachtwoord" fx:id="txtPassword" layoutX="34.0" layoutY="137.0" />
+      <TextField id="txtWachtwoordRepeat" fx:id="txtPasswordRepeat" layoutX="34.0" layoutY="185.0" />
+      <Label fx:id="lbTest" layoutX="283.0" layoutY="94.0" text="Test result" />
+      <Button fx:id="btnTest" layoutX="277.0" layoutY="126.0" mnemonicParsing="false" onAction="#TestDatabase" text="Test" />
+      <Button fx:id="btnBack" layoutX="127.0" layoutY="220.0" mnemonicParsing="false" onAction="#btnBackClick" text="Back" />
    </children>
 </Pane>

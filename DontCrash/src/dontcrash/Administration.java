@@ -1,5 +1,6 @@
 package dontcrash;
 
+import Database.DatabaseManager;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,13 +16,15 @@ import java.util.List;
  */
 public class Administration
 {
-    private final List<Player> players;
+    private List<Player> players;
     
     private final List<Room> rooms;
     
     private int nextRoomID;
     
     private int nextPlayerID;
+    
+    DatabaseManager dbm;
     
     /**
      * Initiates a new  instance of administration
@@ -32,6 +35,16 @@ public class Administration
         this.nextPlayerID = 1;
         this.players = new ArrayList<Player>();
         this.rooms = new ArrayList<Room>();
+        this.dbm = new DatabaseManager();
+        
+        First();
+    }
+    
+    public void First()
+    {
+        dbm.OpenConn();
+        players = dbm.GetPlayers();
+        dbm.CloseConn();
     }
     
     /**
@@ -78,17 +91,35 @@ public class Administration
     /**
      * Initializes a new player using the given name
      * @param name of the new player
+     * @param password of the new player
+     * @param email of the new player
      * @return null if the name is already taken, otherwise returns a new player with the given name
      */
-    public Player newPlayer(String name)
+    public Player newPlayer(String name, String password, String email)
     {
+        Player p = null;
+        
         for (Player player : players)
+        {
             if(player.name.equals(name))
                 return null;
-        //TODO fix new player. emailadres?
-        //players.add(); 
-        //nexPlayerID++;
-        return null;
+        }
+                
+        dbm.OpenConn();
+        if (dbm.AddPlayer(name, password, email))
+        {
+            p = new Player(nextPlayerID, name, 0, email);
+            players.add(p);
+            nextPlayerID++;
+        }
+        dbm.CloseConn();
+            
+        for (Player pl : players)
+        {
+            System.out.println(pl.name);
+        }
+        
+        return p;
     }
     
     /**

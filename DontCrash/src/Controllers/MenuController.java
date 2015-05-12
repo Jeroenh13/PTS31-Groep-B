@@ -5,6 +5,7 @@
  */
 package Controllers;
 
+import Database.DatabaseManager;
 import dontcrash.ActualChat;
 import dontcrash.Player;
 import dontcrash.portsAndIps;
@@ -21,6 +22,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
@@ -77,5 +79,4 @@ public class MenuController  implements Observer
             }
         });
     }
-    
 }
