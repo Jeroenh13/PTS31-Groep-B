@@ -16,7 +16,7 @@ import java.util.ArrayList;
  */
 public class portsAndIps {
 
-    public static String IP = "192.168.177.1";
+    public static String IP = "192.168.220.1";
     public static int defaultServerPortChat = 1099;
     private static int lastPort = 1100;
     

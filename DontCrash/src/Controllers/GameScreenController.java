@@ -36,8 +36,6 @@ public class GameScreenController implements Initializable {
     @FXML Canvas game;
     @FXML Label lblRound;
 
-    int direction;
-
     ArrayList<Point> positions = new ArrayList<>();
     ArrayList<DrawablePowerup> powerups = new ArrayList<>();
     boolean Player1 = true;
@@ -190,16 +188,16 @@ public class GameScreenController implements Initializable {
         gameArea.setOnKeyPressed(new EventHandler<KeyEvent>() {
             public void handle(KeyEvent ke) {
                 if (ke.getCode() == KeyCode.LEFT) {
-                    if (direction == 0) {
-                        direction = 3;
+                    if (c.getDirection() == 0) {
+                        c.setDirection(3);
                     } else {
-                        direction--;
+                        c.setDirection(c.getDirection() - 1);
                     }
                 } else if (ke.getCode() == KeyCode.RIGHT) {
-                    if (direction == 3) {
-                        direction = 0;
+                    if (c.getDirection()  == 3) {
+                        c.setDirection(0);
                     } else {
-                        direction++;
+                        c.setDirection(c.getDirection() + 1);
                     }
                 } 
             }
