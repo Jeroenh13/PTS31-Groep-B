@@ -5,10 +5,7 @@
  */
 package Controllers;
 
-import dontcrash.DrawablePowerup;
-import dontcrash.Point;
-import dontcrash.Powerup;
-import dontcrash.PowerupType;
+import dontcrash.*;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Random;
@@ -41,12 +38,10 @@ public class GameScreenController implements Initializable {
 
     int direction;
 
-    double speed = 2;
     ArrayList<Point> positions = new ArrayList<>();
     ArrayList<DrawablePowerup> powerups = new ArrayList<>();
-    double CurX;
-    double CurY;
     boolean Player1 = true;
+    dontcrash.Character c;
 
     //Powerup stuff
     private int spawnChancePowerUp = 40; // Between 0 and 10000 chance every tick to spawn powerup
@@ -57,6 +52,7 @@ public class GameScreenController implements Initializable {
     }
 
     public void btnToggleSoundPress(Event envt) {
+        setup();
         gameArea.selectAll();
         AnimationTimer t = new AnimationTimer() {
 
@@ -64,21 +60,21 @@ public class GameScreenController implements Initializable {
             public void handle(long now) {
                 double X = 0;
                 double Y = 0;
-                if (direction == 0) {
-                    CurY = CurY - speed;
-                } else if (direction == 1) {
-                    CurX = CurX + speed;
-                } else if (direction == 2) {
-                    CurY = CurY + speed;
-                } else if (direction == 3) {
-                    CurX = CurX - speed;
+                if (c.getDirection() == 0) {
+                    c.setY( c.Y() - c.speed());
+                } else if (c.getDirection() == 1) {
+                    c.setX(c.X() + c.speed());
+                } else if (c.getDirection() == 2) {
+                    c.setY(c.Y() + c.speed());
+                } else if (c.getDirection() == 3) {
+                    c.setX(c.X() - c.speed());
                 }
                 draw();
-                Point p = new Point((int) CurX, (int) CurY, Color.ORANGE);
+                Point p = new Point((int) c.X(), (int) c.Y(), Color.ORANGE);
                 if (Player1) {
                     if (!checkPoint(p)) {
                         positions.add(p);
-                        cCircle.relocate(CurX, CurY);
+                        cCircle.relocate(c.X(), c.Y());
                         //lblRound.setText(Double.toString(CurX));
                     } else {
                         Player1 = false;
@@ -99,11 +95,11 @@ public class GameScreenController implements Initializable {
             @Override
             public void start() {
                 cCircle.relocate(50, 20);
-                CurX = cCircle.getLayoutX();
-                CurY = cCircle.getLayoutY();
+                c.setX(cCircle.getLayoutX());
+                c.setY(cCircle.getLayoutY());
                 super.start();
-                direction = 2;
-                speed = 2;
+                c.setDirection(2);
+                c.setSpeed(2);
                 HandleKeyPress(null);
             }
         };
@@ -160,7 +156,7 @@ public class GameScreenController implements Initializable {
         if(Player1)
         {
             gc.setStroke(Color.ORANGE);
-            gc.strokeOval(CurX, CurY, 1, 1);
+            gc.strokeOval(c.X(), c.Y(), 1, 1);
         }
     }
 
@@ -253,25 +249,25 @@ public class GameScreenController implements Initializable {
         if (powerup.type == PowerupType.INCREASESPEED) {
             (new Thread() {
                 public void run() {
-                    speed = speed * powerup.modifier;
+                    c.setSpeed(c.speed() * powerup.modifier);
                     try {
                         Thread.sleep(powerup.tijdsduur * 1000);
                     } catch (Exception ex) {
                         System.out.println(ex.getMessage());
                     }
-                    speed = speed / powerup.modifier;
+                    c.setSpeed(c.speed()/powerup.modifier);
                 }
             }).start();
         } else if (powerup.type == PowerupType.DECREASESPEED) {
             (new Thread() {
                 public void run() {
-                    speed = speed * powerup.modifier;
+                    c.setSpeed(c.speed() * powerup.modifier);
                     try {
                         Thread.sleep(powerup.tijdsduur * 1000);
                     } catch (Exception ex) {
                         System.out.println(ex.getMessage());
                     }
-                    speed = speed / powerup.modifier;
+                    c.setSpeed(c.speed()/powerup.modifier);
                 }
             }).start();
         } else if (powerup.type == PowerupType.INCREASESIZE) {
@@ -296,5 +292,10 @@ public class GameScreenController implements Initializable {
             positions.clear();
             powerups.clear();
         }
+    }
+
+    private void setup() {
+        Player p = new Player(1, "jeroen", 2,"jeroenh13@live.nl");
+        c = new dontcrash.Character(p,1);
     }
 }

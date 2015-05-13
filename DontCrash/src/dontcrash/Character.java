@@ -29,6 +29,8 @@ public class Character
     {
         this.name = player.name;
         this.characterID = characterID;
+        direction = 0;
+        speed = 2;
     }
     
     public void getHit()
@@ -41,6 +43,25 @@ public class Character
         //gg
     }
     
+    public float getDirection()
+    {
+        return direction;
+    }
+    
+    public double X()
+    {
+        return curX;
+    }
+    
+    public double Y()
+    {
+        return curY;
+    }
+    
+    public double speed()
+    {
+        return speed;
+    }
     /**
      * Sets the speed for the character
      * @param speed new speed value
@@ -60,12 +81,19 @@ public class Character
     }
     
     /**
-     * Sets the position of the character
+     * Sets the X position of the character
      * @param X the X position
-     * @param Y thy Y position
      */
-    public void setPosition(double X, double Y)
+    public void setX(double X)
     {
-        
+        curX = X;
+    }
+        /**
+     * Sets the Y position of the character
+     * @param Y the Y position
+     */
+    public void setY( double Y)
+    {
+        curY = Y;
     }
 }
