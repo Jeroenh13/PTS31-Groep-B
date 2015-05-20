@@ -37,11 +37,6 @@ public class Administration
         this.rooms = new ArrayList<Room>();
         this.dbm = new DatabaseManager();
         
-        First();
-    }
-    
-    public void First()
-    {
         dbm.OpenConn();
         players = dbm.GetPlayers();
         dbm.CloseConn();
@@ -49,8 +44,8 @@ public class Administration
     
     /**
      * Updates the score of the given player
-     * @param Player to update the score of
-     * @param Score new score
+     * @param player to update the score of
+     * @param score new score
      */
     public void updateScore(Player player, int score)
     {

@@ -46,7 +46,7 @@ public class LoginController {
             root = FXMLLoader.load(getClass().getResource("/fxml/menu.fxml"));
             Scene scene = new Scene(root);
             stage.setScene(scene);
-            stage.show();           
+            stage.show();
         }
         else
             JOptionPane.showMessageDialog(null, "foute inloggegevens");
