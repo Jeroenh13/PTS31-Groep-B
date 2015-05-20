@@ -1,5 +1,6 @@
 package dontcrash;
 
+import Database.DatabaseManager;
 import RMI.Server;
 import RemoteObserver.BasicPublisher;
 import RemoteObserver.RemotePropertyListener;
@@ -29,7 +30,9 @@ public class Administration extends UnicastRemoteObject implements RemotePublish
     private int nextRoomID;
 
     private int nextPlayerID;
-
+    
+    DatabaseManager dbm;
+    
     /**
      * Initiates a new instance of administration
      */
@@ -39,13 +42,17 @@ public class Administration extends UnicastRemoteObject implements RemotePublish
         this.nextPlayerID = 1;
         this.players = new ArrayList<Player>();
         this.rooms = new ArrayList<Room>();
+        this.dbm = new DatabaseManager();
+        
+        dbm.OpenConn();
+        players = dbm.GetPlayers();
+        dbm.CloseConn();
     }
 
     /**
      * Updates the score of the given player
-     *
-     * @param Player to update the score of
-     * @param Score new score
+     * @param player to update the score of
+     * @param score new score
      */
     public void updateScore(Player player, int score) {
         player.score = score;
@@ -91,19 +98,35 @@ public class Administration extends UnicastRemoteObject implements RemotePublish
      * Initializes a new player using the given name
      *
      * @param name of the new player
-     * @return null if the name is already taken, otherwise returns a new player
-     * with the given name
+     * @param password of the new player
+     * @param email of the new player
+     * @return null if the name is already taken, otherwise returns a new player with the given name
      */
-    public Player newPlayer(String name) {
-        for (Player player : players) {
-            if (player.name.equals(name)) {
+    public Player newPlayer(String name, String password, String email)
+    {
+        Player p = null;
+        
+        for (Player player : players)
+        {
+            if(player.name.equals(name))
                 return null;
-            }
         }
-        //TODO fix new player. emailadres?
-        //players.add(); 
-        //nexPlayerID++;
-        return null;
+                
+        dbm.OpenConn();
+        if (dbm.AddPlayer(name, password, email))
+        {
+            p = new Player(nextPlayerID, name, 0, email);
+            players.add(p);
+            nextPlayerID++;
+        }
+        dbm.CloseConn();
+            
+        for (Player pl : players)
+        {
+            System.out.println(pl.name);
+        }
+        
+        return p;
     }
 
     /**

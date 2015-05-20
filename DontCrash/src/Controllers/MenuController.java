@@ -8,6 +8,7 @@ package Controllers;
 import RMI.RMIClient;
 import RemoteObserver.RemotePropertyListener;
 import SharedInterfaces.IAdministator;
+import Database.DatabaseManager;
 import dontcrash.ActualChat;
 import dontcrash.DontCrash;
 import dontcrash.Player;
@@ -49,6 +50,8 @@ public class MenuController  implements Observer, RemotePropertyListener
     
     @FXML TextArea taMessages;
     @FXML TextField txtMessage;
+    
+    @FXML Label lblWelcomeUser;
     
     ActualChat ac;
     IAdministator admin;

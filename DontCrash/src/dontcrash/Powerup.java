@@ -20,6 +20,10 @@ public class Powerup implements Serializable {
 
     /**
      * Initializes a new instance of powerup
+     * @param type of the powerup
+     * @param tijdsduur of the powerup
+     * @param modifier of the powerup
+     * @param effected of the powerup
      */
     public Powerup(PowerupType type, int tijdsduur, float modifier, int effected) {
         this.type = type;

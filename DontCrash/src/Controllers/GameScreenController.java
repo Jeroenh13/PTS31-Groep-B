@@ -5,15 +5,13 @@
  */
 package Controllers;
 
-import dontcrash.DrawablePowerup;
-import dontcrash.Point;
-import dontcrash.Powerup;
-import dontcrash.PowerupType;
+import dontcrash.*;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.ResourceBundle;
 import javafx.animation.AnimationTimer;
+import javafx.application.Platform;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.Initializable;
@@ -23,6 +21,7 @@ import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
@@ -35,18 +34,15 @@ public class GameScreenController implements Initializable {
 
     @FXML Button PLAY;
     @FXML Circle cCircle;
+    @FXML ImageView imgview;
     @FXML TextArea gameArea;
     @FXML Canvas game;
     @FXML Label lblRound;
 
-    int direction;
-
-    double speed = 2;
     ArrayList<Point> positions = new ArrayList<>();
     ArrayList<DrawablePowerup> powerups = new ArrayList<>();
-    double CurX;
-    double CurY;
     boolean Player1 = true;
+    dontcrash.Character c;
 
     //Powerup stuff
     private int spawnChancePowerUp = 40; // Between 0 and 10000 chance every tick to spawn powerup
@@ -57,35 +53,42 @@ public class GameScreenController implements Initializable {
     }
 
     public void btnToggleSoundPress(Event envt) {
+        setup();
         gameArea.selectAll();
-        AnimationTimer t = new AnimationTimer() {
-
+        AnimationTimer t;
+        t = new AnimationTimer() {
+            
             @Override
             public void handle(long now) {
-                double X = 0;
-                double Y = 0;
-                if (direction == 0) {
-                    CurY = CurY - speed;
-                } else if (direction == 1) {
-                    CurX = CurX + speed;
-                } else if (direction == 2) {
-                    CurY = CurY + speed;
-                } else if (direction == 3) {
-                    CurX = CurX - speed;
+                Point previousPoint = c.getPoint();
+                //The normal rotation angle of 0 is right
+                //0 is Up
+                if (c.getDirection() == 0) {
+                    c.setY( c.Y() - c.speed());
+                    imgview.setRotate(270);
+                //1 is Right
+                } else if (c.getDirection() == 1) {
+                    c.setX(c.X() + c.speed());
+                    imgview.setRotate(0);
+                //2 is Bottom
+                } else if (c.getDirection() == 2) {
+                    c.setY(c.Y() + c.speed());
+                    imgview.setRotate(90);
+                //3 is Left
+                } else if (c.getDirection() == 3) {
+                    c.setX(c.X() - c.speed());
+                    imgview.setRotate(180);
                 }
                 draw();
-                Point p = new Point((int) CurX, (int) CurY, Color.ORANGE);
+                Point currentPoint = c.getPoint();
                 if (Player1) {
-                    if (!checkPoint(p)) {
-                        positions.add(p);
-                        cCircle.relocate(CurX, CurY);
-                        //lblRound.setText(Double.toString(CurX));
+                    if (!moveToPoint(previousPoint, currentPoint)) {
+                        imgview.relocate(c.X(), c.Y());
                     } else {
-                        Player1 = false;
                         endGame(this);
                     }
                 }
-                DrawablePowerup hitdpu = checkPointPowerup(p);
+                DrawablePowerup hitdpu = checkPointPowerup(currentPoint);
                 if (hitdpu != null) {
                     redraw();
                     applyPowerup(hitdpu.powerup);
@@ -98,12 +101,13 @@ public class GameScreenController implements Initializable {
 
             @Override
             public void start() {
-                cCircle.relocate(50, 20);
-                CurX = cCircle.getLayoutX();
-                CurY = cCircle.getLayoutY();
+                
+                imgview.relocate(50, 20);
+                c.setX(imgview.getLayoutX());
+                c.setY(imgview.getLayoutY());
                 super.start();
-                direction = 2;
-                speed = 2;
+                c.setDirection(2);
+                c.setSpeed(2);
                 HandleKeyPress(null);
             }
         };
@@ -135,7 +139,6 @@ public class GameScreenController implements Initializable {
                 return p;
             }
         }
-
         return null;
     }
 
@@ -160,7 +163,7 @@ public class GameScreenController implements Initializable {
         if(Player1)
         {
             gc.setStroke(Color.ORANGE);
-            gc.strokeOval(CurX, CurY, 1, 1);
+            gc.strokeOval(c.X(), c.Y(), 1, 1);
         }
     }
 
@@ -194,16 +197,16 @@ public class GameScreenController implements Initializable {
         gameArea.setOnKeyPressed(new EventHandler<KeyEvent>() {
             public void handle(KeyEvent ke) {
                 if (ke.getCode() == KeyCode.LEFT) {
-                    if (direction == 0) {
-                        direction = 3;
+                    if (c.getDirection() == 0) {
+                        c.setDirection(3);
                     } else {
-                        direction--;
+                        c.setDirection(c.getDirection() - 1);
                     }
                 } else if (ke.getCode() == KeyCode.RIGHT) {
-                    if (direction == 3) {
-                        direction = 0;
+                    if (c.getDirection()  == 3) {
+                        c.setDirection(0);
                     } else {
-                        direction++;
+                        c.setDirection(c.getDirection() + 1);
                     }
                 } 
             }
@@ -253,25 +256,25 @@ public class GameScreenController implements Initializable {
         if (powerup.type == PowerupType.INCREASESPEED) {
             (new Thread() {
                 public void run() {
-                    speed = speed * powerup.modifier;
+                    c.setSpeed(c.speed() * powerup.modifier);
                     try {
                         Thread.sleep(powerup.tijdsduur * 1000);
                     } catch (Exception ex) {
                         System.out.println(ex.getMessage());
                     }
-                    speed = speed / powerup.modifier;
+                    c.setSpeed(c.speed()/powerup.modifier);
                 }
             }).start();
         } else if (powerup.type == PowerupType.DECREASESPEED) {
             (new Thread() {
                 public void run() {
-                    speed = speed * powerup.modifier;
+                    c.setSpeed(c.speed() * powerup.modifier);
                     try {
                         Thread.sleep(powerup.tijdsduur * 1000);
                     } catch (Exception ex) {
                         System.out.println(ex.getMessage());
                     }
-                    speed = speed / powerup.modifier;
+                    c.setSpeed(c.speed()/powerup.modifier);
                 }
             }).start();
         } else if (powerup.type == PowerupType.INCREASESIZE) {
@@ -296,5 +299,60 @@ public class GameScreenController implements Initializable {
             positions.clear();
             powerups.clear();
         }
+    }
+
+    private void setup() {
+        Player p = new Player(1, "jeroen", 2,"jeroenh13@live.nl");
+        c = new dontcrash.Character(p,1);
+    }
+    
+    private boolean moveToPoint(Point previousPosition, Point currentPosition) {
+        Point point;
+        if (previousPosition.X <= currentPosition.X) {
+            if (previousPosition.Y <= currentPosition.Y) {
+                for (int y = previousPosition.Y; y < currentPosition.Y; y++) {
+                    for (int x = previousPosition.X; x < currentPosition.X; x++) {
+                        point = new Point(x, y, previousPosition.color);
+                        if(checkPoint(point)){
+                            return false;
+                        }
+                        positions.add(point);
+                    }
+                }
+            } else {
+                for (int y = currentPosition.Y; y < previousPosition.Y; y++) {
+                    for (int x = previousPosition.X; x < currentPosition.X; x++) {
+                        point = new Point(x, y, previousPosition.color);
+                        if(checkPoint(point)){
+                            return false;
+                        }
+                        positions.add(point);
+                    }
+                }
+            }
+        } else {
+            if (previousPosition.Y <= currentPosition.Y) {
+                for (int y = previousPosition.Y; y < currentPosition.Y; y++) {
+                    for (int x = currentPosition.X; x < previousPosition.X; x++) {
+                        point = new Point(x, y, previousPosition.color);
+                        if(checkPoint(point)){
+                            return false;
+                        }
+                        positions.add(point);
+                    }
+                }
+            } else {
+                for (int y = currentPosition.Y; y < previousPosition.Y; y++) {
+                    for (int x = currentPosition.X; x < previousPosition.X; x++) {
+                        point = new Point(x, y, previousPosition.color);
+                        if(checkPoint(point)){
+                            return false;
+                        }
+                        positions.add(point);
+                    }
+                }
+            }
+        }
+        return true;
     }
 }

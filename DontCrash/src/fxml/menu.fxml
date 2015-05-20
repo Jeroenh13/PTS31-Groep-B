@@ -29,7 +29,7 @@
                </font></Label>
          </content>
       </ScrollPane>
-      <Label layoutX="465.0" layoutY="6.0" text="Welcome Jeroen!">
+      <Label fx:id="lblWelcomeUser" layoutX="465.0" layoutY="6.0" text="Welcome User!">
          <font>
             <Font size="18.0" />
          </font>

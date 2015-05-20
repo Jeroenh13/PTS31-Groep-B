@@ -25,13 +25,19 @@ public class Game
         this.players = players;
     }
     
-    
+    /**
+     * Updates the current game
+     */
     public void Update()
     {
         
     }
     
-    
+    /**
+     * 
+     * @param object 
+     * @return 
+     */
     public Object getHitBy(Object object)
     {
         return null;

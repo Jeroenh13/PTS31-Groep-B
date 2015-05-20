@@ -5,6 +5,7 @@
  */
 package Controllers;
 
+import Database.DatabaseManager;
 import java.io.IOException;
 import javafx.event.Event;
 import javafx.fxml.FXML;
@@ -29,19 +30,29 @@ public class LoginController {
     @FXML TextField txtNaam;
     @FXML Button btnRegistreer;
     @FXML Parent root; 
+    @FXML Button btnGame;
+    
+    DatabaseManager dbm;
     
     public void btnLoginClick(Event evnt) throws IOException
     {
-        if(txtNaam.getText().equalsIgnoreCase("a") && txtPassword.getText().equalsIgnoreCase("a"))
+        dbm = new DatabaseManager();
+        String username = txtNaam.getText();
+        String password = txtPassword.getText();
+        
+        dbm.OpenConn();
+        if(dbm.CheckPassword(username, password))
         {
             Stage stage=(Stage) txtNaam.getScene().getWindow();
             root = FXMLLoader.load(getClass().getResource("/fxml/menu.fxml"));
             Scene scene = new Scene(root);
             stage.setScene(scene);
-            stage.show();           
+            stage.show();
         }
         else
             JOptionPane.showMessageDialog(null, "foute inloggegevens");
+        
+        dbm.CloseConn();
     }
     
     public void btnRegistreerClick(Event evnt) throws IOException
@@ -51,5 +62,14 @@ public class LoginController {
             Scene scene = new Scene(root);
             stage.setScene(scene);
             stage.show();
+    }
+    
+    public void btnGameClick(Event evt) throws IOException
+    {
+        Stage stage=(Stage) txtNaam.getScene().getWindow();
+        root = FXMLLoader.load(getClass().getResource("/fxml/GameScreen.fxml"));
+        Scene scene = new Scene(root);
+        stage.setScene(scene);
+        stage.show();
     }
 }

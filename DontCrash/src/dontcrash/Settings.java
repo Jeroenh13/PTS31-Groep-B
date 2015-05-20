@@ -23,16 +23,28 @@ public class Settings
         //TODO standaard waardes instellen
     }
     
+    /**
+     * Changes the sound level
+     * @param soundLevel the new level of sound
+     */
     public void changeSound(int soundLevel)
     {
         this.soundLevel = soundLevel;
     }
     
+    /**
+     * Changes the soundeffect level
+     * @param soundEffectLevel the new level of soundeffect
+     */
     public void changeEffectLevel(int soundEffectLevel)
     {
         this.soundEffectLevel = soundEffectLevel;
     }
    
+    /**
+     * Changes the sorting
+     * @param sorting the new way to be sorted at
+     */
     public void changeSorting(Sorting sorting)
     {
         this.roomSorting = sorting;

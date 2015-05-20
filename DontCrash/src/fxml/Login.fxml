@@ -4,7 +4,7 @@
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="155.0" prefWidth="183.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.LoginController">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="165.0" prefWidth="279.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.LoginController">
    <children>
       <Label layoutX="17.0" layoutY="21.0" text="Naam" />
       <TextField id="txtNaam" fx:id="txtNaam" layoutX="17.0" layoutY="38.0" />
@@ -12,5 +12,6 @@
       <PasswordField id="txtPassword" fx:id="txtPassword" layoutX="17.0" layoutY="80.0" />
       <Button id="btnLogin" fx:id="btnLogIn" layoutX="19.0" layoutY="116.0" mnemonicParsing="false" onAction="#btnLoginClick" text="Log In" />
       <Button id="btnRegister" fx:id="btnRegistreer" layoutX="75.0" layoutY="116.0" mnemonicParsing="false" onAction="#btnRegistreerClick" prefHeight="25.0" prefWidth="88.0" text="Registeer" />
+      <Button fx:id="btnGame" layoutX="182.0" layoutY="116.0" mnemonicParsing="false" onAction="#btnGameClick" text="Go to game" />
    </children>
 </Pane>

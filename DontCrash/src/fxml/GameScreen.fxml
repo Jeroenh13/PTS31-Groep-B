@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.image.*?>
 <?import javafx.scene.paint.*?>
 <?import javafx.scene.*?>
 <?import javafx.scene.canvas.*?>
@@ -27,6 +28,11 @@
          <children>
             <Pane layoutX="-9.0" layoutY="7.0" prefHeight="714.0" prefWidth="989.0" style="-fx-background-color: black;" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0">
                <children>
+                  <ImageView fx:id="imgview" fitHeight="194.0" fitWidth="67.0" layoutX="420.0" layoutY="211.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../images/3cdb6cb2d146ff79186b6a7ec1e2bf55.png" />
+                     </image>
+                  </ImageView>
                   <Canvas fx:id="game" height="716.0" layoutX="-4.0" layoutY="-7.0" width="973.0" />
                   <TextArea fx:id="gameArea" editable="false" layoutX="-10.0" layoutY="-10.0" onKeyPressed="#HandleKeyPress" opacity="0.0" prefHeight="722.0" prefWidth="989.0">
                     </TextArea>
