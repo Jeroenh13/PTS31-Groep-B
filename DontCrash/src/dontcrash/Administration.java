@@ -34,13 +34,13 @@ public class Administration extends UnicastRemoteObject implements RemotePublish
     DatabaseManager dbm;
     
     /**
-     * Initiates a new instance of administration
+     * create a new administration
+     * @throws RemoteException Connection error
      */
     public Administration() throws RemoteException {
         bp = new BasicPublisher(new String[]{"Room"});
         this.nextRoomID = 1;
         this.nextPlayerID = 1;
-        this.players = new ArrayList<Player>();
         this.rooms = new ArrayList<Room>();
         this.dbm = new DatabaseManager();
         

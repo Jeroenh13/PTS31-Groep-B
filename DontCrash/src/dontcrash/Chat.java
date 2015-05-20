@@ -15,7 +15,7 @@ import RemoteObserver.RemotePublisher;
 /**
  * @author Bas
  */
-public class Chat extends UnicastRemoteObject implements RemotePublisher, IChat{
+public class Chat extends UnicastRemoteObject implements IChat{
 
     BasicPublisher bp ;
 

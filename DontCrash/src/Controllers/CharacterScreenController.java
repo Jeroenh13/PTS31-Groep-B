@@ -6,13 +6,10 @@
 package Controllers;
 
 import dontcrash.ActualChat;
-import dontcrash.portsAndIps;
 import java.io.IOException;
 import java.rmi.RemoteException;
 import java.util.Observable;
 import java.util.Observer;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.application.Platform;
 import javafx.event.Event;
 import javafx.fxml.FXML;

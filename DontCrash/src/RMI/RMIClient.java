@@ -19,15 +19,15 @@ import java.rmi.registry.Registry;
 public class RMIClient {
 
     // Set binding name for student administration
-    private static  String bindingName = "Chat";
+    private String bindingName = "Chat";
 
     // References to registry and student administration
     private Registry registry = null;
     private IChat chat = null;
     private IAdministator admin = null;
 
-    private String ipAddress;
-    private int portNumber;
+    private final String ipAddress;
+    private final int portNumber;
 
     // Constructor
     public RMIClient(String ipAddress, int portNumber) {

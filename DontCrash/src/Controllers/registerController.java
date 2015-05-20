@@ -8,6 +8,7 @@ package Controllers;
 import Database.DatabaseManager;
 import dontcrash.Administration;
 import java.io.IOException;
+import java.rmi.RemoteException;
 import javafx.application.Platform;
 import javafx.event.Event;
 import javafx.fxml.FXML;
@@ -47,7 +48,7 @@ public class registerController {
     String Password;
     String RPassword;
     
-    public registerController()
+    public registerController() throws RemoteException
     {
         this.dbm = new DatabaseManager();
         this.admin = new Administration();
