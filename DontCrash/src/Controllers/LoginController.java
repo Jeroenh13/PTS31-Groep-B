@@ -30,6 +30,7 @@ public class LoginController {
     @FXML TextField txtNaam;
     @FXML Button btnRegistreer;
     @FXML Parent root; 
+    @FXML Button btnGame;
     
     DatabaseManager dbm;
     
@@ -61,5 +62,14 @@ public class LoginController {
             Scene scene = new Scene(root);
             stage.setScene(scene);
             stage.show();
+    }
+    
+    public void btnGameClick(Event evt) throws IOException
+    {
+        Stage stage=(Stage) txtNaam.getScene().getWindow();
+        root = FXMLLoader.load(getClass().getResource("/fxml/GameScreen.fxml"));
+        Scene scene = new Scene(root);
+        stage.setScene(scene);
+        stage.show();
     }
 }

@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Random;
 import java.util.ResourceBundle;
 import javafx.animation.AnimationTimer;
+import javafx.application.Platform;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.Initializable;
@@ -20,6 +21,7 @@ import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
@@ -32,6 +34,7 @@ public class GameScreenController implements Initializable {
 
     @FXML Button PLAY;
     @FXML Circle cCircle;
+    @FXML ImageView imgview;
     @FXML TextArea gameArea;
     @FXML Canvas game;
     @FXML Label lblRound;
@@ -52,30 +55,38 @@ public class GameScreenController implements Initializable {
     public void btnToggleSoundPress(Event envt) {
         setup();
         gameArea.selectAll();
-        AnimationTimer t = new AnimationTimer() {
-
+        AnimationTimer t;
+        t = new AnimationTimer() {
+            
             @Override
             public void handle(long now) {
                 double X = 0;
                 double Y = 0;
+                //The normal rotation angle of 0 is right
+                //0 is Up
                 if (c.getDirection() == 0) {
                     c.setY( c.Y() - c.speed());
+                    imgview.setRotate(270);
+                //1 is Right
                 } else if (c.getDirection() == 1) {
                     c.setX(c.X() + c.speed());
+                    imgview.setRotate(0);
+                //2 is Bottom
                 } else if (c.getDirection() == 2) {
                     c.setY(c.Y() + c.speed());
+                    imgview.setRotate(90);
+                //3 is Left
                 } else if (c.getDirection() == 3) {
                     c.setX(c.X() - c.speed());
+                    imgview.setRotate(180);
                 }
                 draw();
                 Point p = new Point((int) c.X(), (int) c.Y(), Color.ORANGE);
                 if (Player1) {
                     if (!checkPoint(p)) {
                         positions.add(p);
-                        cCircle.relocate(c.X(), c.Y());
-                        //lblRound.setText(Double.toString(CurX));
+                        imgview.relocate(c.X(), c.Y());
                     } else {
-                        Player1 = false;
                         endGame(this);
                     }
                 }
@@ -92,9 +103,10 @@ public class GameScreenController implements Initializable {
 
             @Override
             public void start() {
-                cCircle.relocate(50, 20);
-                c.setX(cCircle.getLayoutX());
-                c.setY(cCircle.getLayoutY());
+                
+                imgview.relocate(50, 20);
+                c.setX(imgview.getLayoutX());
+                c.setY(imgview.getLayoutY());
                 super.start();
                 c.setDirection(2);
                 c.setSpeed(2);
@@ -129,7 +141,6 @@ public class GameScreenController implements Initializable {
                 return p;
             }
         }
-
         return null;
     }
 
