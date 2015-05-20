@@ -7,6 +7,10 @@ package RMI;
 
 import dontcrash.Chat;
 import SharedInterfaces.IChat;
+import SharedInterfaces.IAdministator;
+import dontcrash.Administration;
+import dontcrash.portsAndIps;
+import java.io.IOException;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
@@ -21,14 +25,16 @@ import java.util.Enumeration;
  * @author Bas
  */
 public class Server {
+
     private static final int portNumber = 1099;
 
     // Set binding name for student administration
-    private static final String bindingName = "Chat";
+    private static String bindingName = "Chat";
 
     // References to registry and student administration
     private Registry registry = null;
     private IChat chat = null;
+    private IAdministator admin = null;
 
     // Constructor
     public Server() {
@@ -64,40 +70,71 @@ public class Server {
         }
     }
 
-    
-     public Server(int port) {
+    public Server(int port, String usage) {
 
         // Print port number for registry
         System.out.println("Server: Port number " + port);
 
-        try {
-            chat = (IChat) new Chat();
-            System.out.println("Server: chatServer created");
-        } catch (RemoteException ex) {
-            System.out.println("Server: Cannot create Chat");
-            System.out.println("Server: RemoteException: " + ex.getMessage());
-            chat = null;
-        }
+        switch (usage) {
+            case "Administrator":     
+                try {
+                    admin = (IAdministator) new Administration();
+                    System.out.println("Server:  newServerObj created");
+                } catch (RemoteException ex) {
+                    System.out.println("Server: Cannot create newServerObj");
+                    System.out.println("Server: RemoteException: " + ex.getMessage());
+                    chat = null;
+                }
 
-        // Create registry at port number
-        try {
-            registry = LocateRegistry.createRegistry(port);
-            System.out.println("Server: Registry created on port number " + port);
-        } catch (RemoteException ex) {
-            System.out.println("Server: Cannot create registry");
-            System.out.println("Server: RemoteException: " + ex.getMessage());
-            registry = null;
-        }
+                // Create registry at port number
+                try {
+                    registry = LocateRegistry.createRegistry(port);
+                    System.out.println("Server: Registry created on port number " + port);
+                } catch (RemoteException ex) {
+                    System.out.println("Server: Cannot create registry");
+                    System.out.println("Server: RemoteException: " + ex.getMessage());
+                    registry = null;
+                }
 
-        // Bind chat using registry
-        try {
-            registry.rebind(bindingName, chat);
-        } catch (RemoteException ex) {
-            System.out.println("Server: Cannot bind student administration");
-            System.out.println("Server: RemoteException: " + ex.getMessage());
+                // Bind newServer using registry
+                try {
+                    registry.rebind(bindingName, admin);
+                } catch (RemoteException ex) {
+                    System.out.println("Server: Cannot bind student administration");
+                    System.out.println("Server: RemoteException: " + ex.getMessage());
+                }
+                break;
+            case "Chat":
+            default:
+                try {
+                    chat = (IChat) new Chat();
+                    System.out.println("Server: chatServer created");
+                } catch (RemoteException ex) {
+                    System.out.println("Server: Cannot create Chat");
+                    System.out.println("Server: RemoteException: " + ex.getMessage());
+                    chat = null;
+                }
+
+                // Create registry at port number
+                try {
+                    registry = LocateRegistry.createRegistry(port);
+                    System.out.println("Server: Registry created on port number " + port);
+                } catch (RemoteException ex) {
+                    System.out.println("Server: Cannot create registry");
+                    System.out.println("Server: RemoteException: " + ex.getMessage());
+                    registry = null;
+                }
+
+                // Bind chat using registry
+                try {
+                    registry.rebind(bindingName, chat);
+                } catch (RemoteException ex) {
+                    System.out.println("Server: Cannot bind student administration");
+                    System.out.println("Server: RemoteException: " + ex.getMessage());
+                }
         }
     }
-    
+
     // Print IP addresses and network interfaces
     private static void printIPAddresses() {
         try {
@@ -144,7 +181,14 @@ public class Server {
 
         // Create server
         Server server = new Server();
+        bindingName = "Admin";
+        Server serverCommands = new Server(1098, "Administrator");
     }
-    
-    
+
+    public static int createNewServer(String type) throws IOException {
+        int portnr = portsAndIps.getNewPort();
+        Server server = new Server(portnr,type);
+        return portnr;
+    }
+
 }

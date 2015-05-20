@@ -1,5 +1,6 @@
 package dontcrash;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,13 +13,13 @@ import java.util.List;
  *
  * @author Saya
  */
-public class Player {
+public class Player implements Serializable{
 
     public int playerID;
     public String name;
     public int score;
     public String email;
-    public List<Player> friends;
+    public transient List<Player> friends;
 
     /**
      * Initializes a new instance of player

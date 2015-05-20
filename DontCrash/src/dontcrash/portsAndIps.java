@@ -5,6 +5,8 @@
  */
 package dontcrash;
 
+import RMI.RMIClient;
+import SharedInterfaces.IAdministator;
 import java.io.IOException;
 import java.net.Socket;
 import java.net.SocketException;
@@ -16,8 +18,8 @@ import java.util.ArrayList;
  */
 public class portsAndIps {
 
-    public static String IP = "192.168.177.1";
-    public static int defaultServerPortChat = 1099;
+    public final static String IP = "192.168.177.1";
+    public final static int defaultServerPortChat = 1099;
     private static int lastPort = 1100;
     
     private static boolean isPortInUse(int port) throws IOException {

@@ -12,8 +12,10 @@
       <ImageView fitHeight="193.0" fitWidth="219.0" layoutX="162.0" layoutY="193.0" pickOnBounds="true" preserveRatio="true" />
       <ImageView fitHeight="193.0" fitWidth="219.0" layoutX="375.0" pickOnBounds="true" preserveRatio="true" />
       <ImageView fitHeight="193.0" fitWidth="219.0" layoutX="375.0" layoutY="200.0" pickOnBounds="true" preserveRatio="true" />
+      <Label layoutX="11.0" layoutY="10.0" text="Rondes" />
+      <TextField id="txtRondes" layoutX="9.0" layoutY="30.0" />
       <Button id="btnStart" fx:id="btnstart" layoutX="343.0" layoutY="188.0" mnemonicParsing="false" onAction="#Start" text="Start" />
-      <Label layoutX="29.0" layoutY="24.0" text="Rondes" />
-      <TextField id="txtRondes" layoutX="14.0" layoutY="41.0" />
+      <TextArea fx:id="taChat" editable="false" layoutX="9.0" layoutY="174.0" prefHeight="200.0" prefWidth="149.0" />
+      <TextField fx:id="txtChat" layoutX="9.0" layoutY="374.0" onAction="#txtChatSend" />
    </children>
 </Pane>

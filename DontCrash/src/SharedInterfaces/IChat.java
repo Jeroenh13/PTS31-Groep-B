@@ -1,7 +1,5 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * Interface that gets send over
  */
 package SharedInterfaces;
 
@@ -14,8 +12,6 @@ import RemoteObserver.RemotePublisher;
  */
  public interface IChat extends RemotePublisher  {
     
-    
-    public void sendMessage(String msg) throws RemoteException;;
+    public void sendMessage(String msg) throws RemoteException;
 
-    public void startNewServer(int portNr) throws RemoteException;
 }

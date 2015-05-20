@@ -1,34 +1,34 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * Class for the information of a game Room.
  */
 package dontcrash;
 
+import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- *
- * @author Saya
- */
-public class Room
+public class Room implements Serializable
 {
     public int roomID;
-    public String name;
-    public List<Player> players;
+    public transient List<Player> players;
     public Game currentGame;
+    public int chatPort;
+    public Player host;
     
     /**
      * Initializes a new instance of room;
-     * @param name of the room
      * @param roomID id of the room
+     * @param host host of the room
+     * @throws java.io.IOException
      */
-    public Room(String name, int roomID)
+    public Room(int roomID,Player host) throws IOException
     {
         players = new ArrayList<Player>();
-        this.name = name;
         this.roomID = roomID;
+        chatPort = portsAndIps.getNewPort();
+        this.host = host;
+        players.add(host);
     }
     
     /**
@@ -63,5 +63,11 @@ public class Room
     public void verlaatRoom(Player player)
     {
         players.remove(player);
+    }
+    
+    @Override
+    public String toString()
+    {
+        return String.valueOf(roomID);
     }
 }

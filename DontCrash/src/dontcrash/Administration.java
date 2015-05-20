@@ -1,113 +1,161 @@
 package dontcrash;
 
+import RMI.Server;
+import RemoteObserver.BasicPublisher;
+import RemoteObserver.RemotePropertyListener;
+import RemoteObserver.RemotePublisher;
+import SharedInterfaces.IAdministator;
+import java.io.IOException;
+import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+public class Administration extends UnicastRemoteObject implements RemotePublisher, IAdministator {
 
-/**
- *
- * @author Saya
- */
-public class Administration
-{
+    BasicPublisher bp;
+
     private final List<Player> players;
-    
+
     private final List<Room> rooms;
-    
+
     private int nextRoomID;
-    
+
     private int nextPlayerID;
-    
+
     /**
-     * Initiates a new  instance of administration
+     * Initiates a new instance of administration
      */
-    public Administration()
-    {
+    public Administration() throws RemoteException {
+        bp = new BasicPublisher(new String[]{"Room"});
         this.nextRoomID = 1;
         this.nextPlayerID = 1;
         this.players = new ArrayList<Player>();
         this.rooms = new ArrayList<Room>();
     }
-    
+
     /**
      * Updates the score of the given player
+     *
      * @param Player to update the score of
      * @param Score new score
      */
-    public void updateScore(Player player, int score)
-    {
+    public void updateScore(Player player, int score) {
         player.score = score;
     }
-    
+
     /**
-     * Tries to login the player that corresponds with the given name, using the given password
+     * Tries to login the player that corresponds with the given name, using the
+     * given password
+     *
      * @param name of the player
      * @param password of the player
      */
-    public void login(String name, String password)
-    {
+    public void login(String name, String password) {
         //TODO returnvalue voor inloggen?
-        for(Player player: players){
-            if(player.name.equals(name)){
+        for (Player player : players) {
+            if (player.name.equals(name)) {
                 //TODO check password
             }
         }
     }
-    
+
     /**
      * Initializes a new room using the given name
-     * @param name of the room to initialize
-     * @return null if the name is already taken, otherwise returns a new room with the given name
+     *
+     * @param host owner of the room to initialize
+     * @return null if the name is already taken, otherwise returns a new room.
      */
-    public Room newRoom(String name)
-    {
-        for (Room room : rooms)
-            if(room.name.equals(name))
-                return null;
-        Room room = new Room(name, nextRoomID);
-        this.nextRoomID++;
-        rooms.add(room);
+    @Override
+    public Room newRoom(Player host) {
+        Room room = null;
+        try {
+            room = new Room(nextRoomID, host);
+            this.nextRoomID++;
+            rooms.add(room);
+            bp.inform(this, "Room", null, room);
+        } catch (IOException ex) {
+            Logger.getLogger(Administration.class.getName()).log(Level.SEVERE, null, ex);
+        }
         return room;
     }
-    
+
     /**
      * Initializes a new player using the given name
+     *
      * @param name of the new player
-     * @return null if the name is already taken, otherwise returns a new player with the given name
+     * @return null if the name is already taken, otherwise returns a new player
+     * with the given name
      */
-    public Player newPlayer(String name)
-    {
-        for (Player player : players)
-            if(player.name.equals(name))
+    public Player newPlayer(String name) {
+        for (Player player : players) {
+            if (player.name.equals(name)) {
                 return null;
+            }
+        }
         //TODO fix new player. emailadres?
         //players.add(); 
         //nexPlayerID++;
         return null;
     }
-    
+
     /**
      * Gets a list of all available rooms
+     *
      * @return List of all rooms
      */
-    public List<Room> getRooms()
-    {
+    public List<Room> getRooms() {
         return rooms;
     }
-    
+
     /**
      * Adds the given player to the given room
+     *
      * @param player to add to room
-     * @param room to join
+     * @param roomID to join
      * @return true if joined, false if already in that room
      */
-    public boolean joinRoom(Player player, Room room)
-    {
-        return room.addPlayer(player);
+    @Override
+    public boolean joinRoom(Player player, int roomID) {
+        Room addToRoom = null;
+        for(Room r : rooms)
+        {
+            if(roomID == r.roomID)
+            {
+                addToRoom = r;
+                break;
+            }
+        }
+        if(addToRoom == null)
+            return false;
+                
+        return addToRoom.addPlayer(player);
+    }
+
+    @Override
+    public int startNewServer(String type) {
+        try {
+            return Server.createNewServer(type);
+        } catch (IOException ex) {
+            Logger.getLogger(Administration.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return 0;
+    }
+
+    @Override
+    public void addListener(RemotePropertyListener listener, String property) throws RemoteException {
+        bp.addListener(listener, property);
+    }
+
+    @Override
+    public void removeListener(RemotePropertyListener listener, String property) throws RemoteException {
+        bp.removeListener(listener, property);
     }
 }
