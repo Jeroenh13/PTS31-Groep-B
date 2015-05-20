@@ -1,5 +1,7 @@
 package dontcrash;
 
+import javafx.scene.paint.Color;
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -19,6 +21,7 @@ public class Character
     float direction;
     double curX;
     double curY;
+    Color color;
     
     /**
      * Initializes a new character using a player and a characterid
@@ -111,5 +114,17 @@ public class Character
     public void setY( double Y)
     {
         curY = Y;
+    }
+    
+    public void setColor(Color color){
+        this.color = color;
+    }
+    
+    public Color getColor(){
+        return this.color;
+    }
+    
+    public Point getPoint(){
+        return new Point((int)curX, (int)curY, color);
     }
 }

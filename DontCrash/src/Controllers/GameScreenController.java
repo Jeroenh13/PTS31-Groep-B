@@ -60,8 +60,7 @@ public class GameScreenController implements Initializable {
             
             @Override
             public void handle(long now) {
-                double X = 0;
-                double Y = 0;
+                Point previousPoint = c.getPoint();
                 //The normal rotation angle of 0 is right
                 //0 is Up
                 if (c.getDirection() == 0) {
@@ -81,16 +80,15 @@ public class GameScreenController implements Initializable {
                     imgview.setRotate(180);
                 }
                 draw();
-                Point p = new Point((int) c.X(), (int) c.Y(), Color.ORANGE);
+                Point currentPoint = c.getPoint();
                 if (Player1) {
-                    if (!checkPoint(p)) {
-                        positions.add(p);
+                    if (!moveToPoint(previousPoint, currentPoint)) {
                         imgview.relocate(c.X(), c.Y());
                     } else {
                         endGame(this);
                     }
                 }
-                DrawablePowerup hitdpu = checkPointPowerup(p);
+                DrawablePowerup hitdpu = checkPointPowerup(currentPoint);
                 if (hitdpu != null) {
                     redraw();
                     applyPowerup(hitdpu.powerup);
@@ -306,5 +304,55 @@ public class GameScreenController implements Initializable {
     private void setup() {
         Player p = new Player(1, "jeroen", 2,"jeroenh13@live.nl");
         c = new dontcrash.Character(p,1);
+    }
+    
+    private boolean moveToPoint(Point previousPosition, Point currentPosition) {
+        Point point;
+        if (previousPosition.X <= currentPosition.X) {
+            if (previousPosition.Y <= currentPosition.Y) {
+                for (int y = previousPosition.Y; y < currentPosition.Y; y++) {
+                    for (int x = previousPosition.X; x < currentPosition.X; x++) {
+                        point = new Point(x, y, previousPosition.color);
+                        if(checkPoint(point)){
+                            return false;
+                        }
+                        positions.add(point);
+                    }
+                }
+            } else {
+                for (int y = currentPosition.Y; y < previousPosition.Y; y++) {
+                    for (int x = previousPosition.X; x < currentPosition.X; x++) {
+                        point = new Point(x, y, previousPosition.color);
+                        if(checkPoint(point)){
+                            return false;
+                        }
+                        positions.add(point);
+                    }
+                }
+            }
+        } else {
+            if (previousPosition.Y <= currentPosition.Y) {
+                for (int y = previousPosition.Y; y < currentPosition.Y; y++) {
+                    for (int x = currentPosition.X; x < previousPosition.X; x++) {
+                        point = new Point(x, y, previousPosition.color);
+                        if(checkPoint(point)){
+                            return false;
+                        }
+                        positions.add(point);
+                    }
+                }
+            } else {
+                for (int y = currentPosition.Y; y < previousPosition.Y; y++) {
+                    for (int x = currentPosition.X; x < previousPosition.X; x++) {
+                        point = new Point(x, y, previousPosition.color);
+                        if(checkPoint(point)){
+                            return false;
+                        }
+                        positions.add(point);
+                    }
+                }
+            }
+        }
+        return true;
     }
 }
