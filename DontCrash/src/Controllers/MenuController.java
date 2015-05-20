@@ -40,6 +40,8 @@ public class MenuController  implements Observer
     @FXML TextArea taMessages;
     @FXML TextField txtMessage;
     
+    @FXML Label lblWelcomeUser;
+    
     ActualChat ac;
 
     public MenuController() {
@@ -51,7 +53,6 @@ public class MenuController  implements Observer
         }
         ac.addObserver(this);
     }
-    
     
     public void Play(Event evnt) throws IOException
     {

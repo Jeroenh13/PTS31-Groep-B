@@ -65,7 +65,13 @@ public class registerController {
             if (admin.newPlayer(Username, Password, Email) == null)
                 JOptionPane.showMessageDialog(null, "Username already in use");
             else
+            {
                 JOptionPane.showMessageDialog(null, "Account created! \n You can now login.");
+                txtUsername.setText("");
+                txtEmail.setText("");
+                txtPassword.setText("");
+                txtPasswordRepeat.setText("");
+            }
         }
         else
             JOptionPane.showMessageDialog(null, "Repeated password is not the same");

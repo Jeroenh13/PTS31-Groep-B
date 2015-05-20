@@ -18,24 +18,12 @@ public class DatabaseManager
 {
     public Connection conn;
     
-    public DatabaseManager()
-    {
-        
+    public DatabaseManager() {
     }
     
-    public void RegisterDriver()
-    {
-        try
-        {
-            Class.forName("oracle.jdbc.driver.OracleDriver");
-        } 
-        catch (ClassNotFoundException ex) 
-        {
-            System.out.println("Error: unable to load driver class!");
-            System.out.println(ex.getMessage());
-        }
-    }
-    
+    /**
+     * Opens the connection to the database
+     */
     public void OpenConn()
     {
         String URL = "jdbc:oracle:thin:@192.168.15.50:1521:fhictora";
@@ -52,6 +40,9 @@ public class DatabaseManager
         }
     }
     
+    /**
+     * Closes the connection to the database
+     */
     public void CloseConn()
     {
         try 
@@ -65,6 +56,10 @@ public class DatabaseManager
         }
     }
     
+    /**
+     * Gets a list of all players in the database.
+     * @return List of players
+     */
     public List<Player> GetPlayers()
     {
         List<Player> ps = new ArrayList<>();
@@ -90,6 +85,12 @@ public class DatabaseManager
         return ps;
     }
     
+    /**
+     * Checks if password is correct.
+     * @param username  of the player
+     * @param password that was entered 
+     * @return true if password is correct, false if not
+     */
     public boolean CheckPassword(String username, String password)
     {
         boolean succes = false;
@@ -115,6 +116,13 @@ public class DatabaseManager
         return succes;
     }
     
+    /**
+     * Add a new player to the database.
+     * @param name of the new player
+     * @param password of the new player
+     * @param email of the new player
+     * @return true if player is added, false if not
+     */
     public boolean AddPlayer(String name, String password, String email)
     {
         boolean succes = true;
@@ -136,6 +144,10 @@ public class DatabaseManager
         return succes;
     }
     
+    /**
+     * Test the connection to the database
+     * @return string from the database
+     */
     public String TestCon()
     {
         String naam = null;
