@@ -5,13 +5,17 @@
  */
 package dontcrash;
 
+import RemoteObserver.RemotePropertyListener;
+import SharedInterfaces.IGame;
+import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
 import java.util.List;
 
 /**
  *
  * @author Saya
  */
-public class Game
+public class Game extends UnicastRemoteObject implements IGame
 {
     int gameID;
     List<Player> players;
@@ -19,10 +23,15 @@ public class Game
     /**
      * Initializes a new game with the given players
      * @param players of the game
+     * @throws java.rmi.RemoteException
      */
-    public Game(List<Player> players)
+    public Game(List<Player> players) throws RemoteException
     {
         this.players = players;
+    }
+    
+    public Game()throws RemoteException{
+        
     }
     
     /**
@@ -41,5 +50,15 @@ public class Game
     public Object getHitBy(Object object)
     {
         return null;
+    }
+
+    @Override
+    public void addListener(RemotePropertyListener listener, String property) throws RemoteException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void removeListener(RemotePropertyListener listener, String property) throws RemoteException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }
