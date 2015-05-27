@@ -1,12 +1,10 @@
 package dontcrash;
 
-import RMI.Server;
 import SharedInterfaces.IChat;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import RemoteObserver.BasicPublisher;
 import RemoteObserver.RemotePropertyListener;
-import RemoteObserver.RemotePublisher;
 
 /*
  * Class for sending chat messages

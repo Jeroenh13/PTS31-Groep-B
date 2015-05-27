@@ -37,6 +37,9 @@ public class Server {
     private IAdministator admin = null;
 
     // Constructor
+    /**
+     * Constructor
+     */
     public Server() {
 
         // Print port number for registry

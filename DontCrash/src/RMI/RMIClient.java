@@ -30,11 +30,22 @@ public class RMIClient {
     private final int portNumber;
 
     // Constructor
+    /**
+     * Constructor
+     * @param ipAddress of the client
+     * @param portNumber of the client
+     */
     public RMIClient(String ipAddress, int portNumber) {
         this.ipAddress = ipAddress;
         this.portNumber = portNumber;
     }
     // Constructor
+    /**
+     * Constructor
+     * @param ipAddress of the client
+     * @param portNumber of the client
+     * @param bindingname of the client
+     */
     public RMIClient(String ipAddress, int portNumber,String bindingname) {
         this.ipAddress = ipAddress;
         this.portNumber = portNumber;

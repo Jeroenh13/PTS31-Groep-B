@@ -35,6 +35,7 @@ public class Room implements Serializable
     /**
      * Starts a new game
      * @return null if couldnt start game, game if could start game
+     * @throws RemoteException
      */
     public Game startGame() throws RemoteException
     {

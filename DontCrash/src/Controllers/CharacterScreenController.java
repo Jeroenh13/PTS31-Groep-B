@@ -35,8 +35,13 @@ public class CharacterScreenController implements Observer
     
     private ActualChat ac;
     
+    /**
+     * Constructor
+     */
     public CharacterScreenController()
-    {       
+    {
+        //Dit er misschien nog bij?
+        //ac = new ActualChat("zooi", "zooi", "zooi", "zooi");
    /*     try {
             this.ac = new ActualChat(portsAndIps.IP,portsAndIps.defaultServerPortChat ,portsAndIps.getNewPort() , "deze man");
         }
@@ -48,6 +53,11 @@ public class CharacterScreenController implements Observer
     }
     
     
+    /**
+     * Starts the game and displays the GameScreen.fxml
+     * @param evnt
+     * @throws IOException 
+     */
     public void Start(Event evnt) throws IOException
     {
         Stage stage=(Stage) btnstart.getScene().getWindow();
@@ -57,6 +67,11 @@ public class CharacterScreenController implements Observer
         stage.show();
     }    
 
+    /**
+     * Sends chat message
+     * @param e
+     * @throws RemoteException 
+     */
     public void txtChatSend(Event e) throws RemoteException
     {
         if(txtChat.getText().isEmpty())
@@ -65,6 +80,11 @@ public class CharacterScreenController implements Observer
         txtChat.setText("");
     }
     
+    /**
+     * Update method. Appends text to chatbox
+     * @param o
+     * @param o1 
+     */
     @Override
     public void update(Observable o, Object o1) {
         Platform.runLater(new Runnable() {

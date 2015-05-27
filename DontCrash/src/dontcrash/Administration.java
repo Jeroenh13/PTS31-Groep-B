@@ -44,9 +44,9 @@ public class Administration extends UnicastRemoteObject implements RemotePublish
         this.rooms = new ArrayList<Room>();
         this.dbm = new DatabaseManager();
         
-        dbm.OpenConn();
-        players = dbm.GetPlayers();
-        dbm.CloseConn();
+        dbm.openConn();
+        players = dbm.getPlayers();
+        dbm.closeConn();
     }
 
     /**
@@ -64,16 +64,17 @@ public class Administration extends UnicastRemoteObject implements RemotePublish
      *
      * @param name of the player
      * @param password of the player
+     * @return true if login succes or false if not
      */
     public boolean login(String name, String password) {
         boolean succes = false;
-        dbm.OpenConn();
+        dbm.openConn();
         for (Player player : players) {
             if (player.name.equals(name)) {
-                succes = dbm.CheckPassword(name, password);
+                succes = dbm.checkPassword(name, password);
             }
         }
-        dbm.CloseConn();
+        dbm.closeConn();
         return succes;
     }
 
@@ -115,14 +116,14 @@ public class Administration extends UnicastRemoteObject implements RemotePublish
                 return null;
         }
                 
-        dbm.OpenConn();
-        if (dbm.AddPlayer(name, password, email))
+        dbm.openConn();
+        if (dbm.addPlayer(name, password, email))
         {
             p = new Player(nextPlayerID, name, 0, email);
             players.add(p);
             nextPlayerID++;
         }
-        dbm.CloseConn();
+        dbm.closeConn();
             
         for (Player pl : players)
         {
@@ -137,6 +138,7 @@ public class Administration extends UnicastRemoteObject implements RemotePublish
      *
      * @return List of all rooms
      */
+    @Override
     public List<Room> getRooms() {
         return rooms;
     }
@@ -165,6 +167,11 @@ public class Administration extends UnicastRemoteObject implements RemotePublish
         return addToRoom.addPlayer(player);
     }
 
+    /**
+     * Starts a new server
+     * @param type of the server
+     * @return 
+     */
     @Override
     public int startNewServer(String type) {
         try {

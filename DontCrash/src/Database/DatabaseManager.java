@@ -16,15 +16,18 @@ import java.util.List;
  */
 public class DatabaseManager 
 {
-    public Connection conn;
+    private Connection conn;
     
+    /**
+     * Database manager constructor
+     */
     public DatabaseManager() {
     }
     
     /**
      * Opens the connection to the database
      */
-    public void OpenConn()
+    public void openConn()
     {
         String URL = "jdbc:oracle:thin:@192.168.15.50:1521:fhictora";
         String USER = "dbi298273";
@@ -43,7 +46,7 @@ public class DatabaseManager
     /**
      * Closes the connection to the database
      */
-    public void CloseConn()
+    public void closeConn()
     {
         try 
         {
@@ -60,7 +63,7 @@ public class DatabaseManager
      * Gets a list of all players in the database.
      * @return List of players
      */
-    public List<Player> GetPlayers()
+    public List<Player> getPlayers()
     {
         List<Player> ps = new ArrayList<>();
         try 
@@ -91,9 +94,9 @@ public class DatabaseManager
      * @param password that was entered 
      * @return true if password is correct, false if not
      */
-    public boolean CheckPassword(String username, String password)
+    public boolean checkPassword(String username, String password)
     {
-        boolean succes = false;
+        boolean succes;
         String temppassw = null;
         try 
         {
@@ -123,7 +126,7 @@ public class DatabaseManager
      * @param email of the new player
      * @return true if player is added, false if not
      */
-    public boolean AddPlayer(String name, String password, String email)
+    public boolean addPlayer(String name, String password, String email)
     {
         boolean succes = true;
         try 
@@ -148,7 +151,7 @@ public class DatabaseManager
      * Test the connection to the database
      * @return string from the database
      */
-    public String TestCon()
+    public String testCon()
     {
         String naam = null;
         try

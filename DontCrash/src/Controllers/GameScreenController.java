@@ -40,7 +40,7 @@ public class GameScreenController implements Initializable {
 
     ArrayList<Point> positions = new ArrayList<>();
     ArrayList<DrawablePowerup> powerups = new ArrayList<>();
-    boolean Player1 = true;
+    boolean player1 = true;
     dontcrash.Character c;
 
     //Powerup stuff
@@ -51,6 +51,11 @@ public class GameScreenController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
     }
 
+    /**
+     * Eventhandeler for button toggle sound. Currently start button of the game
+     * Consider changing name?
+     * @param envt 
+     */
     public void btnToggleSoundPress(Event envt) {
         setup();
         gameArea.selectAll();
@@ -80,7 +85,7 @@ public class GameScreenController implements Initializable {
                 }
                 draw();
                 Point currentPoint = c.getPoint();
-                if (Player1) {
+                if (player1) {
                     if (!moveToPoint(previousPoint, currentPoint)) {
                         imgview.relocate(c.X(), c.Y());
                     } else {
@@ -133,7 +138,7 @@ public class GameScreenController implements Initializable {
 
     private DrawablePowerup checkPointPowerup(Point loc) {
         for (DrawablePowerup p : powerups) {
-            if (p.MinX <= loc.X && p.MaxX >= loc.X && p.MinY <= loc.Y && p.MaxY >= loc.Y) {
+            if (p.minX <= loc.X && p.maxX >= loc.X && p.minY <= loc.Y && p.maxY >= loc.Y) {
                 powerups.remove(p);
                 return p;
             }
@@ -143,7 +148,7 @@ public class GameScreenController implements Initializable {
 
     private void endGame(AnimationTimer t) {
         GraphicsContext gc = game.getGraphicsContext2D();
-        if (!Player1) {
+        if (!player1) {
             //Stop timer
             t.stop();
             //Clear board for new round
@@ -152,27 +157,34 @@ public class GameScreenController implements Initializable {
             positions.clear();
             powerups.clear();
             PLAY.setDisable(false);
-            Player1 = true;
+            player1 = true;
         }
     }
 
+    /**
+     * Draw line player leaves behind
+     */
     public void draw() {
         GraphicsContext gc = game.getGraphicsContext2D();        
         gc.setLineWidth(2);
-        if(Player1)
+        if(player1)
         {
             gc.setStroke(Color.ORANGE);
             gc.strokeOval(c.X(), c.Y(), 1, 1);
         }
     }
 
+    /**
+     * Draw powerup
+     * @param dpu the powerup to be drawn
+     */
     public void drawPowerup(DrawablePowerup dpu) {
         GraphicsContext gc = game.getGraphicsContext2D();
         this.powerups.add(dpu);
         gc.setStroke(Color.CRIMSON);
         gc.setFill(Color.CRIMSON);
-        gc.fillOval(dpu.MinX, dpu.MinY, dpu.MaxX - dpu.MinX, dpu.MaxY - dpu.MinY);
-        gc.strokeOval(dpu.MinX, dpu.MinY, dpu.MaxX - dpu.MinX, dpu.MaxY - dpu.MinY);
+        gc.fillOval(dpu.minX, dpu.minY, dpu.maxX - dpu.minX, dpu.maxY - dpu.minY);
+        gc.strokeOval(dpu.minX, dpu.minY, dpu.maxX - dpu.minX, dpu.maxY - dpu.minY);
     }
 
     public void redraw() {
@@ -187,13 +199,18 @@ public class GameScreenController implements Initializable {
         gc.setStroke(Color.CRIMSON);
         gc.setFill(Color.CRIMSON);
         for (DrawablePowerup p : powerups) {
-            gc.fillOval(p.MinX, p.MinY, p.MaxX - p.MinX, p.MaxY - p.MinY);
-            gc.strokeOval(p.MinX, p.MinY, p.MaxX - p.MinX, p.MaxY - p.MinY);
+            gc.fillOval(p.minX, p.minY, p.maxX - p.minX, p.maxY - p.minY);
+            gc.strokeOval(p.minX, p.minY, p.maxX - p.minX, p.maxY - p.minY);
         }
     }
 
+    /**
+     * Makes the character of the player move to the left or right
+     * @param evt 
+     */
     public void HandleKeyPress(Event evt) {
         gameArea.setOnKeyPressed(new EventHandler<KeyEvent>() {
+            @Override
             public void handle(KeyEvent ke) {
                 if (ke.getCode() == KeyCode.LEFT) {
                     if (c.getDirection() == 0) {
@@ -212,12 +229,16 @@ public class GameScreenController implements Initializable {
         });
     }
 
+    /**
+     * Spawn a powerup on a random position on playfield of a random poweruptype
+     * @return null if no powerup spawns, return the powerup if spawned
+     */
     public DrawablePowerup spawnPowerUp() {
         Random random = new Random();
 
         if (random.nextInt(10000) < spawnChancePowerUp) {
             Powerup powerup;
-            int tijdsduur = 2 + random.nextInt(5);;
+            int tijdsduur = 2 + random.nextInt(5);
             //Get a random powerup
             switch (random.nextInt(6) + 1) {
                 case 1: //Speed up
@@ -251,9 +272,14 @@ public class GameScreenController implements Initializable {
         return null;
     }
 
+    /**
+     * Apply the effect of the picked up powerup to the player
+     * @param powerup 
+     */
     public void applyPowerup(Powerup powerup) {
         if (powerup.type == PowerupType.INCREASESPEED) {
             (new Thread() {
+                @Override
                 public void run() {
                     c.setSpeed(c.speed() * powerup.modifier);
                     try {
@@ -266,6 +292,7 @@ public class GameScreenController implements Initializable {
             }).start();
         } else if (powerup.type == PowerupType.DECREASESPEED) {
             (new Thread() {
+                @Override
                 public void run() {
                     c.setSpeed(c.speed() * powerup.modifier);
                     try {
@@ -282,6 +309,7 @@ public class GameScreenController implements Initializable {
 
         } else if (powerup.type == PowerupType.INVINCIBLE) {
             (new Thread() {
+                @Override
                 public void run() {
                     invincible = true;
                     try {

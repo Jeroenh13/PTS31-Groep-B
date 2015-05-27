@@ -5,11 +5,7 @@
  */
 package RMI;
 
-import dontcrash.Chat;
-import SharedInterfaces.IChat;
-import SharedInterfaces.IAdministator;
 import SharedInterfaces.IGame;
-import dontcrash.Administration;
 import dontcrash.Game;
 import dontcrash.portsAndIps;
 import java.io.IOException;
@@ -38,6 +34,9 @@ public class GameServer {
     private IGame game = null;
 
     // Constructor
+    /**
+     * Constructor
+     */
     public GameServer() {
 
         // Print port number for registry

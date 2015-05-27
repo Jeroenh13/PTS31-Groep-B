@@ -12,6 +12,10 @@ import RemoteObserver.RemotePublisher;
  */
  public interface IChat extends RemotePublisher  {
     
+     /**
+     * sends a message to all listeners
+     * @param msg message to be send
+     */
     public void sendMessage(String msg) throws RemoteException;
 
 }

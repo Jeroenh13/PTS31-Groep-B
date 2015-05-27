@@ -5,9 +5,9 @@
  */
 package Controllers;
 
-import Database.DatabaseManager;
 import dontcrash.Administration;
 import java.io.IOException;
+import java.rmi.RemoteException;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -32,7 +32,22 @@ public class LoginController {
     @FXML Button btnGame;
     
     Administration admin;
+
+    /**
+     * Constructor
+     * @throws RemoteException 
+     */
+    public LoginController() throws RemoteException {
+        this.admin = new Administration();
+    }
     
+    /**
+     * Handles the login button click
+     * Takes values from login fields and checks if correct
+     * If correct, shows menu.fxml
+     * @param evnt
+     * @throws IOException 
+     */
     public void btnLoginClick(Event evnt) throws IOException
     {
         String username = txtNaam.getText();
@@ -50,6 +65,11 @@ public class LoginController {
             JOptionPane.showMessageDialog(null, "foute inloggegevens");
     }
     
+    /**
+     * Handles the registreer button click
+     * @param evnt
+     * @throws IOException 
+     */
     public void btnRegistreerClick(Event evnt) throws IOException
     {
             Stage stage=(Stage) txtNaam.getScene().getWindow();
@@ -59,6 +79,12 @@ public class LoginController {
             stage.show();
     }
     
+    /**
+     * Handles the Game button click
+     * Shortcut to the gamescreen without loggin in
+     * @param evt
+     * @throws IOException 
+     */
     public void btnGameClick(Event evt) throws IOException
     {
         Stage stage=(Stage) txtNaam.getScene().getWindow();

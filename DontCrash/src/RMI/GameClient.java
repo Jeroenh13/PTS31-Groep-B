@@ -5,8 +5,6 @@
  */
 package RMI;
 
-import SharedInterfaces.IAdministator;
-import SharedInterfaces.IChat;
 import SharedInterfaces.IGame;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
@@ -31,6 +29,11 @@ public class GameClient {
     private final int portNumber;
 
     // Constructor
+    /**
+     * Constructor
+     * @param ipAddress of the client
+     * @param portNumber of the client
+     */
     public GameClient(String ipAddress, int portNumber) {
         this.ipAddress = ipAddress;
         this.portNumber = portNumber;
@@ -83,6 +86,12 @@ public class GameClient {
     }
     
     // Constructor
+    /**
+     * Constructor
+     * @param ipAddress of the client
+     * @param portNumber of the client
+     * @param bindingname of the client
+     */
     public GameClient(String ipAddress, int portNumber,String bindingname) {
         this.ipAddress = ipAddress;
         this.portNumber = portNumber;

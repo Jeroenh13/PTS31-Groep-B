@@ -10,7 +10,6 @@ import java.beans.PropertyChangeEvent;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.Observable;
-import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
