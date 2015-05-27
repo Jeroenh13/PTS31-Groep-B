@@ -5,6 +5,7 @@ package dontcrash;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,7 +36,7 @@ public class Room implements Serializable
      * Starts a new game
      * @return null if couldnt start game, game if could start game
      */
-    public Game startGame()
+    public Game startGame() throws RemoteException
     {
         if(this.currentGame != null || this.players.isEmpty())
             return null;

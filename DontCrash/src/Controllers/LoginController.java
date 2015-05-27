@@ -6,6 +6,7 @@
 package Controllers;
 
 import Database.DatabaseManager;
+import dontcrash.Administration;
 import java.io.IOException;
 import javafx.event.Event;
 import javafx.fxml.FXML;
@@ -30,16 +31,14 @@ public class LoginController {
     @FXML Parent root; 
     @FXML Button btnGame;
     
-    DatabaseManager dbm;
+    Administration admin;
     
     public void btnLoginClick(Event evnt) throws IOException
     {
-        dbm = new DatabaseManager();
         String username = txtNaam.getText();
         String password = txtPassword.getText();
         
-        dbm.OpenConn();
-        if(dbm.CheckPassword(username, password))
+        if(admin.login(username, password))
         {
             Stage stage=(Stage) txtNaam.getScene().getWindow();
             root = FXMLLoader.load(getClass().getResource("/fxml/menu.fxml"));
@@ -49,8 +48,6 @@ public class LoginController {
         }
         else
             JOptionPane.showMessageDialog(null, "foute inloggegevens");
-        
-        dbm.CloseConn();
     }
     
     public void btnRegistreerClick(Event evnt) throws IOException

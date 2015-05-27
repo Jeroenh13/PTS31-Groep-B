@@ -65,13 +65,16 @@ public class Administration extends UnicastRemoteObject implements RemotePublish
      * @param name of the player
      * @param password of the player
      */
-    public void login(String name, String password) {
-        //TODO returnvalue voor inloggen?
+    public boolean login(String name, String password) {
+        boolean succes = false;
+        dbm.OpenConn();
         for (Player player : players) {
             if (player.name.equals(name)) {
-                //TODO check password
+                succes = dbm.CheckPassword(name, password);
             }
         }
+        dbm.CloseConn();
+        return succes;
     }
 
     /**
