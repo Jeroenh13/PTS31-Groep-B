@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import java.util.Random;
 import java.util.ResourceBundle;
 import javafx.animation.AnimationTimer;
-import javafx.application.Platform;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.Initializable;
@@ -45,7 +44,7 @@ public class GameScreenController implements Initializable {
     dontcrash.Character c;
 
     //Powerup stuff
-    private int spawnChancePowerUp = 40; // Between 0 and 10000 chance every tick to spawn powerup
+    private final int spawnChancePowerUp = 40; // Between 0 and 10000 chance every tick to spawn powerup
     private boolean invincible = false;
 
     @Override
