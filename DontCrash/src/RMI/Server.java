@@ -8,7 +8,9 @@ package RMI;
 import dontcrash.Chat;
 import SharedInterfaces.IChat;
 import SharedInterfaces.IAdministator;
+import SharedInterfaces.IGame;
 import dontcrash.Administration;
+import dontcrash.Game;
 import dontcrash.portsAndIps;
 import java.io.IOException;
 import java.net.InetAddress;
@@ -35,6 +37,7 @@ public class Server {
     private Registry registry = null;
     private IChat chat = null;
     private IAdministator admin = null;
+    private IGame game = null;
 
     // Constructor
     /**
@@ -63,7 +66,22 @@ public class Server {
             System.out.println("Server: RemoteException: " + ex.getMessage());
             registry = null;
         }
-
+        
+        try {
+            game = (IGame) new Game();
+            System.out.println("Server: gameServer created");
+        } catch (RemoteException ex) {
+            System.out.println("Server: Cannot create Chat");
+            System.out.println("Server: RemoteException: " + ex.getMessage());
+            chat = null;
+        }
+        try {
+            registry.rebind("Game", game);
+        } catch (RemoteException ex) {
+            System.out.println("Server: Cannot bind student administration");
+            System.out.println("Server: RemoteException: " + ex.getMessage());
+        }
+        
         // Bind Mockeffectenbeurs using registry
         try {
             registry.rebind(bindingName, chat);
@@ -133,6 +151,33 @@ public class Server {
                     registry.rebind(bindingName, chat);
                 } catch (RemoteException ex) {
                     System.out.println("Server: Cannot bind student administration");
+                    System.out.println("Server: RemoteException: " + ex.getMessage());
+                }
+            case "Game":
+                try {
+                    game = (IGame) new Game();
+                    System.out.println("Server: gameServer created");
+                } catch (RemoteException ex) {
+                    System.out.println("Server: Cannot create Game");
+                    System.out.println("Server: RemoteException: " + ex.getMessage());
+                    game = null;
+                }
+
+                // Create registry at port number
+                try {
+                    registry = LocateRegistry.createRegistry(port);
+                    System.out.println("Server: Registry created on port number " + port);
+                } catch (RemoteException ex) {
+                    System.out.println("Server: Cannot create registry");
+                    System.out.println("Server: RemoteException: " + ex.getMessage());
+                    registry = null;
+                }
+
+                // Bind chat using registry
+                try {
+                    registry.rebind("Game", game);
+                } catch (RemoteException ex) {
+                    System.out.println("Server: Cannot bind Game");
                     System.out.println("Server: RemoteException: " + ex.getMessage());
                 }
         }

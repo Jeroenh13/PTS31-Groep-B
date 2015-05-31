@@ -5,12 +5,18 @@
  */
 package Controllers;
 
+import RMI.GameClient;
+import SharedInterfaces.IGame;
 import dontcrash.*;
 import java.net.URL;
+import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.animation.AnimationTimer;
+import javafx.application.Platform;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.Initializable;
@@ -35,8 +41,10 @@ public class GameScreenController implements Initializable {
     @FXML Circle cCircle;
     @FXML ImageView imgview;
     @FXML TextArea gameArea;
-    @FXML Canvas game;
+    @FXML Canvas gameCanvas;
     @FXML Label lblRound;
+    
+    IGame game = null;
 
     ArrayList<Point> positions = new ArrayList<>();
     ArrayList<DrawablePowerup> powerups = new ArrayList<>();
@@ -49,6 +57,14 @@ public class GameScreenController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        GameClient gc = new GameClient("10.0.0.10",1099);
+        game = gc.getGame();
+        try {
+            lblRound.setText(game.lolol());
+        } catch (RemoteException ex) {
+            Logger.getLogger(GameScreenController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
     }
 
     /**
@@ -120,7 +136,7 @@ public class GameScreenController implements Initializable {
     }
 
     private boolean checkPoint(Point loc) {
-        if (loc.Y >= game.getHeight() || loc.Y <= 0 || loc.X >= game.getWidth() || loc.X <= 0) {
+        if (loc.Y >= gameCanvas.getHeight() || loc.Y <= 0 || loc.X >= gameCanvas.getWidth() || loc.X <= 0) {
             return true;
         }
         if (!invincible) {
@@ -147,7 +163,7 @@ public class GameScreenController implements Initializable {
     }
 
     private void endGame(AnimationTimer t) {
-        GraphicsContext gc = game.getGraphicsContext2D();
+        GraphicsContext gc = gameCanvas.getGraphicsContext2D();
         if (!player1) {
             //Stop timer
             t.stop();
@@ -165,7 +181,7 @@ public class GameScreenController implements Initializable {
      * Draw line player leaves behind
      */
     public void draw() {
-        GraphicsContext gc = game.getGraphicsContext2D();        
+        GraphicsContext gc = gameCanvas.getGraphicsContext2D();        
         gc.setLineWidth(2);
         if(player1)
         {
@@ -179,7 +195,7 @@ public class GameScreenController implements Initializable {
      * @param dpu the powerup to be drawn
      */
     public void drawPowerup(DrawablePowerup dpu) {
-        GraphicsContext gc = game.getGraphicsContext2D();
+        GraphicsContext gc = gameCanvas.getGraphicsContext2D();
         this.powerups.add(dpu);
         gc.setStroke(Color.CRIMSON);
         gc.setFill(Color.CRIMSON);
@@ -188,7 +204,7 @@ public class GameScreenController implements Initializable {
     }
 
     public void redraw() {
-        GraphicsContext gc = game.getGraphicsContext2D();
+        GraphicsContext gc = gameCanvas.getGraphicsContext2D();
         gc.clearRect(0, 0, gc.getCanvas().getWidth(), gc.getCanvas().getHeight());
         //gc.setStroke(Color.ORANGE);
         gc.setLineWidth(2);
@@ -262,7 +278,7 @@ public class GameScreenController implements Initializable {
                 default:
                     return null;
             }
-            GraphicsContext gc = game.getGraphicsContext2D();
+            GraphicsContext gc = gameCanvas.getGraphicsContext2D();
             DrawablePowerup dpu = new DrawablePowerup(
                     powerup,
                     random.nextInt((int) gc.getCanvas().getWidth()),
@@ -321,7 +337,7 @@ public class GameScreenController implements Initializable {
                 }
             }).start();
         } else if (powerup.type == PowerupType.CLEARBOARD) {
-            GraphicsContext gc = game.getGraphicsContext2D();
+            GraphicsContext gc = gameCanvas.getGraphicsContext2D();
             gc.clearRect(0, 0, gc.getCanvas().getWidth(), gc.getCanvas().getHeight());
             positions.clear();
             powerups.clear();
