@@ -5,8 +5,11 @@
  */
 package Controllers;
 
+import Database.DatabaseManager;
 import RMI.Server;
 import dontcrash.Administration;
+import dontcrash.OmdatFXMLControllersMoeilijkDoen;
+import dontcrash.Player;
 import java.io.IOException;
 import java.rmi.RemoteException;
 import javafx.event.Event;
@@ -52,6 +55,13 @@ public class LoginController {
      */
     public void btnLoginClick(Event evnt) throws IOException
     {
+        OmdatFXMLControllersMoeilijkDoen.setPlayer(new Player(5, txtNaam.getText(), 300, "blabla@gmail.com"));
+            Stage stage=(Stage) txtNaam.getScene().getWindow();
+            root = FXMLLoader.load(getClass().getResource("/fxml/menu.fxml"));
+            Scene scene = new Scene(root);
+            stage.setScene(scene);
+            stage.show();
+        /*
         String username = txtNaam.getText();
         String password = txtPassword.getText();
         
@@ -64,7 +74,7 @@ public class LoginController {
             stage.show();
         }
         else
-            JOptionPane.showMessageDialog(null, "foute inloggegevens");
+            JOptionPane.showMessageDialog(null, "foute inloggegevens");*/
     }
     
     /**
@@ -104,11 +114,10 @@ public class LoginController {
      */
     public void btnNoDBClick(Event evnt) throws IOException
     { 
-            Stage stage=(Stage) txtNaam.getScene().getWindow();
-            root = FXMLLoader.load(getClass().getResource("/fxml/menu.fxml"));
-            Scene scene = new Scene(root);
-            stage.setScene(scene);
-            stage.show();  
-    
+        Stage stage=(Stage) txtNaam.getScene().getWindow();
+        root = FXMLLoader.load(getClass().getResource("/fxml/menu.fxml"));
+        Scene scene = new Scene(root);
+        stage.setScene(scene);
+        stage.show();  
     }
 }

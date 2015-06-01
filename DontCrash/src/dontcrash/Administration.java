@@ -74,11 +74,7 @@ public class Administration extends UnicastRemoteObject implements RemotePublish
     public boolean login(String name, String password) {
         boolean succes = false;
         dbm.openConn();
-        for (Player player : players) {
-            if (player.name.equals(name)) {
-                succes = dbm.checkPassword(name, password);
-            }
-        }
+        succes = dbm.checkPassword(name, password);
         dbm.closeConn();
         return succes;
     }

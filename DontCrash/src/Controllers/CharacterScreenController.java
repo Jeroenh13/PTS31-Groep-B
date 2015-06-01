@@ -69,7 +69,7 @@ public class CharacterScreenController implements Observer, RemotePropertyListen
         }    
         room = admin.getRoom(OmdatFXMLControllersMoeilijkDoen.getRoomID());
         try {
-            this.ac = new ActualChat(portsAndIps.IP,room.getRoomChatPort() ,portsAndIps.getNewPort() , "deze man","Chat"+room.getRoomId());
+            this.ac = new ActualChat(portsAndIps.IP,room.getRoomChatPort() ,portsAndIps.getNewPort() , OmdatFXMLControllersMoeilijkDoen.getPlayer().name,"Chat"+room.getRoomId());
         }
         catch (IOException ex) {
             Logger.getLogger(CharacterScreenController.class.getName()).log(Level.SEVERE, null, ex);

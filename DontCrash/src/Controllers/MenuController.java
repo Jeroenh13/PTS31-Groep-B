@@ -57,13 +57,21 @@ public class MenuController  implements Observer, RemotePropertyListener, Initia
     
     ActualChat ac;
     IAdministator admin;
+    Player p;
     
     /**
      * Create the RMI connections.
      * @throws IOException if there is a problem withe the ports
      */
     public MenuController() throws IOException {
-          
+        p = OmdatFXMLControllersMoeilijkDoen.getPlayer();
+        Platform.runLater(new Runnable() {
+
+            @Override
+            public void run() {
+                lblWelcomeUser.setText("Hello " + p.name);
+            }
+        });
         //makes connection to the admin.
         RMIClient  rmi = new RMIClient(portsAndIps.IP, 1098,"Admin");
         admin = rmi.setUpNewAdministrator();
@@ -76,7 +84,7 @@ public class MenuController  implements Observer, RemotePropertyListener, Initia
         
         //Makes connection to the chat
         try {
-            this.ac = new ActualChat(portsAndIps.IP,portsAndIps.defaultServerPortChat ,portsAndIps.getNewPort() , "deze man");
+            this.ac = new ActualChat(portsAndIps.IP,portsAndIps.defaultServerPortChat ,portsAndIps.getNewPort() , p.name);
         }
         catch (IOException ex) {
             Logger.getLogger(MenuController.class.getName()).log(Level.SEVERE, null, ex);
@@ -92,7 +100,7 @@ public class MenuController  implements Observer, RemotePropertyListener, Initia
      */
     public void createNewRoom(Event evnt) throws RemoteException, IOException
     {          
-        IRoom newRoom = admin.newRoom(new Player(1,"sg",300,"adsgd"));
+        IRoom newRoom = admin.newRoom(p);
         goToCharacterSelect(newRoom.getRoomId());
     }
     
@@ -104,7 +112,7 @@ public class MenuController  implements Observer, RemotePropertyListener, Initia
     public void joinRoom(Event evnt) throws IOException
     {
         int roomID = Integer.parseInt(txtMessage.getText());
-        if(admin.joinRoom(new Player(2,"sgads",330,"adsgdaadfa"), roomID))
+        if(admin.joinRoom(p, roomID))
             goToCharacterSelect(roomID);
         
     }
