@@ -41,6 +41,26 @@ public class ActualChat extends Observable implements RemotePropertyListener  {
         }          
     }
         
+       /**
+     * sets up the connection RMI
+     * @param ip ip of the server
+     * @param port port of the server
+     * @param portObj port wanted to export this
+     * @param name name of the player
+     * @param bindingName name of registery obj
+     */
+    public ActualChat(String ip, int port,int portObj, String name,String bindingName)
+    {
+        this.name = name;
+        RMIClient  rmi = new RMIClient(ip, port,bindingName);
+        chat = rmi.setUpChat();
+        try {
+            UnicastRemoteObject.exportObject(this, portObj);
+            chat.addListener(this, "Chat");
+        } catch (RemoteException ex) {
+            Logger.getLogger(DontCrash.class.getName()).log(Level.SEVERE, null, ex);
+        }          
+    }
 
     /**
      * if there is a new incoming message.
