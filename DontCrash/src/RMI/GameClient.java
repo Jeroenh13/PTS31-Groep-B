@@ -5,7 +5,9 @@
  */
 package RMI;
 
+import RemoteObserver.RemotePropertyListener;
 import SharedInterfaces.IGame;
+import java.beans.PropertyChangeEvent;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
@@ -16,7 +18,7 @@ import java.util.Scanner;
  *
  * @author Bas
  */
-public class GameClient {
+public class GameClient implements RemotePropertyListener{
 
     // Set binding name for student administration
     private String bindingName = "Game";
@@ -62,11 +64,11 @@ public class GameClient {
             try {
                 game = (IGame) registry.lookup(bindingName);
             } catch (RemoteException ex) {
-                System.out.println("Client: Cannot bind chat");
+                System.out.println("Client: Cannot bind game");
                 System.out.println("Client: RemoteException: " + ex.getMessage());
                 game = null;
             } catch (NotBoundException ex) {
-                System.out.println("Client: Cannot bind chat");
+                System.out.println("Client: Cannot bind game");
                 System.out.println("Client: NotBoundException: " + ex.getMessage());
                 game = null;
             }
@@ -79,9 +81,9 @@ public class GameClient {
 
         // Print result binding student administration
         if (game != null) {
-            System.out.println("Client: chat bound");
+            System.out.println("Client: game bound");
         } else {
-            System.out.println("Client: chat is null pointer");
+            System.out.println("Client: game is null pointer");
         }
     }
     
@@ -104,21 +106,13 @@ public class GameClient {
         
     }
     
-     public static void main(String[] args) {
+    public IGame getGame()
+    {
+        return game;
+    }
 
-        // Welcome message
-        System.out.println("CLIENT USING REGISTRY");
-
-        // Get ip address of server
-        Scanner input = new Scanner(System.in);
-        System.out.print("Client: Enter IP address of server: ");
-        String ipAddress = input.nextLine();
-
-        // Get port number
-        System.out.print("Client: Enter port number: ");
-        int portNumber = input.nextInt();
-
-        // Create client
-        GameClient client = new GameClient(ipAddress, portNumber);
+    @Override
+    public void propertyChange(PropertyChangeEvent evt) throws RemoteException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

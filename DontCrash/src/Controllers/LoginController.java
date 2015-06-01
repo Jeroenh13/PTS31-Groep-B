@@ -5,6 +5,7 @@
  */
 package Controllers;
 
+import RMI.Server;
 import dontcrash.Administration;
 import java.io.IOException;
 import java.rmi.RemoteException;
@@ -90,6 +91,7 @@ public class LoginController {
     {
         Stage stage=(Stage) txtNaam.getScene().getWindow();
         root = FXMLLoader.load(getClass().getResource("/fxml/GameScreen.fxml"));
+        //int port = Server.createNewServer("Game");
         Scene scene = new Scene(root);
         stage.setScene(scene);
         stage.show();

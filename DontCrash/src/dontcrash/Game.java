@@ -51,6 +51,12 @@ public class Game extends UnicastRemoteObject implements IGame
     {
         return null;
     }
+    
+    @Override
+    public String lolol()
+    {
+        return "This works";      
+    }
 
     @Override
     public void addListener(RemotePropertyListener listener, String property) throws RemoteException {
