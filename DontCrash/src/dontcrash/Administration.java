@@ -94,6 +94,8 @@ public class Administration extends UnicastRemoteObject implements RemotePublish
         Room room = null;
         try {
             room = new Room(nextRoomID, host);
+            
+            room.chatPort = Server.createNewServer("Chat","Chat"+room.roomID);
             this.nextRoomID++;
             rooms.add(room);
             bp.inform(this, "Room", null, room);

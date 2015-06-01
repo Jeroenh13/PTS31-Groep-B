@@ -15,7 +15,7 @@ import java.net.SocketException;
  */
 public class portsAndIps {
 
-    public final static String IP = "192.168.177.1";
+    public final static String IP = "169.254.18.27";
     public final static int defaultServerPortChat = 1099;
     private static int lastPort = 1100;
     

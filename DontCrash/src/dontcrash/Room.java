@@ -3,6 +3,7 @@
  */
 package dontcrash;
 
+import RMI.Server;
 import SharedInterfaces.IRoom;
 import java.io.IOException;
 import java.io.Serializable;
@@ -28,7 +29,6 @@ public class Room implements Serializable, IRoom
     {
         players = new ArrayList<Player>();
         this.roomID = roomID;
-        chatPort = portsAndIps.getNewPort();
         this.host = host;
         players.add(host);
     }

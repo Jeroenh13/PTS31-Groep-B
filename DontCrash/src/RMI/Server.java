@@ -60,33 +60,19 @@ public class Server {
         // Create registry at port number
         try {
             registry = LocateRegistry.createRegistry(portNumber);
+            registry.rebind("Registry", registry);
             System.out.println("Server: Registry created on port number " + portNumber);
         } catch (RemoteException ex) {
             System.out.println("Server: Cannot create registry");
             System.out.println("Server: RemoteException: " + ex.getMessage());
             registry = null;
         }
-        
-        try {
-            game = (IGame) new Game();
-            System.out.println("Server: gameServer created");
-        } catch (RemoteException ex) {
-            System.out.println("Server: Cannot create Chat");
-            System.out.println("Server: RemoteException: " + ex.getMessage());
-            chat = null;
-        }
-        try {
-            registry.rebind("Game", game);
-        } catch (RemoteException ex) {
-            System.out.println("Server: Cannot bind student administration");
-            System.out.println("Server: RemoteException: " + ex.getMessage());
-        }
-        
+                
         // Bind Mockeffectenbeurs using registry
         try {
             registry.rebind(bindingName, chat);
         } catch (RemoteException ex) {
-            System.out.println("Server: Cannot bind student administration");
+            System.out.println("Server: Cannot bind chat");
             System.out.println("Server: RemoteException: " + ex.getMessage());
         }
     }
@@ -97,7 +83,7 @@ public class Server {
         System.out.println("Server: Port number " + port);
 
         switch (usage) {
-            case "Administrator":     
+            case "Administrator": 
                 try {
                     admin = (IAdministator) new Administration();
                     System.out.println("Server:  newServerObj created");
@@ -150,9 +136,10 @@ public class Server {
                 try {
                     registry.rebind(bindingName, chat);
                 } catch (RemoteException ex) {
-                    System.out.println("Server: Cannot bind student administration");
+                    System.out.println("Server: Cannot bind Chat");
                     System.out.println("Server: RemoteException: " + ex.getMessage());
                 }
+            break;
             case "Game":
                 try {
                     game = (IGame) new Game();
@@ -231,10 +218,19 @@ public class Server {
         Server server = new Server();
         bindingName = "Admin";
         Server serverCommands = new Server(1098, "Administrator");
+        Server gameServer = new Server(1097,"Game");
     }
 
     public static int createNewServer(String type) throws IOException {
         int portnr = portsAndIps.getNewPort();
+        Server server = new Server(portnr,type);
+        return portnr;
+    }
+
+
+    public static int createNewServer(String type,String bn) throws IOException {
+        int portnr = portsAndIps.getNewPort();
+        bindingName = bn;
         Server server = new Server(portnr,type);
         return portnr;
     }

@@ -60,7 +60,7 @@ public class CharacterScreenController implements Observer, RemotePropertyListen
     public CharacterScreenController() throws IOException
     {
         
-        RMIClient  rmi = new RMIClient("192.168.177.1", 1098,"Admin");
+        RMIClient  rmi = new RMIClient(portsAndIps.IP, 1098,"Admin");
         admin = rmi.setUpNewAdministrator();
         try {
             UnicastRemoteObject.exportObject(this, portsAndIps.getNewPort());
@@ -69,7 +69,7 @@ public class CharacterScreenController implements Observer, RemotePropertyListen
         }    
         room = admin.getRoom(OmdatFXMLControllersMoeilijkDoen.getRoomID());
         try {
-            this.ac = new ActualChat(portsAndIps.IP,room.getRoomChatPort() ,portsAndIps.getNewPort() , "deze man");
+            this.ac = new ActualChat(portsAndIps.IP,room.getRoomChatPort() ,portsAndIps.getNewPort() , "deze man","Chat"+room.getRoomId());
         }
         catch (IOException ex) {
             Logger.getLogger(CharacterScreenController.class.getName()).log(Level.SEVERE, null, ex);
