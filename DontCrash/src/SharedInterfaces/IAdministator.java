@@ -30,14 +30,14 @@ public interface IAdministator  extends RemotePublisher {
      * @param host owner of the room to initialize
      * @return null if the name is already taken, otherwise returns a new room.
      */
-    public Room newRoom(Player host)throws RemoteException;
+    public IRoom newRoom(Player host)throws RemoteException;
     
     /**
      * Gets a list of all available rooms
      *
      * @return List of all rooms
      */
-    public List<Room> getRooms() throws RemoteException;
+    public List<IRoom> getRooms() throws RemoteException;
     
     /**
      * Adds the given player to the given room
@@ -45,6 +45,9 @@ public interface IAdministator  extends RemotePublisher {
      * @param player to add to room
      * @param roomID to join
      * @return true if joined, false if already in that room
+     * @throws java.rmi.RemoteException
      */
     public boolean joinRoom(Player player, int roomID) throws RemoteException;
+    
+    public IRoom getRoom(int roomID) throws RemoteException;
 }

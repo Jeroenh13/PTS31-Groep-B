@@ -3,13 +3,14 @@
  */
 package dontcrash;
 
+import SharedInterfaces.IRoom;
 import java.io.IOException;
 import java.io.Serializable;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Room implements Serializable
+public class Room implements Serializable, IRoom
 {
     public int roomID;
     public transient List<Player> players;
@@ -62,14 +63,38 @@ public class Room implements Serializable
      * removes the given player from this room
      * @param player to remove from room
      */
-    public void verlaatRoom(Player player)
+    public void exitRoom(Player player)
     {
         players.remove(player);
     }
     
+    /**
+     * returns roomid
+     * @return returns roomID
+     */
     @Override
     public String toString()
     {
         return String.valueOf(roomID);
+    }
+
+    /**
+     * gets the roomId
+     * @return 
+     * @throws RemoteException 
+     */
+    @Override
+    public int getRoomId() throws RemoteException {
+        return roomID;
+    }
+
+    /**
+     * 
+     * @return 
+     * @throws RemoteException 
+     */
+    @Override
+    public int getRoomChatPort() throws RemoteException {
+        return chatPort;
     }
 }

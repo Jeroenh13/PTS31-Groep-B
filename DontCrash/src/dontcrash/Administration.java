@@ -6,6 +6,7 @@ import RemoteObserver.BasicPublisher;
 import RemoteObserver.RemotePropertyListener;
 import RemoteObserver.RemotePublisher;
 import SharedInterfaces.IAdministator;
+import SharedInterfaces.IRoom;
 import java.io.IOException;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
@@ -25,7 +26,7 @@ public class Administration extends UnicastRemoteObject implements RemotePublish
 
     private final List<Player> players;
 
-    private final List<Room> rooms;
+    private final List<IRoom> rooms;
 
     private int nextRoomID;
 
@@ -41,12 +42,16 @@ public class Administration extends UnicastRemoteObject implements RemotePublish
         bp = new BasicPublisher(new String[]{"Room"});
         this.nextRoomID = 1;
         this.nextPlayerID = 1;
-        this.rooms = new ArrayList<Room>();
+        this.rooms = new ArrayList<IRoom>();
         this.dbm = new DatabaseManager();
         
+        
+        this.players = new ArrayList<Player>();
+        /*
         dbm.openConn();
         players = dbm.getPlayers();
         dbm.closeConn();
+        */
     }
 
     /**
@@ -85,7 +90,7 @@ public class Administration extends UnicastRemoteObject implements RemotePublish
      * @return null if the name is already taken, otherwise returns a new room.
      */
     @Override
-    public Room newRoom(Player host) {
+    public IRoom newRoom(Player host) {
         Room room = null;
         try {
             room = new Room(nextRoomID, host);
@@ -95,7 +100,7 @@ public class Administration extends UnicastRemoteObject implements RemotePublish
         } catch (IOException ex) {
             Logger.getLogger(Administration.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return room;
+        return (IRoom)room;
     }
 
     /**
@@ -139,7 +144,7 @@ public class Administration extends UnicastRemoteObject implements RemotePublish
      * @return List of all rooms
      */
     @Override
-    public List<Room> getRooms() {
+    public List<IRoom> getRooms() {
         return rooms;
     }
 
@@ -151,11 +156,11 @@ public class Administration extends UnicastRemoteObject implements RemotePublish
      * @return true if joined, false if already in that room
      */
     @Override
-    public boolean joinRoom(Player player, int roomID) {
-        Room addToRoom = null;
-        for(Room r : rooms)
+    public boolean joinRoom(Player player, int roomID) throws RemoteException {
+        IRoom addToRoom = null;
+        for(IRoom r : rooms)
         {
-            if(roomID == r.roomID)
+            if(roomID == r.getRoomId())
             {
                 addToRoom = r;
                 break;
@@ -190,5 +195,19 @@ public class Administration extends UnicastRemoteObject implements RemotePublish
     @Override
     public void removeListener(RemotePropertyListener listener, String property) throws RemoteException {
         bp.removeListener(listener, property);
+    }
+
+    /**
+     * Returns the room with the given ID
+     * @param roomID requested room
+     * @return room with matching id or null
+     * @throws RemoteException RMI connection fails.
+     */
+    @Override
+    public IRoom getRoom(int roomID) throws RemoteException {
+       for(IRoom r : rooms)
+            if(r.getRoomId() == roomID)
+                return r;
+       return null;
     }
 }

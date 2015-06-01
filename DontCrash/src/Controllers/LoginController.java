@@ -30,6 +30,7 @@ public class LoginController {
     @FXML Button btnRegistreer;
     @FXML Parent root; 
     @FXML Button btnGame;
+    @FXML Button btnNoDBCLick;
     
     Administration admin;
 
@@ -92,5 +93,20 @@ public class LoginController {
         Scene scene = new Scene(root);
         stage.setScene(scene);
         stage.show();
+    }
+    
+    /**
+     * cause fuck databases.
+     * @param evnt
+     * @throws java.io.IOException
+     */
+    public void btnNoDBClick(Event evnt) throws IOException
+    { 
+            Stage stage=(Stage) txtNaam.getScene().getWindow();
+            root = FXMLLoader.load(getClass().getResource("/fxml/menu.fxml"));
+            Scene scene = new Scene(root);
+            stage.setScene(scene);
+            stage.show();  
+    
     }
 }

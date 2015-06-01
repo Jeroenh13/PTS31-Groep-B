@@ -8,24 +8,29 @@ package Controllers;
 import RMI.RMIClient;
 import RemoteObserver.RemotePropertyListener;
 import SharedInterfaces.IAdministator;
+import SharedInterfaces.IRoom;
 import dontcrash.ActualChat;
 import dontcrash.DontCrash;
+import dontcrash.OmdatFXMLControllersMoeilijkDoen;
 import dontcrash.Player;
 import dontcrash.Room;
 import dontcrash.portsAndIps;
 import java.beans.PropertyChangeEvent;
 import java.io.IOException;
+import java.net.URL;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Platform;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -34,13 +39,11 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-import javax.swing.JOptionPane;
-
 /**
  *
  * @author Kitty
  */
-public class MenuController  implements Observer, RemotePropertyListener
+public class MenuController  implements Observer, RemotePropertyListener, Initializable
 {
     @FXML Button btnCreate;
     @FXML Button btnJoin;
@@ -89,8 +92,8 @@ public class MenuController  implements Observer, RemotePropertyListener
      */
     public void createNewRoom(Event evnt) throws RemoteException, IOException
     {          
-        Room newRoom = admin.newRoom(new Player(1,"sg",300,"adsgd"));
-        goToCharacterSelect();
+        IRoom newRoom = admin.newRoom(new Player(1,"sg",300,"adsgd"));
+        goToCharacterSelect(newRoom.getRoomId());
     }
     
     /**
@@ -100,31 +103,36 @@ public class MenuController  implements Observer, RemotePropertyListener
      */
     public void joinRoom(Event evnt) throws IOException
     {
-        int a = Integer.parseInt(txtMessage.getText());
-        boolean b = admin.joinRoom(new Player(2,"sgads",330,"adsgdaadfa"), a);
-        if(b)
-        goToCharacterSelect();
-        else
-            JOptionPane.showMessageDialog(null, "SHAAAT UPPPP");
+        int roomID = Integer.parseInt(txtMessage.getText());
+        if(admin.joinRoom(new Player(2,"sgads",330,"adsgdaadfa"), roomID))
+            goToCharacterSelect(roomID);
+        
     }
     
     /**
      * switches the screen to character select.
      * @throws IOException if the FXML file cannot be found.
      */
-    public void goToCharacterSelect() throws IOException
+    public void goToCharacterSelect(int roomID) throws IOException
     {      
+        OmdatFXMLControllersMoeilijkDoen.setRoomID(roomID);
         Stage stage=(Stage) btnCreate.getScene().getWindow();
-        root = FXMLLoader.load(getClass().getResource("/fxml/CharacterSelect.fxml"));
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(getClass().getResource("/fxml/CharacterSelect.fxml"));
+        loader.load();
+        root = loader.getRoot();
         Scene scene = new Scene(root);
         ac.removeObserver();
         ac.deleteObserver(this);
         stage.setScene(scene);
+        //Shit die toch niet werkt dus leuke class voor gemaakt 
+        CharacterScreenController csc = loader.getController();
+        csc.setRoomId(roomID);
         stage.show();    
     }
     
     /**
-     * Sends a message to the server for the chatbox
+     * Sends a message to the server for the chat
      * @param e onEnterPressEvent
      * @throws RemoteException if RMI Connection fails
      */
@@ -159,11 +167,11 @@ public class MenuController  implements Observer, RemotePropertyListener
      */
     @Override
     public void propertyChange(PropertyChangeEvent evt) throws RemoteException {
-        ArrayList<Room> gamerooms = (ArrayList<Room>) admin.getRooms();
+        ArrayList<IRoom> gamerooms = (ArrayList<IRoom>) admin.getRooms();
         Platform.runLater(new Runnable(){
             @Override
             public void run(){
-            for (Room r:gamerooms)
+            for (IRoom r:gamerooms)
             {
                 Label label = new Label(r.toString());
                 
@@ -171,5 +179,9 @@ public class MenuController  implements Observer, RemotePropertyListener
             }
         }
     });
+    }
+
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
     }
 }
