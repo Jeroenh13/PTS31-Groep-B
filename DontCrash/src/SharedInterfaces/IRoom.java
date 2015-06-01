@@ -23,7 +23,7 @@ public interface IRoom extends Serializable
     
     public ArrayList<Player> getPlayers()throws RemoteException;
     
-    public Game startGame()throws RemoteException;
+    public IGame startGame()throws RemoteException;
 
     /**
      * Adds player to this room, if the player isnt already in this room
@@ -45,4 +45,6 @@ public interface IRoom extends Serializable
     
     public int getRoomId() throws RemoteException;
     public int getRoomChatPort() throws RemoteException;
+
+    public IGame getCurrentGame();
 }

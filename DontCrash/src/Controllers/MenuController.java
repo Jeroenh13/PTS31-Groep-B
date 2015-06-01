@@ -55,9 +55,9 @@ public class MenuController  implements Observer, RemotePropertyListener, Initia
     
     @FXML Label lblWelcomeUser;
     
-    ActualChat ac;
-    IAdministator admin;
-    Player p;
+    private ActualChat ac;
+    private IAdministator admin;
+    private Player p;
     
     /**
      * Create the RMI connections.
@@ -72,8 +72,9 @@ public class MenuController  implements Observer, RemotePropertyListener, Initia
                 lblWelcomeUser.setText("Hello " + p.name);
             }
         });
+        
         //makes connection to the admin.
-        RMIClient  rmi = new RMIClient(portsAndIps.IP, 1098,"Admin");
+        RMIClient  rmi = new RMIClient(portsAndIps.IP, 1096,"Admin");
         admin = rmi.setUpNewAdministrator();
         try {
             UnicastRemoteObject.exportObject(this, portsAndIps.getNewPort());

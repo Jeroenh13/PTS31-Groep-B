@@ -8,10 +8,12 @@ package Controllers;
 import RMI.RMIClient;
 import RemoteObserver.RemotePropertyListener;
 import SharedInterfaces.IAdministator;
+import SharedInterfaces.IGame;
 import SharedInterfaces.IRoom;
 import dontcrash.ActualChat;
 import dontcrash.DontCrash;
 import dontcrash.OmdatFXMLControllersMoeilijkDoen;
+import dontcrash.Room;
 import dontcrash.portsAndIps;
 import java.beans.PropertyChangeEvent;
 import java.io.IOException;
@@ -59,8 +61,7 @@ public class CharacterScreenController implements Observer, RemotePropertyListen
      */
     public CharacterScreenController() throws IOException
     {
-        
-        RMIClient  rmi = new RMIClient(portsAndIps.IP, 1098,"Admin");
+        RMIClient  rmi = new RMIClient(portsAndIps.IP, 1096,"Admin");
         admin = rmi.setUpNewAdministrator();
         try {
             UnicastRemoteObject.exportObject(this, portsAndIps.getNewPort());
@@ -86,6 +87,7 @@ public class CharacterScreenController implements Observer, RemotePropertyListen
      */
     public void Start(Event evnt) throws IOException
     {
+        IGame game = room.startGame();
         Stage stage=(Stage) btnstart.getScene().getWindow();
         root = FXMLLoader.load(getClass().getResource("/fxml/GameScreen.fxml"));
         Scene scene = new Scene(root);

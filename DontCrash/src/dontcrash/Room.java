@@ -3,19 +3,24 @@
  */
 package dontcrash;
 
+import Controllers.CharacterScreenController;
 import RMI.Server;
+import SharedInterfaces.IGame;
 import SharedInterfaces.IRoom;
 import java.io.IOException;
 import java.io.Serializable;
 import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Room implements Serializable, IRoom
 {
     public int roomID;
     public transient List<Player> players;
-    public Game currentGame;
+    public IGame currentGame;
     public int chatPort;
     public Player host;
     
@@ -27,7 +32,7 @@ public class Room implements Serializable, IRoom
      */
     public Room(int roomID,Player host) throws IOException
     {
-        players = new ArrayList<Player>();
+        players = new ArrayList<>();
         this.roomID = roomID;
         this.host = host;
         players.add(host);
@@ -38,14 +43,16 @@ public class Room implements Serializable, IRoom
      * @return null if couldnt start game, game if could start game
      * @throws RemoteException
      */
-    public Game startGame() throws RemoteException
+    public IGame startGame() throws RemoteException
     {
-        if(this.currentGame != null || this.players.isEmpty())
-            return null;
+        //if(this.currentGame != null || this.players.isEmpty())
+        //    return null;
         Game game = new Game(this.players);
         this.currentGame = game;
         return game;
     }
+ 
+    
     /**
      * Adds player to this room, if the player isnt already in this room
      * @param player
@@ -101,5 +108,10 @@ public class Room implements Serializable, IRoom
     @Override
     public ArrayList<Player> getPlayers() throws RemoteException {
         return (ArrayList<Player>) players;
+    }
+
+    @Override
+    public IGame getCurrentGame() {
+        return currentGame;
     }
 }

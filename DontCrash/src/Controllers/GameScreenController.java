@@ -6,8 +6,12 @@
 package Controllers;
 
 import RMI.GameClient;
+import RMI.RMIClient;
+import SharedInterfaces.IAdministator;
 import SharedInterfaces.IGame;
+import SharedInterfaces.IRoom;
 import dontcrash.*;
+import java.io.IOException;
 import java.net.URL;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
@@ -37,13 +41,19 @@ import javafx.scene.paint.Color;
  */
 public class GameScreenController implements Initializable {
 
-    @FXML Button PLAY;
-    @FXML Circle cCircle;
-    @FXML ImageView imgview;
-    @FXML TextArea gameArea;
-    @FXML Canvas gameCanvas;
-    @FXML Label lblRound;
-    
+    @FXML
+    Button PLAY;
+    @FXML
+    Circle cCircle;
+    @FXML
+    ImageView imgview;
+    @FXML
+    TextArea gameArea;
+    @FXML
+    Canvas gameCanvas;
+    @FXML
+    Label lblRound;
+
     IGame game = null;
 
     ArrayList<Point> positions = new ArrayList<>();
@@ -51,50 +61,54 @@ public class GameScreenController implements Initializable {
     boolean player1 = true;
     dontcrash.Character c;
 
+    private IAdministator admin;
+
     //Powerup stuff
     private final int spawnChancePowerUp = 40; // Between 0 and 10000 chance every tick to spawn powerup
     private boolean invincible = false;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        GameClient gc = new GameClient("10.0.0.10",1099);
-        game = gc.getGame();
+        RMIClient rmi = new RMIClient(portsAndIps.IP, 1096, "Admin");
+        admin = rmi.setUpNewAdministrator();
         try {
-            lblRound.setText(game.lolol());
+            IRoom r = admin.getRoom(OmdatFXMLControllersMoeilijkDoen.getRoomID());
+            IGame g = r.getCurrentGame();
+            lblRound.setText(g.lolol());
         } catch (RemoteException ex) {
             Logger.getLogger(GameScreenController.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
     }
 
     /**
      * Eventhandeler for button toggle sound. Currently start button of the game
      * Consider changing name?
-     * @param envt 
+     *
+     * @param envt
      */
     public void btnToggleSoundPress(Event envt) {
         setup();
         gameArea.selectAll();
         AnimationTimer t;
         t = new AnimationTimer() {
-            
+
             @Override
             public void handle(long now) {
                 Point previousPoint = c.getPoint();
                 //The normal rotation angle of 0 is right
                 //0 is Up
                 if (c.getDirection() == 0) {
-                    c.setY( c.Y() - c.speed());
+                    c.setY(c.Y() - c.speed());
                     imgview.setRotate(270);
-                //1 is Right
+                    //1 is Right
                 } else if (c.getDirection() == 1) {
                     c.setX(c.X() + c.speed());
                     imgview.setRotate(0);
-                //2 is Bottom
+                    //2 is Bottom
                 } else if (c.getDirection() == 2) {
                     c.setY(c.Y() + c.speed());
                     imgview.setRotate(90);
-                //3 is Left
+                    //3 is Left
                 } else if (c.getDirection() == 3) {
                     c.setX(c.X() - c.speed());
                     imgview.setRotate(180);
@@ -121,7 +135,7 @@ public class GameScreenController implements Initializable {
 
             @Override
             public void start() {
-                
+
                 imgview.relocate(50, 20);
                 c.setX(imgview.getLayoutX());
                 c.setY(imgview.getLayoutY());
@@ -181,10 +195,9 @@ public class GameScreenController implements Initializable {
      * Draw line player leaves behind
      */
     public void draw() {
-        GraphicsContext gc = gameCanvas.getGraphicsContext2D();        
+        GraphicsContext gc = gameCanvas.getGraphicsContext2D();
         gc.setLineWidth(2);
-        if(player1)
-        {
+        if (player1) {
             gc.setStroke(Color.ORANGE);
             gc.strokeOval(c.X(), c.Y(), 1, 1);
         }
@@ -192,6 +205,7 @@ public class GameScreenController implements Initializable {
 
     /**
      * Draw powerup
+     *
      * @param dpu the powerup to be drawn
      */
     public void drawPowerup(DrawablePowerup dpu) {
@@ -222,7 +236,8 @@ public class GameScreenController implements Initializable {
 
     /**
      * Makes the character of the player move to the left or right
-     * @param evt 
+     *
+     * @param evt
      */
     public void HandleKeyPress(Event evt) {
         gameArea.setOnKeyPressed(new EventHandler<KeyEvent>() {
@@ -235,18 +250,19 @@ public class GameScreenController implements Initializable {
                         c.setDirection(c.getDirection() - 1);
                     }
                 } else if (ke.getCode() == KeyCode.RIGHT) {
-                    if (c.getDirection()  == 3) {
+                    if (c.getDirection() == 3) {
                         c.setDirection(0);
                     } else {
                         c.setDirection(c.getDirection() + 1);
                     }
-                } 
+                }
             }
         });
     }
 
     /**
      * Spawn a powerup on a random position on playfield of a random poweruptype
+     *
      * @return null if no powerup spawns, return the powerup if spawned
      */
     public DrawablePowerup spawnPowerUp() {
@@ -290,7 +306,8 @@ public class GameScreenController implements Initializable {
 
     /**
      * Apply the effect of the picked up powerup to the player
-     * @param powerup 
+     *
+     * @param powerup
      */
     public void applyPowerup(Powerup powerup) {
         if (powerup.type == PowerupType.INCREASESPEED) {
@@ -303,7 +320,7 @@ public class GameScreenController implements Initializable {
                     } catch (Exception ex) {
                         System.out.println(ex.getMessage());
                     }
-                    c.setSpeed(c.speed()/powerup.modifier);
+                    c.setSpeed(c.speed() / powerup.modifier);
                 }
             }).start();
         } else if (powerup.type == PowerupType.DECREASESPEED) {
@@ -316,7 +333,7 @@ public class GameScreenController implements Initializable {
                     } catch (Exception ex) {
                         System.out.println(ex.getMessage());
                     }
-                    c.setSpeed(c.speed()/powerup.modifier);
+                    c.setSpeed(c.speed() / powerup.modifier);
                 }
             }).start();
         } else if (powerup.type == PowerupType.INCREASESIZE) {
@@ -345,10 +362,10 @@ public class GameScreenController implements Initializable {
     }
 
     private void setup() {
-        Player p = new Player(1, "jeroen", 2,"jeroenh13@live.nl");
-        c = new dontcrash.Character(p,1);
+        Player p = new Player(1, "jeroen", 2, "jeroenh13@live.nl");
+        c = new dontcrash.Character(p, 1);
     }
-    
+
     private boolean moveToPoint(Point previousPosition, Point currentPosition) {
         Point point;
         if (previousPosition.X <= currentPosition.X) {
@@ -356,7 +373,7 @@ public class GameScreenController implements Initializable {
                 for (int y = previousPosition.Y; y < currentPosition.Y; y++) {
                     for (int x = previousPosition.X; x < currentPosition.X; x++) {
                         point = new Point(x, y, previousPosition.color);
-                        if(checkPoint(point)){
+                        if (checkPoint(point)) {
                             return false;
                         }
                         positions.add(point);
@@ -366,7 +383,7 @@ public class GameScreenController implements Initializable {
                 for (int y = currentPosition.Y; y < previousPosition.Y; y++) {
                     for (int x = previousPosition.X; x < currentPosition.X; x++) {
                         point = new Point(x, y, previousPosition.color);
-                        if(checkPoint(point)){
+                        if (checkPoint(point)) {
                             return false;
                         }
                         positions.add(point);
@@ -378,7 +395,7 @@ public class GameScreenController implements Initializable {
                 for (int y = previousPosition.Y; y < currentPosition.Y; y++) {
                     for (int x = currentPosition.X; x < previousPosition.X; x++) {
                         point = new Point(x, y, previousPosition.color);
-                        if(checkPoint(point)){
+                        if (checkPoint(point)) {
                             return false;
                         }
                         positions.add(point);
@@ -388,7 +405,7 @@ public class GameScreenController implements Initializable {
                 for (int y = currentPosition.Y; y < previousPosition.Y; y++) {
                     for (int x = currentPosition.X; x < previousPosition.X; x++) {
                         point = new Point(x, y, previousPosition.color);
-                        if(checkPoint(point)){
+                        if (checkPoint(point)) {
                             return false;
                         }
                         positions.add(point);
