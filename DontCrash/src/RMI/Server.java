@@ -60,6 +60,7 @@ public class Server {
         // Create registry at port number
         try {
             registry = LocateRegistry.createRegistry(portNumber);
+            registry.rebind("Registry", registry);
             System.out.println("Server: Registry created on port number " + portNumber);
         } catch (RemoteException ex) {
             System.out.println("Server: Cannot create registry");
