@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.text.*?>
 <?import javafx.scene.image.*?>
 <?import javafx.scene.paint.*?>
 <?import javafx.scene.*?>
@@ -11,18 +12,42 @@
 
 <SplitPane dividerPositions="0.15213675213675212" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="734.0" prefWidth="1172.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.GameScreenController">
   <items>
-    <AnchorPane id="apStats" minHeight="0.0" minWidth="0.0" prefHeight="732.0" prefWidth="260.0">
+    <AnchorPane id="apStats" minHeight="0.0" minWidth="0.0" prefHeight="732.0" prefWidth="260.0" style="-fx-background-color: #7da7d9;">
          <children>
-            <Label fx:id="lblRound" layoutX="20.0" layoutY="14.0" text="Dont Crash Round 1!" />
-            <Label layoutX="20.0" layoutY="35.0" text="Player1 : 0" />
-            <Label layoutX="20.0" layoutY="55.0" text="Player2 : 0" />
-            <Label layoutX="20.0" layoutY="75.0" text="Player3 : 0" />
-            <Label layoutX="20.0" layoutY="145.0" text="Rounds to go: 1" />
-            <Label layoutX="20.0" layoutY="93.0" text="Player4 : 0" />
-            <TextArea layoutY="468.0" prefHeight="206.0" prefWidth="169.0" />
-            <TextField layoutY="676.0" prefHeight="25.0" prefWidth="169.0" />
-            <Button layoutY="701.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="169.0" text="Stuur" />
-            <Button id="btnToggle" fx:id="PLAY" layoutX="2.0" layoutY="274.0" mnemonicParsing="false" onAction="#btnToggleSoundPress" prefHeight="25.0" prefWidth="169.0" text="Start" />
+            <Label fx:id="lblRound" layoutX="20.0" layoutY="14.0" text="Round 1">
+               <font>
+                  <Font name="NeuropolXRg-Regular" size="18.0" />
+               </font></Label>
+            <Label layoutX="20.0" layoutY="35.0" text="Player1 : 0">
+               <font>
+                  <Font name="NeuropolXRg-Regular" size="15.0" />
+               </font></Label>
+            <Label layoutX="20.0" layoutY="55.0" text="Player2 : 0">
+               <font>
+                  <Font name="NeuropolXRg-Regular" size="15.0" />
+               </font></Label>
+            <Label layoutX="20.0" layoutY="75.0" text="Player3 : 0">
+               <font>
+                  <Font name="NeuropolXRg-Regular" size="15.0" />
+               </font></Label>
+            <Label layoutX="20.0" layoutY="145.0" text="Rounds to go: 1">
+               <font>
+                  <Font name="NeuropolXRg-Regular" size="15.0" />
+               </font></Label>
+            <Label layoutX="20.0" layoutY="93.0" text="Player4 : 0">
+               <font>
+                  <Font name="NeuropolXRg-Regular" size="15.0" />
+               </font></Label>
+            <TextArea layoutY="429.0" prefHeight="206.0" prefWidth="169.0" />
+            <TextField layoutY="643.0" prefHeight="25.0" prefWidth="169.0" style="-fx-background-color: c1c1c1;" />
+            <Button layoutY="680.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="169.0" style="-fx-background-color: #c1c1c1;" text="Stuur">
+               <font>
+                  <Font name="NeuropolXRg-Regular" size="15.0" />
+               </font></Button>
+            <Button id="btnToggle" fx:id="PLAY" layoutY="274.0" mnemonicParsing="false" onAction="#btnToggleSoundPress" prefHeight="25.0" prefWidth="169.0" style="-fx-background-color: #c1c1c1;" text="Start">
+               <font>
+                  <Font name="NeuropolXRg-Regular" size="15.0" />
+               </font></Button>
          </children></AnchorPane>
     <AnchorPane id="apGane" minHeight="0.0" minWidth="0.0" prefHeight="434.0" prefWidth="488.0">
          <children>
@@ -36,7 +61,6 @@
                   <Canvas fx:id="gameCanvas" height="716.0" layoutX="-4.0" layoutY="-7.0" width="973.0" />
                   <TextArea fx:id="gameArea" editable="false" layoutX="-10.0" layoutY="-10.0" onKeyPressed="#HandleKeyPress" opacity="0.0" prefHeight="722.0" prefWidth="989.0">
                     </TextArea>
-                  <Circle fx:id="cCircle" fill="#00ff2f" layoutX="45.0" layoutY="41.0" radius="5.0" stroke="BLACK" strokeType="INSIDE" />
                </children>
             </Pane>
          </children></AnchorPane>
