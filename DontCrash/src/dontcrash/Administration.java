@@ -212,4 +212,18 @@ public class Administration extends UnicastRemoteObject implements RemotePublish
                 return r;
        return null;
     }
+
+    /**
+     * 
+     */
+    @Override
+    public ArrayList<Player> getPlayers(int roomID) throws RemoteException {
+        for(IRoom r : rooms)
+            if(r.getRoomId() == roomID)
+                return r.getPlayers();
+       return null;
+        
+    }
+    
+    
 }

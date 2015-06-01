@@ -21,6 +21,7 @@ import java.util.List;
 public interface IRoom extends Serializable 
 {
     
+    public ArrayList<Player> getPlayers()throws RemoteException;
     
     public Game startGame()throws RemoteException;
 

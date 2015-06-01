@@ -9,6 +9,7 @@ import RemoteObserver.RemotePublisher;
 import dontcrash.Player;
 import dontcrash.Room;
 import java.rmi.RemoteException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -50,4 +51,6 @@ public interface IAdministator  extends RemotePublisher {
     public boolean joinRoom(Player player, int roomID) throws RemoteException;
     
     public IRoom getRoom(int roomID) throws RemoteException;
+    
+    public List<Player>  getPlayers(int roomID) throws RemoteException;
 }

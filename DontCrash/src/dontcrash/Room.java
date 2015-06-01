@@ -97,4 +97,9 @@ public class Room implements Serializable, IRoom
     public int getRoomChatPort() throws RemoteException {
         return chatPort;
     }
+
+    @Override
+    public ArrayList<Player> getPlayers() throws RemoteException {
+        return (ArrayList<Player>) players;
+    }
 }
