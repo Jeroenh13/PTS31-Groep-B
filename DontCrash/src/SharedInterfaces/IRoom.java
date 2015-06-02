@@ -5,14 +5,10 @@
  */
 package SharedInterfaces;
 
-import dontcrash.Game;
 import dontcrash.Player;
-import dontcrash.portsAndIps;
-import java.io.IOException;
 import java.io.Serializable;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  *
@@ -47,4 +43,6 @@ public interface IRoom extends Serializable
     public int getRoomChatPort() throws RemoteException;
 
     public IGame getCurrentGame();
+
+    public Player getHost();
 }

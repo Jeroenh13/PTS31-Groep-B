@@ -12,6 +12,7 @@ public class OmdatFXMLControllersMoeilijkDoen {
  
     private static int roomID;
     private static Player player;
+    public static int curPlayerID = 0;
 
     public static Player getPlayer() {
         return player;

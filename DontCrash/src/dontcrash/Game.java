@@ -6,6 +6,7 @@
 package dontcrash;
 
 import RemoteObserver.RemotePropertyListener;
+import RemoteObserver.RemotePublisher;
 import SharedInterfaces.IGame;
 import java.io.Serializable;
 import java.rmi.RemoteException;
@@ -16,7 +17,7 @@ import java.util.List;
  *
  * @author Saya
  */
-public class Game extends UnicastRemoteObject implements IGame, Serializable
+public class Game extends UnicastRemoteObject implements RemotePublisher, IGame, Serializable
 {
     int gameID;
     List<Player> players;

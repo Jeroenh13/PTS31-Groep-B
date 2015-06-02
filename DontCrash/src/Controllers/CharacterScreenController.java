@@ -76,7 +76,6 @@ public class CharacterScreenController implements Observer, RemotePropertyListen
             Logger.getLogger(CharacterScreenController.class.getName()).log(Level.SEVERE, null, ex);
         }
         ac.addObserver(this);
-    
     }
     
     
@@ -87,7 +86,6 @@ public class CharacterScreenController implements Observer, RemotePropertyListen
      */
     public void Start(Event evnt) throws IOException
     {
-        IGame game = room.startGame();
         Stage stage=(Stage) btnstart.getScene().getWindow();
         root = FXMLLoader.load(getClass().getResource("/fxml/GameScreen.fxml"));
         Scene scene = new Scene(root);

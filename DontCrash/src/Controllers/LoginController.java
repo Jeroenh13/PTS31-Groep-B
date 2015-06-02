@@ -55,7 +55,7 @@ public class LoginController {
      */
     public void btnLoginClick(Event evnt) throws IOException
     {
-        OmdatFXMLControllersMoeilijkDoen.setPlayer(new Player(5, txtNaam.getText(), 300, "blabla@gmail.com"));
+        OmdatFXMLControllersMoeilijkDoen.setPlayer(new Player(1, txtNaam.getText(), 300, "blabla@gmail.com"));
             Stage stage=(Stage) txtNaam.getScene().getWindow();
             root = FXMLLoader.load(getClass().getResource("/fxml/menu.fxml"));
             Scene scene = new Scene(root);

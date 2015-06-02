@@ -7,14 +7,18 @@ package Controllers;
 
 import RMI.GameClient;
 import RMI.RMIClient;
+import RemoteObserver.RemotePropertyListener;
 import SharedInterfaces.IAdministator;
 import SharedInterfaces.IGame;
 import SharedInterfaces.IRoom;
 import dontcrash.*;
+import java.beans.PropertyChangeEvent;
 import java.io.IOException;
 import java.net.URL;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
+import java.util.Observable;
+import java.util.Observer;
 import java.util.Random;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
@@ -39,7 +43,7 @@ import javafx.scene.paint.Color;
  *
  * @author Bas
  */
-public class GameScreenController implements Initializable {
+public class GameScreenController implements Observer, RemotePropertyListener, Initializable {
 
     @FXML
     Button PLAY;
@@ -54,7 +58,17 @@ public class GameScreenController implements Initializable {
     @FXML
     Label lblRound;
 
-    IGame game = null;
+    @FXML
+    Label lblPlayer1;
+    @FXML
+    Label lblPlayer2;
+    @FXML
+    Label lblPlayer3;
+    @FXML
+    Label lblPlayer4;
+
+    private IGame game = null;
+    private IRoom room = null;
 
     ArrayList<Point> positions = new ArrayList<>();
     ArrayList<DrawablePowerup> powerups = new ArrayList<>();
@@ -72,10 +86,49 @@ public class GameScreenController implements Initializable {
         RMIClient rmi = new RMIClient(portsAndIps.IP, 1096, "Admin");
         admin = rmi.setUpNewAdministrator();
         try {
-            IRoom r = admin.getRoom(OmdatFXMLControllersMoeilijkDoen.getRoomID());
-            IGame g = r.getCurrentGame();
-            lblRound.setText(g.lolol());
+            room = admin.getRoom(OmdatFXMLControllersMoeilijkDoen.getRoomID());
+            String name = OmdatFXMLControllersMoeilijkDoen.getPlayer().name;
+            String hostname = room.getHost().name;
+            if (hostname.equals(name)) {
+                game = room.startGame();
+                if(room.getCurrentGame() == null)
+                {
+                    System.out.println("USUXK");
+                }
+            } else {
+                while (room.getCurrentGame() == null) {
+                    Thread.sleep(500);
+                     admin = rmi.setUpNewAdministrator();
+                    room = admin.getRoom(OmdatFXMLControllersMoeilijkDoen.getRoomID());
+                }
+                game = room.getCurrentGame();
+            }
+
+            ArrayList<Label> labels = new ArrayList<>();
+            labels.add(lblPlayer1);
+            labels.add(lblPlayer2);
+            labels.add(lblPlayer3);
+            labels.add(lblPlayer4);
+
+            lblPlayer1.setText("");
+            lblPlayer2.setText("");
+            lblPlayer3.setText("");
+            lblPlayer4.setText("");
+            switch (room.getPlayers().size()) {
+                case 4:
+                    lblPlayer4.setText(room.getPlayers().get(3).name);
+                case 3:
+                    lblPlayer3.setText(room.getPlayers().get(2).name);
+                case 2:
+                    lblPlayer2.setText(room.getPlayers().get(1).name);
+                    lblPlayer1.setText(room.getPlayers().get(0).name);
+
+                    break;
+            }
+
         } catch (RemoteException ex) {
+            Logger.getLogger(GameScreenController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (InterruptedException ex) {
             Logger.getLogger(GameScreenController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
@@ -414,5 +467,15 @@ public class GameScreenController implements Initializable {
             }
         }
         return true;
+    }
+
+    @Override
+    public void propertyChange(PropertyChangeEvent evt) throws RemoteException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void update(Observable o, Object arg) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

@@ -19,7 +19,7 @@ import java.util.logging.Logger;
 public class Room implements Serializable, IRoom
 {
     public int roomID;
-    public transient List<Player> players;
+    public List<Player> players;
     public IGame currentGame;
     public int chatPort;
     public Player host;
@@ -47,7 +47,7 @@ public class Room implements Serializable, IRoom
     {
         //if(this.currentGame != null || this.players.isEmpty())
         //    return null;
-        Game game = new Game(this.players);
+        IGame game = new Game(this.players);
         this.currentGame = game;
         return game;
     }
@@ -113,5 +113,10 @@ public class Room implements Serializable, IRoom
     @Override
     public IGame getCurrentGame() {
         return currentGame;
+    }
+    
+    public Player getHost()
+    {
+        return host;
     }
 }
