@@ -47,7 +47,7 @@ public class Room implements Serializable, IRoom
     {
         //if(this.currentGame != null || this.players.isEmpty())
         //    return null;
-        Game game = new Game(this.players);
+        IGame game = new Game(this.players);
         this.currentGame = game;
         return game;
     }

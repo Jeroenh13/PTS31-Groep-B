@@ -5,6 +5,7 @@
  */
 package dontcrash;
 
+import RemoteObserver.BasicPublisher;
 import RemoteObserver.RemotePropertyListener;
 import RemoteObserver.RemotePublisher;
 import SharedInterfaces.IGame;
@@ -23,6 +24,7 @@ public class Game extends UnicastRemoteObject implements RemotePublisher, IGame,
     private int gameID;
     private List<Player> players;
     private Timer timer;
+    BasicPublisher bp ;
     
     /**
      * Initializes a new game with the given players
@@ -32,6 +34,7 @@ public class Game extends UnicastRemoteObject implements RemotePublisher, IGame,
     public Game(List<Player> players) throws RemoteException
     {
         this.players = players;
+        bp = new BasicPublisher(new String[]{"Game"});
     }
     
     public Game()throws RemoteException{
@@ -58,12 +61,12 @@ public class Game extends UnicastRemoteObject implements RemotePublisher, IGame,
 
     @Override
     public void addListener(RemotePropertyListener listener, String property) throws RemoteException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        bp.addListener(listener, property);
     }
 
     @Override
     public void removeListener(RemotePropertyListener listener, String property) throws RemoteException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        bp.removeListener(listener, property);
     }
 
     @Override

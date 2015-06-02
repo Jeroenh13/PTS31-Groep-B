@@ -12,6 +12,6 @@ import java.rmi.RemoteException;
  */
  public interface IGame extends RemotePublisher {
 
-    public void startRun();
+    public void startRun() throws RemoteException;
     
 }

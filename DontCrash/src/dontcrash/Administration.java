@@ -32,6 +32,8 @@ public class Administration extends UnicastRemoteObject implements RemotePublish
 
     private int nextPlayerID;
     
+    private int nextCharacterID;
+    
     DatabaseManager dbm;
     
     /**
@@ -42,6 +44,7 @@ public class Administration extends UnicastRemoteObject implements RemotePublish
         bp = new BasicPublisher(new String[]{"Room"});
         this.nextRoomID = 1;
         this.nextPlayerID = 1;
+        this.nextCharacterID = 1;
         this.rooms = new ArrayList<IRoom>();
         this.dbm = new DatabaseManager();
         
@@ -195,6 +198,11 @@ public class Administration extends UnicastRemoteObject implements RemotePublish
         bp.removeListener(listener, property);
     }
 
+    public int getNextCharacterID(){
+        int temp = nextCharacterID;
+        nextCharacterID++;
+        return temp;
+    }
     /**
      * Returns the room with the given ID
      * @param roomID requested room
@@ -226,5 +234,19 @@ public class Administration extends UnicastRemoteObject implements RemotePublish
     public void startNewGame(int roomID) throws RemoteException {
         IRoom startRoom = getRoom(roomID);
         startRoom.startGame();
+    }
+
+    @Override
+    public Character newCharacter(int roomID, Player player, int nextCharacterID) throws RemoteException {
+        IRoom tempRoom = getRoom(roomID);
+        dontcrash.Character c = null;
+        for(Player p : tempRoom.getPlayers())
+        {
+            if(p.name.equals(player.name))
+            {
+                c = p.newCharacter(p,getNextCharacterID());
+            }
+        }
+        return c;
     }
 }

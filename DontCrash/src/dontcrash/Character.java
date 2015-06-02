@@ -1,5 +1,6 @@
 package dontcrash;
 
+import java.io.Serializable;
 import javafx.scene.paint.Color;
 
 /*
@@ -12,7 +13,7 @@ import javafx.scene.paint.Color;
  *
  * @author Saya
  */
-public class Character
+public class Character implements Serializable
 {
     int characterID;
     String name;

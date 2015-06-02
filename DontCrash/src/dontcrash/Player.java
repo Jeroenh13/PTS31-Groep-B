@@ -20,6 +20,7 @@ public class Player implements Serializable{
     public int score;
     public String email;
     public transient List<Player> friends;
+    public dontcrash.Character character;
 
     /**
      * Initializes a new instance of player
@@ -35,6 +36,15 @@ public class Player implements Serializable{
         this.playerID = playerID;
         this.score = score;
         this.email = email;
+    }
+    
+    public dontcrash.Character newCharacter(Player p, int nxt)
+    {
+        if(p.playerID == this.playerID)
+        {
+            character = new Character(p,nxt);
+        }
+        return character;
     }
 
     /**

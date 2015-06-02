@@ -12,6 +12,7 @@ import SharedInterfaces.IAdministator;
 import SharedInterfaces.IGame;
 import SharedInterfaces.IRoom;
 import dontcrash.*;
+import dontcrash.Character;
 import java.beans.PropertyChangeEvent;
 import java.io.IOException;
 import java.net.URL;
@@ -72,25 +73,21 @@ public class GameScreenController implements Observer, RemotePropertyListener, I
     ArrayList<Point> positions = new ArrayList<>();
     ArrayList<DrawablePowerup> powerups = new ArrayList<>();
     boolean player1 = true;
-    dontcrash.Character c;
 
     private IAdministator admin;
+    dontcrash.Character character = null;
 
     //Powerup stuff
     private final int spawnChancePowerUp = 40; // Between 0 and 10000 chance every tick to spawn powerup
     private boolean invincible = false;
 
-    
-    
-    public GameScreenController() throws IOException
-    {
-       
+    public GameScreenController() throws IOException {
+
     }
-    
-    
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-         RMIClient rmi = new RMIClient(portsAndIps.IP, 1096, "Admin");
+        RMIClient rmi = new RMIClient(portsAndIps.IP, 1096, "Admin");
         admin = rmi.setUpNewAdministrator();
         try {
             UnicastRemoteObject.exportObject(this, portsAndIps.getNewPort());
@@ -98,21 +95,22 @@ public class GameScreenController implements Observer, RemotePropertyListener, I
             Logger.getLogger(CharacterScreenController.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
             Logger.getLogger(GameScreenController.class.getName()).log(Level.SEVERE, null, ex);
-        } 
-        
+        }
+
         try {
             room = admin.getRoom(OmdatFXMLControllersMoeilijkDoen.getRoomID());
             String name = OmdatFXMLControllersMoeilijkDoen.getPlayer().name;
             String hostname = room.getHost().name;
             if (hostname.equals(name)) {
                 admin.startNewGame(room.getRoomId());
+                room = admin.getRoom(OmdatFXMLControllersMoeilijkDoen.getRoomID());
+                game = room.getCurrentGame();
                 PLAY.setVisible(false);
             } else {
                 while (room.getCurrentGame() == null) {
                     Thread.sleep(500);
-                     admin = rmi.setUpNewAdministrator();
                     room = admin.getRoom(OmdatFXMLControllersMoeilijkDoen.getRoomID());
-                    PLAY.setVisible(false);
+                    PLAY.setVisible(true);
                 }
                 game = room.getCurrentGame();
             }
@@ -138,17 +136,55 @@ public class GameScreenController implements Observer, RemotePropertyListener, I
                     break;
             }
             game.addListener(this, "Game");
-
+            
+            character = admin.newCharacter(OmdatFXMLControllersMoeilijkDoen.getRoomID(), OmdatFXMLControllersMoeilijkDoen.getPlayer(), admin.getNextCharacterID());
+                
         } catch (RemoteException ex) {
             Logger.getLogger(GameScreenController.class.getName()).log(Level.SEVERE, null, ex);
         } catch (InterruptedException ex) {
             Logger.getLogger(GameScreenController.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
     }
-     public void btnToggleSoundPress(Event envt) {
-         game.startRun();
-     }
+
+    public void btnToggleSoundPress(Event envt) {
+        try {
+            game.startRun();
+        } catch (RemoteException ex) {
+            Logger.getLogger(GameScreenController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public void HandleKeyPress(Event evt) {
+        gameArea.setOnKeyPressed(new EventHandler<KeyEvent>() {
+            @Override
+            public void handle(KeyEvent ke) {
+                try {
+                    room = admin.getRoom(OmdatFXMLControllersMoeilijkDoen.getRoomID());
+                    for (Player p : room.getPlayers()) {
+                        if (p.name.equals(OmdatFXMLControllersMoeilijkDoen.getPlayer().name)) {
+                            character = p.character;
+                            if (ke.getCode() == KeyCode.LEFT) {
+                                if (character.getDirection() == 0) {
+                                    character.setDirection(3);
+                                } else {
+                                    character.setDirection(character.getDirection() - 1);
+                                }
+                            } else if (ke.getCode() == KeyCode.RIGHT) {
+                                if (character.getDirection() == 3) {
+                                    character.setDirection(0);
+                                } else {
+                                    character.setDirection(character.getDirection() + 1);
+                                }
+                            }
+                            lblRound.setText(Float.toString(p.character.getDirection()));
+                        }
+                    }
+                } catch (RemoteException ex) {
+                    Logger.getLogger(GameScreenController.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        });
+    }
 
     @Override
     public void update(Observable o, Object arg) {
@@ -319,26 +355,7 @@ public class GameScreenController implements Observer, RemotePropertyListener, I
 //     *
 //     * @param evt
 //     */
-//    public void HandleKeyPress(Event evt) {
-//        gameArea.setOnKeyPressed(new EventHandler<KeyEvent>() {
-//            @Override
-//            public void handle(KeyEvent ke) {
-//                if (ke.getCode() == KeyCode.LEFT) {
-//                    if (c.getDirection() == 0) {
-//                        c.setDirection(3);
-//                    } else {
-//                        c.setDirection(c.getDirection() - 1);
-//                    }
-//                } else if (ke.getCode() == KeyCode.RIGHT) {
-//                    if (c.getDirection() == 3) {
-//                        c.setDirection(0);
-//                    } else {
-//                        c.setDirection(c.getDirection() + 1);
-//                    }
-//                }
-//            }
-//        });
-//    }
+//    
 //
 //    /**
 //     * Spawn a powerup on a random position on playfield of a random poweruptype

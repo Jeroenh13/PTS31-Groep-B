@@ -6,6 +6,7 @@
 package SharedInterfaces;
 
 import RemoteObserver.RemotePublisher;
+import dontcrash.Character;
 import dontcrash.Player;
 import dontcrash.Room;
 import java.rmi.RemoteException;
@@ -55,4 +56,9 @@ public interface IAdministator  extends RemotePublisher {
     public List<Player>  getPlayers(int roomID) throws RemoteException;
     
     public void startNewGame(int roomID) throws RemoteException;
+   
+    public int getNextCharacterID() throws RemoteException;
+
+    public Character newCharacter(int roomID, Player p, int nextCharacterID) throws RemoteException;
+    
 }
