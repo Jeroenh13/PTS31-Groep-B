@@ -12,6 +12,7 @@ import java.io.Serializable;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.List;
+import java.util.Timer;
 
 /**
  *
@@ -21,6 +22,7 @@ public class Game extends UnicastRemoteObject implements RemotePublisher, IGame,
 {
     private int gameID;
     private List<Player> players;
+    private Timer timer;
     
     /**
      * Initializes a new game with the given players
@@ -53,12 +55,6 @@ public class Game extends UnicastRemoteObject implements RemotePublisher, IGame,
     {
         return null;
     }
-    
-    @Override
-    public String lolol()
-    {
-        return "This works";      
-    }
 
     @Override
     public void addListener(RemotePropertyListener listener, String property) throws RemoteException {
@@ -68,5 +64,10 @@ public class Game extends UnicastRemoteObject implements RemotePublisher, IGame,
     @Override
     public void removeListener(RemotePropertyListener listener, String property) throws RemoteException {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void startRun() {
+        timer.
     }
 }

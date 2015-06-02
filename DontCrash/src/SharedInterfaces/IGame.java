@@ -10,8 +10,8 @@ import java.rmi.RemoteException;
  *
  * @author Bas
  */
- public interface IGame extends RemotePublisher  {
+ public interface IGame extends RemotePublisher {
 
-    public String lolol() throws RemoteException;
+    public void startRun();
     
 }
