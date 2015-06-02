@@ -53,4 +53,6 @@ public interface IAdministator  extends RemotePublisher {
     public IRoom getRoom(int roomID) throws RemoteException;
     
     public List<Player>  getPlayers(int roomID) throws RemoteException;
+    
+    public void startNewGame(int roomID) throws RemoteException;
 }

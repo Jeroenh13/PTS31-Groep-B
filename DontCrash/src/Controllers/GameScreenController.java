@@ -16,6 +16,7 @@ import java.beans.PropertyChangeEvent;
 import java.io.IOException;
 import java.net.URL;
 import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
@@ -81,20 +82,33 @@ public class GameScreenController implements Observer, RemotePropertyListener, I
     private final int spawnChancePowerUp = 40; // Between 0 and 10000 chance every tick to spawn powerup
     private boolean invincible = false;
 
+    
+    
+    public GameScreenController() throws IOException
+    {
+       
+    }
+    
+    
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        RMIClient rmi = new RMIClient(portsAndIps.IP, 1096, "Admin");
+         RMIClient rmi = new RMIClient(portsAndIps.IP, 1096, "Admin");
         admin = rmi.setUpNewAdministrator();
+        try {
+            UnicastRemoteObject.exportObject(this, portsAndIps.getNewPort());
+        } catch (RemoteException ex) {
+            Logger.getLogger(CharacterScreenController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(GameScreenController.class.getName()).log(Level.SEVERE, null, ex);
+        } 
+        
+       
         try {
             room = admin.getRoom(OmdatFXMLControllersMoeilijkDoen.getRoomID());
             String name = OmdatFXMLControllersMoeilijkDoen.getPlayer().name;
             String hostname = room.getHost().name;
             if (hostname.equals(name)) {
-                game = room.startGame();
-                if(room.getCurrentGame() == null)
-                {
-                    System.out.println("USUXK");
-                }
+                admin.startNewGame(room.getRoomId());
             } else {
                 while (room.getCurrentGame() == null) {
                     Thread.sleep(500);
@@ -131,6 +145,7 @@ public class GameScreenController implements Observer, RemotePropertyListener, I
         } catch (InterruptedException ex) {
             Logger.getLogger(GameScreenController.class.getName()).log(Level.SEVERE, null, ex);
         }
+        
     }
 
     /**

@@ -19,8 +19,8 @@ import java.util.List;
  */
 public class Game extends UnicastRemoteObject implements RemotePublisher, IGame, Serializable
 {
-    int gameID;
-    List<Player> players;
+    private int gameID;
+    private List<Player> players;
     
     /**
      * Initializes a new game with the given players

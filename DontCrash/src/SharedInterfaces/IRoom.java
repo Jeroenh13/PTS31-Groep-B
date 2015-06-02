@@ -5,6 +5,7 @@
  */
 package SharedInterfaces;
 
+import dontcrash.Game;
 import dontcrash.Player;
 import java.io.Serializable;
 import java.rmi.RemoteException;

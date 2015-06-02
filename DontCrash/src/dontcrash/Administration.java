@@ -204,8 +204,9 @@ public class Administration extends UnicastRemoteObject implements RemotePublish
     @Override
     public IRoom getRoom(int roomID) throws RemoteException {
        for(IRoom r : rooms)
-            if(r.getRoomId() == roomID)
+            if(r.getRoomId() == roomID){
                 return r;
+            }
        return null;
     }
 
@@ -219,5 +220,11 @@ public class Administration extends UnicastRemoteObject implements RemotePublish
                 return r.getPlayers();
        return null;
         
+    }
+
+    @Override
+    public void startNewGame(int roomID) throws RemoteException {
+        IRoom startRoom = getRoom(roomID);
+        startRoom.startGame();
     }
 }
