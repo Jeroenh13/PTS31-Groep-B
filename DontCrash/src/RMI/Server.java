@@ -217,8 +217,8 @@ public class Server {
         // Create server
         Server server = new Server();
         bindingName = "Admin";
-        Server serverCommands = new Server(1098, "Administrator");
-        Server gameServer = new Server(1097,"Game");
+        Server serverCommands = new Server(1096, "Administrator");
+       // Server gameServer = new Server(1097,"Game");
     }
 
     public static int createNewServer(String type) throws IOException {

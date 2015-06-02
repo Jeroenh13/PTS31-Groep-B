@@ -29,9 +29,17 @@ public class DatabaseManager
      */
     public void openConn()
     {
+        /*
         String URL = "jdbc:oracle:thin:@192.168.15.50:1521:fhictora";
+        
         String USER = "dbi298273";
         String PASS = "LxbdRdlzEx";
+        */
+                
+        String URL = "jdbc:oracle:thin:@localhost:1521:xe";
+        String USER = "PTS3";
+        String PASS = "PTS3";
+        
         try 
         {
             conn = DriverManager.getConnection(URL, USER, PASS);

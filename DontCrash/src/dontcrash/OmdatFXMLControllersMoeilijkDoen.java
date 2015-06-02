@@ -11,6 +11,15 @@ package dontcrash;
 public class OmdatFXMLControllersMoeilijkDoen {
  
     private static int roomID;
+    private static Player player;
+
+    public static Player getPlayer() {
+        return player;
+    }
+
+    public static void setPlayer(Player player) {
+        OmdatFXMLControllersMoeilijkDoen.player = player;
+    }
 
     public static int getRoomID() {
         System.out.println(roomID);

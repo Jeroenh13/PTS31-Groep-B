@@ -220,6 +220,4 @@ public class Administration extends UnicastRemoteObject implements RemotePublish
        return null;
         
     }
-    
-    
 }
