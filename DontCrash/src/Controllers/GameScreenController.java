@@ -149,6 +149,16 @@ public class GameScreenController implements Observer, RemotePropertyListener, I
      public void btnToggleSoundPress(Event envt) {
          game.startRun();
      }
+
+    @Override
+    public void update(Observable o, Object arg) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void propertyChange(PropertyChangeEvent evt) throws RemoteException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }
 //     /**
 //     * Eventhandeler for button toggle sound. Currently start button of the game

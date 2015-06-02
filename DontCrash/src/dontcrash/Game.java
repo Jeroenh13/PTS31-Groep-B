@@ -68,6 +68,6 @@ public class Game extends UnicastRemoteObject implements RemotePublisher, IGame,
 
     @Override
     public void startRun() {
-        timer.
+       // timer.
     }
 }
