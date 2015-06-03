@@ -54,22 +54,16 @@
                            <font>
                               <Font name="NeuropolXRg-Regular" size="15.0" />
                            </font></PasswordField>
-                        <Button id="btnRegister" fx:id="btnRegistreer" mnemonicParsing="false" onAction="#btnRegistreerClick" prefHeight="29.0" prefWidth="125.0" style="-fx-background-color: #c1c1c1;" text="Registeer" textFill="#303030" GridPane.columnIndex="1" GridPane.rowIndex="7">
+                        <Button id="btnRegister" fx:id="btnRegistreer" mnemonicParsing="false" onAction="#btnRegistreerClick" prefHeight="29.0" prefWidth="125.0" style="-fx-background-color: #c1c1c1;" text="Registeer" textFill="#303030" GridPane.columnIndex="1" GridPane.rowIndex="8">
                            <font>
                               <Font name="NeuropolXRg-Regular" size="15.0" />
                            </font>
                         </Button>
-                        <Button id="btnLogin" fx:id="btnLogIn" alignment="CENTER" mnemonicParsing="false" onAction="#btnLoginClick" style="-fx-background-color: #c1c1c1;" text="Log In" textFill="#303030" GridPane.columnIndex="1" GridPane.rowIndex="6">
+                        <Button id="btnLogin" fx:id="btnLogIn" alignment="CENTER" mnemonicParsing="false" onAction="#btnLoginClick" style="-fx-background-color: #c1c1c1;" text="Log In" textFill="#303030" GridPane.columnIndex="1" GridPane.rowIndex="7">
                            <font>
                               <Font name="NeuropolXRg-Regular" size="15.0" />
                            </font>
                         </Button>
-                        <Button fx:id="btnGame" mnemonicParsing="false" onAction="#btnGameClick" style="-fx-background-color: #c1c1c1;" text="Go to game" textFill="#303030" GridPane.columnIndex="1" GridPane.rowIndex="8">
-                           <font>
-                              <Font name="NeuropolXRg-Regular" size="15.0" />
-                           </font>
-                        </Button>
-                        <Button fx:id="btnNoDBCLick" mnemonicParsing="false" onAction="#btnNoDBClick" prefHeight="31.0" prefWidth="179.0" style="-fx-background-color: #c1c1c1;" text="Zeg nee tegen DB" GridPane.columnIndex="1" GridPane.rowIndex="9" />
                         <Label prefHeight="21.0" prefWidth="271.0" text="Password" textFill="#303030" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="3">
                            <font>
                               <Font name="NeuropolXRg-Regular" size="16.0" />
