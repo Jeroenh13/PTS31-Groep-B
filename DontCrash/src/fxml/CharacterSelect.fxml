@@ -1,22 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.text.*?>
 <?import javafx.scene.image.*?>
 <?import javafx.scene.control.*?>
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 <?import java.net.*?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.CharacterScreenController">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="734.0" prefWidth="1172.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.CharacterScreenController">
    <children>
-      <Separator layoutX="162.0" layoutY="-4.0" orientation="VERTICAL" prefHeight="406.0" prefWidth="3.0" />
-      <ImageView fitHeight="193.0" fitWidth="219.0" layoutX="168.0" pickOnBounds="true" preserveRatio="true" />
-      <ImageView fitHeight="193.0" fitWidth="219.0" layoutX="162.0" layoutY="193.0" pickOnBounds="true" preserveRatio="true" />
-      <ImageView fitHeight="193.0" fitWidth="219.0" layoutX="375.0" pickOnBounds="true" preserveRatio="true" />
-      <ImageView fitHeight="193.0" fitWidth="219.0" layoutX="375.0" layoutY="200.0" pickOnBounds="true" preserveRatio="true" />
-      <Label layoutX="11.0" layoutY="10.0" text="Rondes" />
-      <TextField id="txtRondes" layoutX="9.0" layoutY="30.0" />
-      <Button id="btnStart" fx:id="btnstart" layoutX="343.0" layoutY="188.0" mnemonicParsing="false" onAction="#Start" text="Start" />
-      <TextArea fx:id="taChat" editable="false" layoutX="9.0" layoutY="174.0" prefHeight="200.0" prefWidth="149.0" />
-      <TextField fx:id="txtChat" layoutX="9.0" layoutY="374.0" onAction="#txtChatSend" />
+      <Pane layoutX="283.0" prefHeight="734.0" prefWidth="889.0" style="-fx-background-color: #303030;">
+         <children>
+            <ImageView fitHeight="354.0" fitWidth="419.0" pickOnBounds="true" preserveRatio="true" />
+            <ImageView fitHeight="354.0" fitWidth="419.0" layoutX="464.0" layoutY="380.0" pickOnBounds="true" preserveRatio="true" />
+            <ImageView fitHeight="354.0" fitWidth="419.0" layoutX="6.0" layoutY="380.0" pickOnBounds="true" preserveRatio="true" />
+            <ImageView fitHeight="347.0" fitWidth="419.0" layoutX="470.0" layoutY="6.0" pickOnBounds="true" preserveRatio="true" />
+            <Button id="btnStart" fx:id="btnstart" layoutX="419.0" layoutY="352.0" mnemonicParsing="false" onAction="#Start" style="-fx-background-color: #c1c1c1;" text="Start">
+               <font>
+                  <Font name="NeuropolXRg-Regular" size="15.0" />
+               </font>
+            </Button>
+         </children>
+      </Pane>
+      <Pane prefHeight="734.0" prefWidth="284.0" style="-fx-background-color: #7da7d9;">
+         <children>
+            <Label layoutX="15.0" layoutY="22.0" text="Rondes">
+               <font>
+                  <Font name="NeuropolXRg-Regular" size="15.0" />
+               </font>
+            </Label>
+            <TextField id="txtRondes" layoutX="15.0" layoutY="48.0" prefHeight="31.0" prefWidth="251.0" style="-fx-background-color: #c1c1c1;" />
+            <TextArea fx:id="taChat" editable="false" layoutX="47.0" layoutY="444.0" prefHeight="238.0" prefWidth="186.0" />
+            <TextField fx:id="txtChat" layoutX="47.0" layoutY="689.0" onAction="#txtChatSend" style="-fx-background-color: #c1c1c1;" />
+         </children>
+      </Pane>
    </children>
 </Pane>

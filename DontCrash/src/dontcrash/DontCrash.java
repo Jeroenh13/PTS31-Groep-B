@@ -33,7 +33,7 @@ public class DontCrash extends Application
              
             Scene scene = new Scene(page);
             primaryStage.setScene(scene);
-            primaryStage.setTitle("Login");
+            primaryStage.setTitle("Don't Crash");
             primaryStage.show();
         } catch (Exception ex) {
             Logger.getLogger(DontCrash.class.getName()).log(Level.SEVERE, null, ex);
