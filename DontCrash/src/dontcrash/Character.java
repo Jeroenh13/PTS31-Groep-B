@@ -1,6 +1,7 @@
 package dontcrash;
 
 import java.io.Serializable;
+import java.util.Random;
 import javafx.scene.paint.Color;
 
 /*
@@ -15,14 +16,17 @@ import javafx.scene.paint.Color;
  */
 public class Character implements Serializable
 {
-    int characterID;
-    String name;
-    int cost;
-    double speed;
-    float direction;
-    double curX;
-    double curY;
-    Color color;
+    private int characterID;
+    private String name;
+    private int cost;
+    public double speed;
+    public float direction;
+    public double curX;
+    public double curY;
+    public double red;
+    public double green;
+    public double blue;
+    public boolean gameOver;
     
     /**
      * Initializes a new character using a player and a characterid
@@ -31,10 +35,12 @@ public class Character implements Serializable
      */
     public Character(Player player, int characterID)
     {
+        gameOver = false;
         this.name = player.name;
         this.characterID = characterID;
-        direction = 2;
-        speed = 2;
+        Random rnd = new Random();
+        direction = rnd.nextInt(3);
+        speed = 1;
     }
     
     public void getHit()
@@ -118,14 +124,12 @@ public class Character implements Serializable
     }
     
     public void setColor(Color color){
-        this.color = color;
-    }
-    
-    public Color getColor(){
-        return this.color;
+        red = color.getRed();
+        blue = color.getBlue();
+        green = color.getGreen();
     }
     
     public Point getPoint(){
-        return new Point((int)curX, (int)curY, color);
+        return new Point((int)curX, (int)curY, red,green,blue);
     }
 }

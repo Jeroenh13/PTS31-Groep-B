@@ -249,4 +249,17 @@ public class Administration extends UnicastRemoteObject implements RemotePublish
         }
         return c;
     }
+    
+    @Override
+    public void UpdateCharacter(int roomID, dontcrash.Character c, Player player) throws RemoteException
+    {
+        IRoom tempRoom = getRoom(roomID);
+        for(Player p : tempRoom.getPlayers())
+        {
+            if(p.name.equals(player.name))
+            {
+                p.character = c;
+            }
+        }
+    }
 }

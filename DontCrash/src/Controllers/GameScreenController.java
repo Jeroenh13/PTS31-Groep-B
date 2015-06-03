@@ -105,22 +105,16 @@ public class GameScreenController implements Observer, RemotePropertyListener, I
                 admin.startNewGame(room.getRoomId());
                 room = admin.getRoom(OmdatFXMLControllersMoeilijkDoen.getRoomID());
                 game = room.getCurrentGame();
-                PLAY.setVisible(false);
+                PLAY.setVisible(true);
             } else {
                 while (room.getCurrentGame() == null) {
                     Thread.sleep(500);
                     room = admin.getRoom(OmdatFXMLControllersMoeilijkDoen.getRoomID());
-                    PLAY.setVisible(true);
+                    PLAY.setVisible(false);
                 }
                 game = room.getCurrentGame();
             }
-
-            ArrayList<Label> labels = new ArrayList<>();
-            labels.add(lblPlayer1);
-            labels.add(lblPlayer2);
-            labels.add(lblPlayer3);
-            labels.add(lblPlayer4);
-
+            
             lblPlayer1.setText("");
             lblPlayer2.setText("");
             lblPlayer3.setText("");
@@ -136,9 +130,9 @@ public class GameScreenController implements Observer, RemotePropertyListener, I
                     break;
             }
             game.addListener(this, "Game");
-            
+
             character = admin.newCharacter(OmdatFXMLControllersMoeilijkDoen.getRoomID(), OmdatFXMLControllersMoeilijkDoen.getPlayer(), admin.getNextCharacterID());
-                
+
         } catch (RemoteException ex) {
             Logger.getLogger(GameScreenController.class.getName()).log(Level.SEVERE, null, ex);
         } catch (InterruptedException ex) {
@@ -149,6 +143,7 @@ public class GameScreenController implements Observer, RemotePropertyListener, I
     public void btnToggleSoundPress(Event envt) {
         try {
             game.startRun();
+            PLAY.setVisible(false);
         } catch (RemoteException ex) {
             Logger.getLogger(GameScreenController.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -176,7 +171,7 @@ public class GameScreenController implements Observer, RemotePropertyListener, I
                                     character.setDirection(character.getDirection() + 1);
                                 }
                             }
-                            lblRound.setText(Float.toString(p.character.getDirection()));
+                            admin.UpdateCharacter(OmdatFXMLControllersMoeilijkDoen.getRoomID(), character, p);
                         }
                     }
                 } catch (RemoteException ex) {
@@ -193,7 +188,34 @@ public class GameScreenController implements Observer, RemotePropertyListener, I
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) throws RemoteException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                if ("GameOver".equals(evt.getNewValue())) {
+                    lblRound.setText("Game Over");
+                } else {
+                    ArrayList<Point> oldPoints = (ArrayList<Point>) evt.getOldValue();
+                    ArrayList<Point> newPoints = (ArrayList<Point>) evt.getNewValue();
+                    for (Point op : oldPoints) {
+                        for (Point np : newPoints) {
+                            if (op.red == np.red && op.green == np.green && op.blue == np.blue) {
+                                draw(newPoints);
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+    }
+
+    public void draw(ArrayList<Point> points) {
+        for (Point p : points) {
+            GraphicsContext gc = gameCanvas.getGraphicsContext2D();
+            gc.setLineWidth(2);
+            gc.setStroke(Color.color(p.red, p.green, p.blue));
+            gc.strokeOval(p.X, p.Y, 1, 1);
+        }
     }
 }
 //     /**
@@ -265,6 +287,57 @@ public class GameScreenController implements Observer, RemotePropertyListener, I
 //        PLAY.setDisable(true);
 //    }
 //
+//private ArrayList<Point> moveToPoint(Point previousPosition, Point currentPosition) {
+//        ArrayList<Point> points = new ArrayList<Point>();
+//        Point point;
+//        if (previousPosition.X <= currentPosition.X) {
+//            if (previousPosition.Y <= currentPosition.Y) {
+//                for (double y = previousPosition.Y; y < currentPosition.Y; y++) {
+//                    for (double x = previousPosition.X; x < currentPosition.X; x++) {
+//                        point = new Point(x, y, previousPosition.red, previousPosition.green, previousPosition.blue);
+//                        if (checkPoint(point)) {
+//                            return null;
+//                        }
+//                        points.add(point);
+//                    }
+//                }
+//            } else {
+//                for (double y = currentPosition.Y; y < previousPosition.Y; y++) {
+//                    for (double x = previousPosition.X; x < currentPosition.X; x++) {
+//                        point = new Point(x, y, previousPosition.red, previousPosition.green, previousPosition.blue);
+//                        if (checkPoint(point)) {
+//                            return null;
+//                        }
+//                        points.add(point);
+//                    }
+//                }
+//            }
+//        } else {
+//            if (previousPosition.Y <= currentPosition.Y) {
+//                for (double y = previousPosition.Y; y < currentPosition.Y; y++) {
+//                    for (double x = currentPosition.X; x < previousPosition.X; x++) {
+//                        point = new Point(x, y, previousPosition.red, previousPosition.green, previousPosition.blue);
+//                        if (checkPoint(point)) {
+//                            return null;
+//                        }
+//                        points.add(point);
+//                    }
+//                }
+//            } else {
+//                for (double y = currentPosition.Y; y < previousPosition.Y; y++) {
+//                    for (double x = currentPosition.X; x < previousPosition.X; x++) {
+//                        point = new Point(x, y, previousPosition.red, previousPosition.green, previousPosition.blue);
+//                        if (checkPoint(point)) {
+//                            return null;
+//                        }
+//                        points.add(point);
+//                    }
+//                }
+//            }
+//        }
+//        return points;
+//    }
+//
 //    private boolean checkPoint(Point loc) {
 //        if (loc.Y >= gameCanvas.getHeight() || loc.Y <= 0 || loc.X >= gameCanvas.getWidth() || loc.X <= 0) {
 //            return true;
@@ -280,6 +353,56 @@ public class GameScreenController implements Observer, RemotePropertyListener, I
 //            lblRound.setText("INVINCIBLE");
 //        }
 //        return false;
+//    }
+//
+//private boolean moveToPoint(Point previousPosition, Point currentPosition) {
+//        Point point;
+//        if (previousPosition.X <= currentPosition.X) {
+//            if (previousPosition.Y <= currentPosition.Y) {
+//                for (int y = previousPosition.Y; y < currentPosition.Y; y++) {
+//                    for (int x = previousPosition.X; x < currentPosition.X; x++) {
+//                        point = new Point(x, y, previousPosition.color);
+//                        if (checkPoint(point)) {
+//                            return false;
+//                        }
+//                        positions.add(point);
+//                    }
+//                }
+//            } else {
+//                for (int y = currentPosition.Y; y < previousPosition.Y; y++) {
+//                    for (int x = previousPosition.X; x < currentPosition.X; x++) {
+//                        point = new Point(x, y, previousPosition.color);
+//                        if (checkPoint(point)) {
+//                            return false;
+//                        }
+//                        positions.add(point);
+//                    }
+//                }
+//            }
+//        } else {
+//            if (previousPosition.Y <= currentPosition.Y) {
+//                for (int y = previousPosition.Y; y < currentPosition.Y; y++) {
+//                    for (int x = currentPosition.X; x < previousPosition.X; x++) {
+//                        point = new Point(x, y, previousPosition.color);
+//                        if (checkPoint(point)) {
+//                            return false;
+//                        }
+//                        positions.add(point);
+//                    }
+//                }
+//            } else {
+//                for (int y = currentPosition.Y; y < previousPosition.Y; y++) {
+//                    for (int x = currentPosition.X; x < previousPosition.X; x++) {
+//                        point = new Point(x, y, previousPosition.color);
+//                        if (checkPoint(point)) {
+//                            return false;
+//                        }
+//                        positions.add(point);
+//                    }
+//                }
+//            }
+//        }
+//        return true;
 //    }
 //
 //    private DrawablePowerup checkPointPowerup(Point loc) {
@@ -463,55 +586,7 @@ public class GameScreenController implements Observer, RemotePropertyListener, I
 //        c = new dontcrash.Character(p, 1);
 //    }
 //
-//    private boolean moveToPoint(Point previousPosition, Point currentPosition) {
-//        Point point;
-//        if (previousPosition.X <= currentPosition.X) {
-//            if (previousPosition.Y <= currentPosition.Y) {
-//                for (int y = previousPosition.Y; y < currentPosition.Y; y++) {
-//                    for (int x = previousPosition.X; x < currentPosition.X; x++) {
-//                        point = new Point(x, y, previousPosition.color);
-//                        if (checkPoint(point)) {
-//                            return false;
-//                        }
-//                        positions.add(point);
-//                    }
-//                }
-//            } else {
-//                for (int y = currentPosition.Y; y < previousPosition.Y; y++) {
-//                    for (int x = previousPosition.X; x < currentPosition.X; x++) {
-//                        point = new Point(x, y, previousPosition.color);
-//                        if (checkPoint(point)) {
-//                            return false;
-//                        }
-//                        positions.add(point);
-//                    }
-//                }
-//            }
-//        } else {
-//            if (previousPosition.Y <= currentPosition.Y) {
-//                for (int y = previousPosition.Y; y < currentPosition.Y; y++) {
-//                    for (int x = currentPosition.X; x < previousPosition.X; x++) {
-//                        point = new Point(x, y, previousPosition.color);
-//                        if (checkPoint(point)) {
-//                            return false;
-//                        }
-//                        positions.add(point);
-//                    }
-//                }
-//            } else {
-//                for (int y = currentPosition.Y; y < previousPosition.Y; y++) {
-//                    for (int x = currentPosition.X; x < previousPosition.X; x++) {
-//                        point = new Point(x, y, previousPosition.color);
-//                        if (checkPoint(point)) {
-//                            return false;
-//                        }
-//                        positions.add(point);
-//                    }
-//                }
-//            }
-//        }
-//        return true;
-//    }
+
 //
 //    @Override
 //    public void propertyChange(PropertyChangeEvent evt) throws RemoteException {

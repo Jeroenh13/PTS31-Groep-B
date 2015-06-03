@@ -14,13 +14,17 @@ import javafx.scene.paint.Color;
  */
 public class Point implements Serializable {
 
-    public int X;
-    public int Y;
-    public Color color;
+    public double X;
+    public double Y;
+    public double red;
+    public double green;
+    public double blue;
 
-    public Point(int X, int Y, Color color) {
+    public Point(double X, double Y, double r, double g, double b) {
         this.X = X;
         this.Y = Y;
-        this.color = color;
+        red = r;
+        green = g;
+        blue = b;
     }
 }

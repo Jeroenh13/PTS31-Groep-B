@@ -61,4 +61,6 @@ public interface IAdministator  extends RemotePublisher {
 
     public Character newCharacter(int roomID, Player p, int nextCharacterID) throws RemoteException;
     
+    public void UpdateCharacter(int roomID, dontcrash.Character c, Player player) throws RemoteException;
+    
 }
