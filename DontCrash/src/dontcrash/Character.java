@@ -27,6 +27,7 @@ public class Character implements Serializable
     public double green;
     public double blue;
     public boolean gameOver;
+    public boolean getinput = true;
     
     /**
      * Initializes a new character using a player and a characterid

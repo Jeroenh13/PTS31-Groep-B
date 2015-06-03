@@ -114,7 +114,7 @@ public class GameScreenController implements Observer, RemotePropertyListener, I
                 }
                 game = room.getCurrentGame();
             }
-            
+
             lblPlayer1.setText("");
             lblPlayer2.setText("");
             lblPlayer3.setText("");
@@ -158,17 +158,19 @@ public class GameScreenController implements Observer, RemotePropertyListener, I
                     for (Player p : room.getPlayers()) {
                         if (p.name.equals(OmdatFXMLControllersMoeilijkDoen.getPlayer().name)) {
                             character = p.character;
-                            if (ke.getCode() == KeyCode.LEFT) {
-                                if (character.getDirection() == 0) {
-                                    character.setDirection(3);
-                                } else {
-                                    character.setDirection(character.getDirection() - 1);
-                                }
-                            } else if (ke.getCode() == KeyCode.RIGHT) {
-                                if (character.getDirection() == 3) {
-                                    character.setDirection(0);
-                                } else {
-                                    character.setDirection(character.getDirection() + 1);
+                            if (character.getinput) {
+                                if (ke.getCode() == KeyCode.LEFT) {
+                                    if (character.getDirection() == 0) {
+                                        character.setDirection(3);
+                                    } else {
+                                        character.setDirection(character.getDirection() - 1);
+                                    }
+                                } else if (ke.getCode() == KeyCode.RIGHT) {
+                                    if (character.getDirection() == 3) {
+                                        character.setDirection(0);
+                                    } else {
+                                        character.setDirection(character.getDirection() + 1);
+                                    }
                                 }
                             }
                             admin.UpdateCharacter(OmdatFXMLControllersMoeilijkDoen.getRoomID(), character, p);

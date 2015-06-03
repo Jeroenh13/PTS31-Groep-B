@@ -126,6 +126,7 @@ public class Game extends UnicastRemoteObject implements RemotePublisher, IGame,
             for (Player p : r.getPlayers()) {
                 dontcrash.Character c = p.character;
                 if (!c.gameOver) {
+                    c.getinput = false;
                     for (Point op : oldPoints) {
                         if (op.red == c.red && op.green == c.green && op.blue == c.blue) {
                             //0 i up
@@ -162,6 +163,7 @@ public class Game extends UnicastRemoteObject implements RemotePublisher, IGame,
                     }
                     admin.UpdateCharacter(roomID, c, p);
                 }
+                c.getinput = false;
             }
         } catch (RemoteException ex) {
             Logger.getLogger(Game.class.getName()).log(Level.SEVERE, null, ex);
