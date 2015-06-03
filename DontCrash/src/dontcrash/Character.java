@@ -40,7 +40,7 @@ public class Character implements Serializable
         this.characterID = characterID;
         Random rnd = new Random();
         direction = rnd.nextInt(3);
-        speed = 1;
+        speed = 2;
     }
     
     public void getHit()

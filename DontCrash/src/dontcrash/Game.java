@@ -115,7 +115,7 @@ public class Game extends UnicastRemoteObject implements RemotePublisher, IGame,
             Logger.getLogger(Game.class.getName()).log(Level.SEVERE, null, ex);
         }
         timer = new Timer();
-        timer.scheduleAtFixedRate(new GameTask(), 0, 10);
+        timer.scheduleAtFixedRate(new GameTask(), 0, 15);
     }
 
     public void calculatePoints() {
