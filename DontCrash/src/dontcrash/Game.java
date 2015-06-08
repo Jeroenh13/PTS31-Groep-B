@@ -161,9 +161,9 @@ public class Game extends UnicastRemoteObject implements RemotePublisher, IGame,
                             }
                         }
                     }
+                    c.getinput = true;
                     admin.UpdateCharacter(roomID, c, p);
                 }
-                c.getinput = false;
             }
         } catch (RemoteException ex) {
             Logger.getLogger(Game.class.getName()).log(Level.SEVERE, null, ex);
