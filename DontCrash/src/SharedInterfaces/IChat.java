@@ -15,6 +15,7 @@ import RemoteObserver.RemotePublisher;
      /**
      * sends a message to all listeners
      * @param msg message to be send
+     * @throws java.rmi.RemoteException
      */
     public void sendMessage(String msg) throws RemoteException;
 

@@ -27,6 +27,7 @@ public class ActualChat extends Observable implements RemotePropertyListener  {
      * @param port port of the server
      * @param portObj port wanted to export this
      * @param name name of the player
+     * @throws java.rmi.RemoteException
      */
     public ActualChat(String ip, int port,int portObj, String name) throws RemoteException
     {
@@ -49,6 +50,7 @@ public class ActualChat extends Observable implements RemotePropertyListener  {
      * @param portObj port wanted to export this
      * @param name name of the player
      * @param bindingName name of registery obj
+     * @throws java.rmi.RemoteException
      */
     public ActualChat(String ip, int port,int portObj, String name,String bindingName) throws RemoteException
     {
@@ -61,7 +63,7 @@ public class ActualChat extends Observable implements RemotePropertyListener  {
         } catch (RemoteException ex) {
             Logger.getLogger(DontCrash.class.getName()).log(Level.SEVERE, null, ex);
         }          
-        sendMessage(" has joined the room");
+        sendMessage(" has joined the room"+ "\n");
     }
 
     /**
@@ -89,6 +91,7 @@ public class ActualChat extends Observable implements RemotePropertyListener  {
      * @throws RemoteException if the connection the RMI fails 
      */
     public void removeObserver() throws RemoteException {
+        chat.sendMessage(name+" Has left"+ "\n");
         chat.removeListener(this, "Chat");
     }
 }

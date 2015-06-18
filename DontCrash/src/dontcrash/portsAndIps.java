@@ -15,7 +15,13 @@ import java.net.SocketException;
  */
 public class portsAndIps {
 
+    /**
+     * IP Address of the server
+     */
     public final static String IP = "192.168.177.1";
+    /**
+     * Default chat port of the server
+     */
     public final static int defaultServerPortChat = 1099;
     private static int lastPort = 1100;
     
@@ -33,10 +39,15 @@ public class portsAndIps {
         return result;
     }
     
+    /**
+     * Gets a new open port
+     * @return new open port.
+     * @throws IOException 
+     */
     public static int getNewPort() throws IOException
     {
         while(isPortInUse(lastPort)){
-            System.out.println(lastPort+" is in gebruik");
+            //System.out.println(lastPort+" is in gebruik");
             lastPort++;}
         return lastPort;
     }

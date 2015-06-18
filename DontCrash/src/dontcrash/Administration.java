@@ -1,3 +1,8 @@
+
+/*
+ * Class that holds all data and connects different classes.
+ */
+
 package dontcrash;
 
 import Database.DatabaseManager;
@@ -7,18 +12,22 @@ import RemoteObserver.RemotePropertyListener;
 import RemoteObserver.RemotePublisher;
 import SharedInterfaces.IAdministator;
 import SharedInterfaces.IRoom;
+import Sockets.SocketClient;
 import java.io.IOException;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+/**
+ * 
+ * @author Bas
  */
 public class Administration extends UnicastRemoteObject implements RemotePublisher, IAdministator {
 
@@ -31,13 +40,14 @@ public class Administration extends UnicastRemoteObject implements RemotePublish
     private int nextRoomID;
 
     private int nextPlayerID;
-    
+
     private int nextCharacterID;
-    
-    DatabaseManager dbm;
-    
+
+    private final transient DatabaseManager dbm;
+
     /**
      * create a new administration
+     *
      * @throws RemoteException Connection error
      */
     public Administration() throws RemoteException {
@@ -47,18 +57,18 @@ public class Administration extends UnicastRemoteObject implements RemotePublish
         this.nextCharacterID = 1;
         this.rooms = new ArrayList<IRoom>();
         this.dbm = new DatabaseManager();
-        
-        
+
         this.players = new ArrayList<Player>();
         /*
-        dbm.openConn();
-        players = dbm.getPlayers();
-        dbm.closeConn();
-        */
+         dbm.openConn();
+         players = dbm.getPlayers();
+         dbm.closeConn();
+         */
     }
 
     /**
      * Updates the score of the given player
+     *
      * @param player to update the score of
      * @param score new score
      */
@@ -75,9 +85,8 @@ public class Administration extends UnicastRemoteObject implements RemotePublish
      * @return true if login succes or false if not
      */
     public boolean login(String name, String password) {
-        boolean succes = false;
         dbm.openConn();
-        succes = dbm.checkPassword(name, password);
+        boolean succes = dbm.checkPassword(name, password);
         dbm.closeConn();
         return succes;
     }
@@ -93,15 +102,14 @@ public class Administration extends UnicastRemoteObject implements RemotePublish
         Room room = null;
         try {
             room = new Room(nextRoomID, host);
-            
-            room.chatPort = Server.createNewServer("Chat","Chat"+room.roomID);
+            room.chatPort = setUpNewChat();
             this.nextRoomID++;
             rooms.add(room);
-            bp.inform(this, "Room", null, room);
-        } catch (IOException ex) {
+            bp.inform(this, "Room", null, (IRoom)room);
+        } catch (IOException | InterruptedException | ExecutionException ex) {
             Logger.getLogger(Administration.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return (IRoom)room;
+        return (IRoom) room;
     }
 
     /**
@@ -110,32 +118,26 @@ public class Administration extends UnicastRemoteObject implements RemotePublish
      * @param name of the new player
      * @param password of the new player
      * @param email of the new player
-     * @return null if the name is already taken, otherwise returns a new player with the given name
+     * @return null if the name is already taken, otherwise returns a new player
+     * with the given name
      */
-    public Player newPlayer(String name, String password, String email)
-    {
+    public Player newPlayer(String name, String password, String email) {
         Player p = null;
-        
-        for (Player player : players)
-        {
-            if(player.name.equals(name))
+
+        for (Player player : players) {
+            if (player.name.equals(name)) {
                 return null;
+            }
         }
-                
+
         dbm.openConn();
-        if (dbm.addPlayer(name, password, email))
-        {
+        if (dbm.addPlayer(name, password, email)) {
             p = new Player(nextPlayerID, name, 0, email);
             players.add(p);
             nextPlayerID++;
         }
         dbm.closeConn();
-            
-        for (Player pl : players)
-        {
-            System.out.println(pl.name);
-        }
-        
+
         return p;
     }
 
@@ -159,24 +161,24 @@ public class Administration extends UnicastRemoteObject implements RemotePublish
     @Override
     public boolean joinRoom(Player player, int roomID) throws RemoteException {
         IRoom addToRoom = null;
-        for(IRoom r : rooms)
-        {
-            if(roomID == r.getRoomId())
-            {
+        for (IRoom r : rooms) {
+            if (roomID == r.getRoomId()) {
                 addToRoom = r;
                 break;
             }
         }
-        if(addToRoom == null)
+        if (addToRoom == null) {
             return false;
-                
+        }
+
         return addToRoom.addPlayer(player);
     }
 
     /**
      * Starts a new server
+     *
      * @param type of the server
-     * @return 
+     * @return
      */
     @Override
     public int startNewServer(String type) {
@@ -190,6 +192,7 @@ public class Administration extends UnicastRemoteObject implements RemotePublish
 
     @Override
     public void addListener(RemotePropertyListener listener, String property) throws RemoteException {
+        bp.addProperty(property);
         bp.addListener(listener, property);
     }
 
@@ -198,36 +201,49 @@ public class Administration extends UnicastRemoteObject implements RemotePublish
         bp.removeListener(listener, property);
     }
 
-    public int getNextCharacterID(){
+    /**
+     * gets the next character id
+     * @return the next characterID
+     */
+    @Override
+    public int getNextCharacterID() {
         int temp = nextCharacterID;
         nextCharacterID++;
         return temp;
     }
+
     /**
      * Returns the room with the given ID
+     *
      * @param roomID requested room
      * @return room with matching id or null
      * @throws RemoteException RMI connection fails.
      */
     @Override
     public IRoom getRoom(int roomID) throws RemoteException {
-       for(IRoom r : rooms)
-            if(r.getRoomId() == roomID){
+        for (IRoom r : rooms) {
+            if (r.getRoomId() == roomID) {
                 return r;
             }
-       return null;
+        }
+        return null;
     }
 
     /**
      * 
+     * @param roomID
+     * @return returns a list of players
+     * @throws java.rmi.RemoteException
      */
     @Override
     public ArrayList<Player> getPlayers(int roomID) throws RemoteException {
-        for(IRoom r : rooms)
-            if(r.getRoomId() == roomID)
+        for (IRoom r : rooms) {
+            if (r.getRoomId() == roomID) {
                 return r.getPlayers();
-       return null;
-        
+            }
+        }
+        return null;
+
     }
 
     @Override
@@ -240,26 +256,42 @@ public class Administration extends UnicastRemoteObject implements RemotePublish
     public Character newCharacter(int roomID, Player player, int nextCharacterID) throws RemoteException {
         IRoom tempRoom = getRoom(roomID);
         dontcrash.Character c = null;
-        for(Player p : tempRoom.getPlayers())
-        {
-            if(p.name.equals(player.name))
-            {
-                c = p.newCharacter(p,getNextCharacterID());
+        for (Player p : tempRoom.getPlayers()) {
+            if (p.name.equals(player.name)) {
+                c = p.newCharacter(p, getNextCharacterID());
             }
         }
         return c;
     }
-    
+
     @Override
-    public void UpdateCharacter(int roomID, dontcrash.Character c, Player player) throws RemoteException
-    {
+    public void UpdateCharacter(int roomID, dontcrash.Character c, Player player) throws RemoteException {
         IRoom tempRoom = getRoom(roomID);
-        for(Player p : tempRoom.getPlayers())
-        {
-            if(p.name.equals(player.name))
-            {
+        for (Player p : tempRoom.getPlayers()) {
+            if (p.name.equals(player.name)) {
                 p.character = c;
             }
         }
+    }
+
+    /**
+     * sets up a new chat server
+     * @return what port the new server runs on.
+     * @throws InterruptedException
+     * @throws ExecutionException 
+     */
+    public int setUpNewChat() throws InterruptedException, ExecutionException {
+        ExecutorService pool = Executors.newFixedThreadPool(1);
+        Future f = pool.submit(new SocketClient());
+        return (int) f.get();
+    }
+
+    @Override
+    public boolean leaveGame(Player player, int roomID) throws RemoteException {
+        IRoom room = getRoom(roomID);
+        boolean succes = room.removePlayer(player);
+        if(room.getHost() == null)
+            bp.inform(this, "Room"+room.toString(), null, null);
+        return succes;
     }
 }

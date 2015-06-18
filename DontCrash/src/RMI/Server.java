@@ -1,16 +1,14 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * Server that makes different clients communicate with eachother.
+ *
+ * Note: for optimalization System.out.println outcommented.
  */
 package RMI;
 
 import dontcrash.Chat;
 import SharedInterfaces.IChat;
 import SharedInterfaces.IAdministator;
-import SharedInterfaces.IGame;
 import dontcrash.Administration;
-import dontcrash.Game;
 import dontcrash.portsAndIps;
 import java.io.IOException;
 import java.net.InetAddress;
@@ -37,8 +35,6 @@ public class Server {
     private Registry registry = null;
     private IChat chat = null;
     private IAdministator admin = null;
-    private IGame game = null;
-
     // Constructor
     /**
      * Constructor
@@ -77,10 +73,15 @@ public class Server {
         }
     }
 
+    /**
+     * creates a new server
+     * @param port port the server uses
+     * @param usage What kind of server
+     */
     public Server(int port, String usage) {
 
         // Print port number for registry
-        System.out.println("Server: Port number " + port);
+        //System.out.println("Server: Port number " + port);
 
         switch (usage) {
             case "Administrator": 
@@ -140,33 +141,6 @@ public class Server {
                     System.out.println("Server: RemoteException: " + ex.getMessage());
                 }
             break;
-            case "Game":
-                try {
-                    game = (IGame) new Game();
-                    System.out.println("Server: gameServer created");
-                } catch (RemoteException ex) {
-                    System.out.println("Server: Cannot create Game");
-                    System.out.println("Server: RemoteException: " + ex.getMessage());
-                    game = null;
-                }
-
-                // Create registry at port number
-                try {
-                    registry = LocateRegistry.createRegistry(port);
-                    System.out.println("Server: Registry created on port number " + port);
-                } catch (RemoteException ex) {
-                    System.out.println("Server: Cannot create registry");
-                    System.out.println("Server: RemoteException: " + ex.getMessage());
-                    registry = null;
-                }
-
-                // Bind chat using registry
-                try {
-                    registry.rebind("Game", game);
-                } catch (RemoteException ex) {
-                    System.out.println("Server: Cannot bind Game");
-                    System.out.println("Server: RemoteException: " + ex.getMessage());
-                }
         }
     }
 
@@ -208,6 +182,9 @@ public class Server {
      */
     public static void main(String[] args) {
 
+        Thread t = new Thread(new Sockets.SocketServer());
+        t.start();
+        
         // Welcome message
         System.out.println("SERVER USING REGISTRY");
 
@@ -218,9 +195,14 @@ public class Server {
         Server server = new Server();
         bindingName = "Admin";
         Server serverCommands = new Server(1096, "Administrator");
-       // Server gameServer = new Server(1097,"Game");
     }
 
+    /**
+     * Creates a new server
+     * @param type type of server
+     * @return port server is running on
+     * @throws IOException 
+     */
     public static int createNewServer(String type) throws IOException {
         int portnr = portsAndIps.getNewPort();
         Server server = new Server(portnr,type);
@@ -228,11 +210,20 @@ public class Server {
     }
 
 
+    /**
+     * creates a new server
+     * @param type type of server
+     * @param bn bindingname 
+     * @return port the server is running on
+     * @throws IOException 
+     */
     public static int createNewServer(String type,String bn) throws IOException {
         int portnr = portsAndIps.getNewPort();
         bindingName = bn;
         Server server = new Server(portnr,type);
         return portnr;
     }
+    
+    
 
 }

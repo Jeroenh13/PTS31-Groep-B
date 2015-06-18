@@ -18,19 +18,23 @@ import javafx.stage.Stage;
  *
  * @author Saya
  */
-public class DontCrash extends Application
-{
+public class DontCrash extends Application {
 
-     public static void main(String[] args) {
-         launch(args);
+    /**
+     * Launches Don't Crash!
+     *
+     * @param args
+     */
+    public static void main(String[] args) {
+        launch(args);
     }
 
-     @Override
+    @Override
     public void start(Stage primaryStage) {
-         try {
+        try {
             Pane page = (Pane) FXMLLoader.load(DontCrash.class.getResource("/fxml/Login.fxml"));
             //SplitPane gamescreen = FXMLLoader.load(getClass().getResource("/fxml/GameScreen.fxml"));
-             
+
             Scene scene = new Scene(page);
             primaryStage.setScene(scene);
             primaryStage.setTitle("Don't Crash");
@@ -39,5 +43,5 @@ public class DontCrash extends Application
             Logger.getLogger(DontCrash.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
 }

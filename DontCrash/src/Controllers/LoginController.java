@@ -5,8 +5,6 @@
  */
 package Controllers;
 
-import Database.DatabaseManager;
-import RMI.Server;
 import dontcrash.Administration;
 import dontcrash.OmdatFXMLControllersMoeilijkDoen;
 import dontcrash.Player;
@@ -21,7 +19,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-import javax.swing.JOptionPane;
 
 /**
  *

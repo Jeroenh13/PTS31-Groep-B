@@ -12,6 +12,12 @@ import java.rmi.RemoteException;
  */
  public interface IGame extends RemotePublisher {
 
+     /**
+      * 
+      * TODO Create JAVADOC
+      * 
+      * @throws RemoteException 
+      */
     public void startRun() throws RemoteException;
     
 }

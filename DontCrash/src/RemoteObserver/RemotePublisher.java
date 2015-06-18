@@ -7,7 +7,9 @@ package RemoteObserver;
 
 import java.rmi.*;
 
-
+/**
+ * 
+*/
 public interface RemotePublisher extends Remote {
 
     /**
@@ -17,6 +19,7 @@ public interface RemotePublisher extends Remote {
      * @param property mag null zijn, dan abonneert listener zich op alle
      * properties; property moet wel een eigenschap zijn waarop je je kunt
      * abonneren
+     * @throws java.rmi.RemoteException
      */
     void addListener(RemotePropertyListener listener, String property)
             throws RemoteException;
@@ -27,6 +30,7 @@ public interface RemotePublisher extends Remote {
      * @param listener PropertyListener
      * @param property mag null zijn, dan worden alle abonnementen van listener
      * opgezegd
+     * @throws java.rmi.RemoteException
      */
     void removeListener(RemotePropertyListener listener, String property)
             throws RemoteException;

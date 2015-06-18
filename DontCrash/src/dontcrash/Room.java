@@ -3,18 +3,13 @@
  */
 package dontcrash;
 
-import Controllers.CharacterScreenController;
-import RMI.Server;
 import SharedInterfaces.IGame;
 import SharedInterfaces.IRoom;
 import java.io.IOException;
 import java.io.Serializable;
 import java.rmi.RemoteException;
-import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class Room implements Serializable, IRoom
 {
@@ -43,6 +38,7 @@ public class Room implements Serializable, IRoom
      * @return null if couldnt start game, game if could start game
      * @throws RemoteException
      */
+    @Override
     public IGame startGame() throws RemoteException
     {
         //if(this.currentGame != null || this.players.isEmpty())
@@ -58,6 +54,7 @@ public class Room implements Serializable, IRoom
      * @param player
      * @return 
      */
+    @Override
     public boolean addPlayer(Player player)
     {
         if(players.contains(player))
@@ -70,6 +67,7 @@ public class Room implements Serializable, IRoom
      * removes the given player from this room
      * @param player to remove from room
      */
+    @Override
     public void exitRoom(Player player)
     {
         players.remove(player);
@@ -115,8 +113,25 @@ public class Room implements Serializable, IRoom
         return currentGame;
     }
     
+    @Override
     public Player getHost()
     {
         return host;
+    }
+    
+    @Override
+    public boolean removePlayer(Player player)
+    {
+        boolean succes = false;
+        if(player.playerID == host.playerID)
+            host = null;
+        for(Player p : players)
+            if(player.playerID == p.playerID)
+            {
+                players.remove(p);
+                succes = true;
+                break;
+            }
+        return succes;
     }
 }

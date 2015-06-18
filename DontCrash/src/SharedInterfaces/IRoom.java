@@ -5,7 +5,6 @@
  */
 package SharedInterfaces;
 
-import dontcrash.Game;
 import dontcrash.Player;
 import java.io.Serializable;
 import java.rmi.RemoteException;
@@ -17,9 +16,18 @@ import java.util.ArrayList;
  */
 public interface IRoom extends Serializable 
 {
-    
+    /**
+     * Gets the players of the room.
+     * @return List of current players in this room.
+     * @throws RemoteException 
+     */
     public ArrayList<Player> getPlayers()throws RemoteException;
     
+    /**
+     * Starts the game.
+     * @return the started game.
+     * @throws RemoteException 
+     */
     public IGame startGame()throws RemoteException;
 
     /**
@@ -37,13 +45,43 @@ public interface IRoom extends Serializable
      */
     public void exitRoom(Player player)throws RemoteException;
     
+    /**
+     * returns the roomID in string format
+     * @return returns roomID
+     */
     @Override
     public String toString();
     
+    /**
+     * Gets the roomID
+     * @return roomId
+     * @throws RemoteException 
+     */
     public int getRoomId() throws RemoteException;
+    
+    /**
+     * Returns the RoomChatPort
+     * @return Port where the chat can be found.
+     * @throws RemoteException 
+     */
     public int getRoomChatPort() throws RemoteException;
 
+    /**
+     * Gets the current game
+     * @return current game.
+     */
     public IGame getCurrentGame();
 
+    /**
+     * Returns who the host is
+     * @return Host of the room.
+     */
     public Player getHost();
+
+    /**
+     * Removes a player from a room.
+     * @param player player that needs to be removed.
+     * @return if the statements succeeded
+     */
+    public boolean removePlayer(Player player);
 }

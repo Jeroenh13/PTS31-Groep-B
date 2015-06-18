@@ -9,7 +9,6 @@ import Database.DatabaseManager;
 import dontcrash.Administration;
 import java.io.IOException;
 import java.rmi.RemoteException;
-import javafx.application.Platform;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;

@@ -5,14 +5,12 @@
  */
 package Controllers;
 
-import RMI.GameClient;
 import RMI.RMIClient;
 import RemoteObserver.RemotePropertyListener;
 import SharedInterfaces.IAdministator;
 import SharedInterfaces.IGame;
 import SharedInterfaces.IRoom;
 import dontcrash.*;
-import dontcrash.Character;
 import java.beans.PropertyChangeEvent;
 import java.io.IOException;
 import java.net.URL;
@@ -21,17 +19,14 @@ import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
-import java.util.Random;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javafx.animation.AnimationTimer;
 import javafx.application.Platform;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
-import javafx.scene.shape.Circle;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
