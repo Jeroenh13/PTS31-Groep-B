@@ -30,9 +30,12 @@
                </font>
             </Label>
             <TextField id="txtRondes" layoutX="15.0" layoutY="82.0" prefHeight="31.0" prefWidth="251.0" style="-fx-background-color: #c1c1c1;" />
-            <TextArea fx:id="taChat" editable="false" layoutX="15.0" layoutY="444.0" prefHeight="238.0" prefWidth="251.0" />
+            <TextArea fx:id="taChat" editable="false" layoutX="13.0" layoutY="444.0" prefHeight="238.0" prefWidth="251.0" />
             <TextField fx:id="txtChat" layoutX="13.0" layoutY="682.0" onAction="#txtChatSend" prefHeight="25.0" prefWidth="251.0" style="-fx-background-color: #c1c1c1;" />
-            <Button fx:id="btnLeaveGame" layoutX="13.0" layoutY="14.0" mnemonicParsing="false" onAction="#btnLeaveGameClick" prefHeight="31.0" prefWidth="251.0" text="Leave game" />
+            <Button fx:id="btnLeaveGame" layoutX="13.0" layoutY="14.0" mnemonicParsing="false" onAction="#btnLeaveGameClick" prefHeight="31.0" prefWidth="251.0" style="-fx-background-color: #c1c1c1;" text="Leave game">
+               <font>
+                  <Font name="NeuropolXRg-Regular" size="15.0" />
+               </font></Button>
          </children>
       </Pane>
    </children>
