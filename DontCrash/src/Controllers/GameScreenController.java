@@ -1,4 +1,4 @@
-/*
+ /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
@@ -191,14 +191,21 @@ public class GameScreenController implements Observer, RemotePropertyListener, I
                 if ("GameOver".equals(evt.getNewValue())) {
                     lblRound.setText("Game Over");
                 } else {
-                    ArrayList<Point> oldPoints = (ArrayList<Point>) evt.getOldValue();
-                    ArrayList<Point> newPoints = (ArrayList<Point>) evt.getNewValue();
-                    for (Point op : oldPoints) {
-                        for (Point np : newPoints) {
-                            if (op.red == np.red && op.green == np.green && op.blue == np.blue) {
-                                draw(newPoints);
+                    try {
+                        // If it is a arraylist of points
+                        ArrayList<Point> oldPoints = (ArrayList<Point>) evt.getOldValue();
+                        ArrayList<Point> newPoints = (ArrayList<Point>) evt.getNewValue();
+                        for (Point op : oldPoints) {
+                            for (Point np : newPoints) {
+                                if (op.red == np.red && op.green == np.green && op.blue == np.blue) {
+                                    draw(newPoints);
+                                }
                             }
                         }
+                    } catch (Exception ex) {
+                        //If not, it is a arraylist of powerups
+                        ArrayList<DrawablePowerup> powerups = (ArrayList<DrawablePowerup>) evt.getNewValue();
+                        drawPowerups(powerups);
                     }
                 }
             }
@@ -212,6 +219,16 @@ public class GameScreenController implements Observer, RemotePropertyListener, I
             gc.setLineWidth(2);
             gc.setStroke(Color.color(p.red, p.green, p.blue));
             gc.strokeOval(p.X, p.Y, 1, 1);
+        }
+    }
+
+    public void drawPowerups(ArrayList<DrawablePowerup> powerups) {
+        for (DrawablePowerup p : powerups) {
+            GraphicsContext gc = gameCanvas.getGraphicsContext2D();
+            gc.setStroke(Color.CRIMSON);
+            gc.setFill(Color.CRIMSON);
+            gc.fillOval(p.minX, p.minY, p.maxX - p.minX, p.maxY - p.minY);
+            gc.strokeOval(p.minX, p.minY, p.maxX - p.minX, p.maxY - p.minY);
         }
     }
 }
