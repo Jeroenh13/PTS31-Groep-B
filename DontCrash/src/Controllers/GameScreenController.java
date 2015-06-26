@@ -52,6 +52,8 @@ public class GameScreenController implements Observer, RemotePropertyListener, I
     Canvas gameCanvas;
     @FXML
     Label lblRound;
+    @FXML
+    Label lblScore;
 
     @FXML
     Label lblPlayer1;
@@ -109,7 +111,8 @@ public class GameScreenController implements Observer, RemotePropertyListener, I
                 }
                 game = room.getCurrentGame();
             }
-
+            
+            lblScore.setText(String.valueOf(OmdatFXMLControllersMoeilijkDoen.getScore()));
             lblPlayer1.setText("");
             lblPlayer2.setText("");
             lblPlayer3.setText("");

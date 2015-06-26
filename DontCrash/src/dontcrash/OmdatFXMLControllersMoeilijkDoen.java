@@ -12,6 +12,7 @@ public class OmdatFXMLControllersMoeilijkDoen {
 
     private static int roomID;
     private static Player player;
+    private static int scoreToWin;
 
     /**
      *
@@ -57,4 +58,16 @@ public class OmdatFXMLControllersMoeilijkDoen {
         roomID = aRoomID;
         System.out.println(aRoomID);
     }
+    
+    public static int getScore()
+    {
+        return scoreToWin;
+    }
+    
+    public static void setScoreNeeded(int score)
+    {
+        scoreToWin = score;
+    }
+    
+    //host functies toevoegen hier?
 }

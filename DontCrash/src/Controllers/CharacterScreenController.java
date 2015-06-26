@@ -11,6 +11,7 @@ import SharedInterfaces.IAdministator;
 import SharedInterfaces.IRoom;
 import dontcrash.ActualChat;
 import dontcrash.OmdatFXMLControllersMoeilijkDoen;
+import dontcrash.Player;
 import dontcrash.portsAndIps;
 import java.beans.PropertyChangeEvent;
 import java.io.IOException;
@@ -48,12 +49,15 @@ public class CharacterScreenController implements Observer, RemotePropertyListen
     TextArea taChat;
     @FXML
     TextField txtChat;
+    @FXML
+    TextField txtScore;
 
     private ActualChat ac;
     private IRoom room;
     private IAdministator admin;
 
     private int roomID;
+    //private int roomNeededScore;
 
     /**
      * Creates a new CharacterScreenController to select a character etc. also
@@ -86,6 +90,7 @@ public class CharacterScreenController implements Observer, RemotePropertyListen
      * @throws IOException
      */
     public void Start(Event evnt) throws IOException {
+        OmdatFXMLControllersMoeilijkDoen.setScoreNeeded(Integer.parseInt(txtScore.getText()));
         Stage stage = (Stage) btnstart.getScene().getWindow();
         root = FXMLLoader.load(getClass().getResource("/fxml/GameScreen.fxml"));
         Scene scene = new Scene(root);
@@ -178,4 +183,5 @@ public class CharacterScreenController implements Observer, RemotePropertyListen
         });
 
     }
+   
 }

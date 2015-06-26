@@ -84,4 +84,8 @@ public interface IRoom extends Serializable
      * @return if the statements succeeded
      */
     public boolean removePlayer(Player player);
+    
+    public void setNeededScore(int score);
+    
+    public int getNeededScore();
 }

@@ -18,6 +18,7 @@ public class Room implements Serializable, IRoom
     public IGame currentGame;
     public int chatPort;
     public Player host;
+    public int neededScore;
     
     /**
      * Initializes a new instance of room;
@@ -133,5 +134,17 @@ public class Room implements Serializable, IRoom
                 break;
             }
         return succes;
+    }
+    
+    @Override
+    public void setNeededScore(int score)
+    {
+        this.neededScore = score;
+    }
+    
+    @Override
+    public int getNeededScore()
+    {
+        return this.neededScore;
     }
 }
