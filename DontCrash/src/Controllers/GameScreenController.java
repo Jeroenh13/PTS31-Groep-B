@@ -216,7 +216,7 @@ public class GameScreenController implements Observer, RemotePropertyListener, I
     public void draw(ArrayList<Point> points) {
         for (Point p : points) {
             GraphicsContext gc = gameCanvas.getGraphicsContext2D();
-            gc.setLineWidth(2);
+            gc.setLineWidth(p.size);
             gc.setStroke(Color.color(p.red, p.green, p.blue));
             gc.strokeOval(p.X, p.Y, 1, 1);
         }

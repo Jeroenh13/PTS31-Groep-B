@@ -19,12 +19,14 @@ public class Point implements Serializable {
     public double red;
     public double green;
     public double blue;
+    public double size;
 
-    public Point(double X, double Y, double r, double g, double b) {
+    public Point(double X, double Y, double r, double g, double b, double size) {
         this.X = X;
         this.Y = Y;
         red = r;
         green = g;
         blue = b;
+        this.size = size;
     }
 }

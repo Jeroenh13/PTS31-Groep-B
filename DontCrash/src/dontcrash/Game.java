@@ -111,8 +111,8 @@ public class Game extends UnicastRemoteObject implements RemotePublisher, IGame,
                 c.curX = x;
                 int y = rnd.nextInt(500);
                 c.curY = y;
-                oldPoints.add(new Point(x, y, colors[colorcnt].getRed(), colors[colorcnt].getGreen(), colors[colorcnt].getBlue()));
-                newPoints.add(new Point(x, y, colors[colorcnt].getRed(), colors[colorcnt].getGreen(), colors[colorcnt].getBlue()));
+                oldPoints.add(new Point(x, y, colors[colorcnt].getRed(), colors[colorcnt].getGreen(), colors[colorcnt].getBlue(), p.character.size));
+                newPoints.add(new Point(x, y, colors[colorcnt].getRed(), colors[colorcnt].getGreen(), colors[colorcnt].getBlue(), p.character.size));
                 admin.UpdateCharacter(roomID, c, p);
                 allPoints.addAll(oldPoints);
                 colorcnt++;
@@ -137,25 +137,25 @@ public class Game extends UnicastRemoteObject implements RemotePublisher, IGame,
                         if (op.red == c.red && op.green == c.green && op.blue == c.blue) {
                             //0 i up
                             if (c.getDirection() == 0) {
-                                point = new Point(op.X, c.Y() - c.speed(), op.red, op.green, op.blue);
+                                point = new Point(op.X, c.Y() - c.speed(), op.red, op.green, op.blue, c.size);
                                 c.setY(c.Y() - c.speed());
                                 //imgview.setRotate(270);
 
                                 //1 is Right
                             } else if (c.getDirection() == 1) {
-                                point = new Point(c.X() + c.speed(), op.Y, op.red, op.green, op.blue);
+                                point = new Point(c.X() + c.speed(), op.Y, op.red, op.green, op.blue, c.size);
                                 c.setX(c.X() + c.speed());
                                 //imgview.setRotate(0);
 
                                 //2 is Bottom
                             } else if (c.getDirection() == 2) {
-                                point = new Point(op.X, c.Y() + c.speed(), op.red, op.green, op.blue);
+                                point = new Point(op.X, c.Y() + c.speed(), op.red, op.green, op.blue, c.size);
                                 c.setY(c.Y() + c.speed());
                                 //imgview.setRotate(90);
 
                                 //3 is Left
                             } else if (c.getDirection() == 3) {
-                                point = new Point(c.X() - c.speed(), op.Y, op.red, op.green, op.blue);
+                                point = new Point(c.X() - c.speed(), op.Y, op.red, op.green, op.blue, c.size);
                                 c.setX(c.X() - c.speed());
                                 //imgview.setRotate(180);
                             }
@@ -278,9 +278,31 @@ public class Game extends UnicastRemoteObject implements RemotePublisher, IGame,
                 }
             }).start();
         } else if (powerup.type == PowerupType.INCREASESIZE) {
-
+            (new Thread() {
+                @Override
+                public void run() {
+                    c.size = c.size * 2;
+                    try {
+                        Thread.sleep(powerup.tijdsduur * 4000);
+                    } catch (Exception ex) {
+                        System.out.println(ex.getMessage());
+                    }
+                    c.size = 2;
+                }
+            }).start();
         } else if (powerup.type == PowerupType.DECREASESIZE) {
-
+            (new Thread() {
+                @Override
+                public void run() {
+                    c.size = c.size * 0.5;
+                    try {
+                        Thread.sleep(powerup.tijdsduur * 4000);
+                    } catch (Exception ex) {
+                        System.out.println(ex.getMessage());
+                    }
+                    c.size = 2;
+                }
+            }).start();
         } else if (powerup.type == PowerupType.INVINCIBLE) {
             (new Thread() {
                 @Override

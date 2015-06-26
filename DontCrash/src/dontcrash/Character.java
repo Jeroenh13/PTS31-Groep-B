@@ -29,6 +29,7 @@ public class Character implements Serializable
     public boolean gameOver;
     public boolean getinput = true;
     public boolean invincible;
+    public double size = 2;
     
     /**
      * Initializes a new character using a player and a characterid
@@ -133,6 +134,6 @@ public class Character implements Serializable
     }
     
     public Point getPoint(){
-        return new Point((int)curX, (int)curY, red,green,blue);
+        return new Point((int)curX, (int)curY, red,green,blue,size);
     }
 }
