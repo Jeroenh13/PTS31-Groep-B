@@ -40,6 +40,10 @@ public class Game extends UnicastRemoteObject implements RemotePublisher, IGame,
     private ArrayList<Point> oldPoints;
     private ArrayList<Point> allPoints;
 
+    private ArrayList<DrawablePowerup> powerups;
+
+    private final int spawnChancePowerUp = 40; // Between 0 and 10000 chance every tick to spawn powerup
+
     private IAdministator admin;
 
     /**
@@ -55,6 +59,8 @@ public class Game extends UnicastRemoteObject implements RemotePublisher, IGame,
         newPoints = new ArrayList<>();
         oldPoints = new ArrayList<>();
         allPoints = new ArrayList<>();
+
+        powerups = new ArrayList();
 
         this.roomID = roomID;
         this.players = players;
@@ -105,8 +111,8 @@ public class Game extends UnicastRemoteObject implements RemotePublisher, IGame,
                 c.curX = x;
                 int y = rnd.nextInt(500);
                 c.curY = y;
-                oldPoints.add(new Point(x, y, colors[colorcnt].getRed(), colors[colorcnt].getGreen(), colors[colorcnt].getBlue()));
-                newPoints.add(new Point(x, y, colors[colorcnt].getRed(), colors[colorcnt].getGreen(), colors[colorcnt].getBlue()));
+                oldPoints.add(new Point(x, y, colors[colorcnt].getRed(), colors[colorcnt].getGreen(), colors[colorcnt].getBlue(), p.character.size));
+                newPoints.add(new Point(x, y, colors[colorcnt].getRed(), colors[colorcnt].getGreen(), colors[colorcnt].getBlue(), p.character.size));
                 admin.UpdateCharacter(roomID, c, p);
                 allPoints.addAll(oldPoints);
                 colorcnt++;
@@ -131,25 +137,25 @@ public class Game extends UnicastRemoteObject implements RemotePublisher, IGame,
                         if (op.red == c.red && op.green == c.green && op.blue == c.blue) {
                             //0 i up
                             if (c.getDirection() == 0) {
-                                point = new Point(op.X, c.Y() - c.speed(), op.red, op.green, op.blue);
+                                point = new Point(op.X, c.Y() - c.speed(), op.red, op.green, op.blue, c.size);
                                 c.setY(c.Y() - c.speed());
                                 //imgview.setRotate(270);
 
                                 //1 is Right
                             } else if (c.getDirection() == 1) {
-                                point = new Point(c.X() + c.speed(), op.Y, op.red, op.green, op.blue);
+                                point = new Point(c.X() + c.speed(), op.Y, op.red, op.green, op.blue, c.size);
                                 c.setX(c.X() + c.speed());
                                 //imgview.setRotate(0);
 
                                 //2 is Bottom
                             } else if (c.getDirection() == 2) {
-                                point = new Point(op.X, c.Y() + c.speed(), op.red, op.green, op.blue);
+                                point = new Point(op.X, c.Y() + c.speed(), op.red, op.green, op.blue, c.size);
                                 c.setY(c.Y() + c.speed());
                                 //imgview.setRotate(90);
 
                                 //3 is Left
                             } else if (c.getDirection() == 3) {
-                                point = new Point(c.X() - c.speed(), op.Y, op.red, op.green, op.blue);
+                                point = new Point(c.X() - c.speed(), op.Y, op.red, op.green, op.blue, c.size);
                                 c.setX(c.X() - c.speed());
                                 //imgview.setRotate(180);
                             }
@@ -158,6 +164,17 @@ public class Game extends UnicastRemoteObject implements RemotePublisher, IGame,
                                 newPoints.add(point);
                             } else {
                                 c.gameOver = true;
+                            }
+                            //Check collision with powerup
+                            DrawablePowerup hitdpu = checkPointPowerup(point);
+                            if (hitdpu != null) {
+                                applyPowerup(hitdpu.powerup, c);
+                            }
+                            //Spawn new powerup
+                            DrawablePowerup dpu = spawnPowerUp();
+                            if (dpu != null) {
+                                powerups.add(dpu);
+                                bp.inform(this, "Game", null, powerups);
                             }
                         }
                     }
@@ -170,6 +187,152 @@ public class Game extends UnicastRemoteObject implements RemotePublisher, IGame,
         }
     }
 
+    private boolean checkPoint(Point loc) {
+        if (loc.Y >= 714.0 || loc.Y <= 0 || loc.X >= 989.0 || loc.X <= 0) {
+            return true;
+        }
+
+        for (Point p : allPoints) {
+            if (p.X == loc.X && p.Y == loc.Y) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private DrawablePowerup checkPointPowerup(Point loc) {
+        for (DrawablePowerup p : powerups) {
+            if (p.minX <= loc.X && p.maxX >= loc.X && p.minY <= loc.Y && p.maxY >= loc.Y) {
+                powerups.remove(p);
+                bp.inform(this, "Game", null, powerups);
+                return p;
+            }
+        }
+        return null;
+    }
+
+    public DrawablePowerup spawnPowerUp() {
+        Random random = new Random();
+
+        if (random.nextInt(10000) < spawnChancePowerUp) {
+            Powerup powerup;
+            int tijdsduur = 2 + random.nextInt(5);
+            //Get a random powerup
+            switch (random.nextInt(6) + 1) {
+                case 1: //Speed up
+                    powerup = new Powerup(PowerupType.INCREASESPEED, tijdsduur, (float) 1.5, 1);
+                    break;
+                case 2: //Speed down
+                    powerup = new Powerup(PowerupType.DECREASESPEED, tijdsduur, (float) 0.5, 1);
+                    break;
+                /*case 3: //Size up
+                 powerup = new Powerup(PowerupType.INCREASESIZE, tijdsduur, (float) 2, 1);
+                 break;
+                 case 4: //Size down
+                 powerup = new Powerup(PowerupType.DECREASESIZE, tijdsduur, (float) 0.5, 1);
+                 break;*/
+                case 5: //ClearBoard
+                    powerup = new Powerup(PowerupType.CLEARBOARD, 0, 0, 1);
+                    break;
+                case 6: //Invincible
+                    powerup = new Powerup(PowerupType.INVINCIBLE, tijdsduur, 0, 1);
+                    break;
+                default:
+                    return null;
+            }
+
+            DrawablePowerup dpu = new DrawablePowerup(
+                    powerup,
+                    random.nextInt(600),
+                    random.nextInt(500));
+            return dpu;
+        }
+        return null;
+    }
+
+    public void applyPowerup(Powerup powerup, dontcrash.Character c) {
+        if (powerup.type == PowerupType.INCREASESPEED) {
+            (new Thread() {
+                @Override
+                public void run() {
+                    c.setSpeed(c.speed() * powerup.modifier);
+                    try {
+                        Thread.sleep(powerup.tijdsduur * 1000);
+                    } catch (Exception ex) {
+                        System.out.println(ex.getMessage());
+                    }
+                    c.setSpeed(c.speed() / powerup.modifier);
+                }
+            }).start();
+        } else if (powerup.type == PowerupType.DECREASESPEED) {
+            (new Thread() {
+                @Override
+                public void run() {
+                    c.setSpeed(c.speed() * powerup.modifier);
+                    try {
+                        Thread.sleep(powerup.tijdsduur * 1000);
+                    } catch (Exception ex) {
+                        System.out.println(ex.getMessage());
+                    }
+                    c.setSpeed(c.speed() / powerup.modifier);
+                }
+            }).start();
+        } else if (powerup.type == PowerupType.INCREASESIZE) {
+            (new Thread() {
+                @Override
+                public void run() {
+                    c.size = c.size * 2;
+                    try {
+                        Thread.sleep(powerup.tijdsduur * 4000);
+                    } catch (Exception ex) {
+                        System.out.println(ex.getMessage());
+                    }
+                    c.size = 2;
+                }
+            }).start();
+        } else if (powerup.type == PowerupType.DECREASESIZE) {
+            (new Thread() {
+                @Override
+                public void run() {
+                    c.size = c.size * 0.5;
+                    try {
+                        Thread.sleep(powerup.tijdsduur * 4000);
+                    } catch (Exception ex) {
+                        System.out.println(ex.getMessage());
+                    }
+                    c.size = 2;
+                }
+            }).start();
+        } else if (powerup.type == PowerupType.INVINCIBLE) {
+            (new Thread() {
+                @Override
+                public void run() {
+                    c.invincible = true;
+                    try {
+                        Thread.sleep(powerup.tijdsduur * 1000);
+                    } catch (Exception ex) {
+                        System.out.println(ex.getMessage());
+                    }
+                    c.invincible = false;
+                }
+            }).start();
+        } else if (powerup.type == PowerupType.CLEARBOARD) {
+            allPoints.clear();
+            powerups.clear();
+            bp.inform(this, "Game", null, powerups);
+        }
+    }
+
+    private class GameTask extends TimerTask {
+
+        @Override
+        public void run() {
+            calculatePoints();
+            bp.inform(this, "Game", oldPoints, newPoints);
+            oldPoints = newPoints;
+            newPoints = oldPoints;
+        }
+    }
     /*
      private ArrayList<Point> moveToPoint(Point previousPosition, Point currentPosition) {
      ArrayList<Point> points = new ArrayList<Point>();
@@ -222,27 +385,5 @@ public class Game extends UnicastRemoteObject implements RemotePublisher, IGame,
      return points;
      }
      */
-    private boolean checkPoint(Point loc) {
-        if (loc.Y >= 714.0 || loc.Y <= 0 || loc.X >= 989.0 || loc.X <= 0) {
-            return true;
-        }
 
-        for (Point p : allPoints) {
-            if (p.X == loc.X && p.Y == loc.Y) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    class GameTask extends TimerTask {
-
-        @Override
-        public void run() {
-            calculatePoints();
-            bp.inform(this, "Game", oldPoints, newPoints);
-            oldPoints = newPoints;
-            newPoints = oldPoints;
-        }
-    }
 }

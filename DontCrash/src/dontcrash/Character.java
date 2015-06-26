@@ -28,6 +28,8 @@ public class Character implements Serializable
     public double blue;
     public boolean gameOver;
     public boolean getinput = true;
+    public boolean invincible;
+    public double size = 2;
     
     /**
      * Initializes a new character using a player and a characterid
@@ -42,6 +44,7 @@ public class Character implements Serializable
         Random rnd = new Random();
         direction = rnd.nextInt(3);
         speed = 2;
+        invincible = false;
     }
     
     public void getHit()
@@ -131,6 +134,6 @@ public class Character implements Serializable
     }
     
     public Point getPoint(){
-        return new Point((int)curX, (int)curY, red,green,blue);
+        return new Point((int)curX, (int)curY, red,green,blue,size);
     }
 }
