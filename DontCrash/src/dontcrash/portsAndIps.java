@@ -14,11 +14,15 @@ import java.net.SocketException;
  * @author Bas
  */
 public class portsAndIps {
-
+    /**
+     * IP Address of the database
+     */
+    public final static String databaseIP="10.0.0.11";
+    
     /**
      * IP Address of the server
      */
-    public final static String IP = "192.168.2.2";
+    public final static String IP = "10.0.0.11";
     /**
      * Default chat port of the server
      */
