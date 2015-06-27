@@ -5,26 +5,33 @@
  */
 package Controllers;
 
+import Music.MusicPlayer;
 import RMI.RMIClient;
 import RemoteObserver.RemotePropertyListener;
 import SharedInterfaces.IAdministator;
 import SharedInterfaces.IRoom;
 import dontcrash.ActualChat;
 import dontcrash.DontCrash;
-import dontcrash.OmdatFXMLControllersMoeilijkDoen;
+import dontcrash.LocalVariables;
+import dontcrash.Options;
 import dontcrash.Player;
+import dontcrash.RoomSort;
 import dontcrash.portsAndIps;
 import java.beans.PropertyChangeEvent;
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -33,7 +40,9 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.Slider;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
@@ -61,9 +70,17 @@ public class MenuController implements Observer, RemotePropertyListener, Initial
     @FXML
     Label lblWelcomeUser;
 
+    @FXML
+    Slider slrMusic;
+    @FXML
+    Slider slrEffect;
+    @FXML
+    ListView lvRooms;
+
     private ActualChat ac;
     private IAdministator admin;
     private Player p;
+    private MusicPlayer mp;
 
     /**
      * Create the RMI connections.
@@ -71,13 +88,13 @@ public class MenuController implements Observer, RemotePropertyListener, Initial
      * @throws IOException if there is a problem withe the ports
      */
     public MenuController() throws IOException {
-        p = OmdatFXMLControllersMoeilijkDoen.getPlayer();
+        p = LocalVariables.getPlayer();
         Platform.runLater(() -> {
             lblWelcomeUser.setText("Hello " + p.name);
         });
 
         //makes connection to the admin.
-        RMIClient rmi = new RMIClient(portsAndIps.IP, 1096, "Admin");
+        RMIClient rmi = new RMIClient(portsAndIps.IP, 1098, "Admin");
         admin = rmi.setUpNewAdministrator();
         try {
             UnicastRemoteObject.exportObject(this, portsAndIps.getNewPort());
@@ -93,6 +110,26 @@ public class MenuController implements Observer, RemotePropertyListener, Initial
             Logger.getLogger(MenuController.class.getName()).log(Level.SEVERE, null, ex);
         }
         ac.addObserver(this);
+        mp = new MusicPlayer();
+        mp.playSound("BackgroundMusic");
+
+        if (LocalVariables.getOptions() == null) {
+            String path = new File(".").getCanonicalPath() + "Options.bin";
+            File f = new File(path);
+            if (f.exists()) {
+                LocalVariables.setOptions(Options.readFile());
+            } else {
+                LocalVariables.setOptions(new Options(100, 100, RoomSort.ID));
+                Options.writeFile(LocalVariables.getOptions());
+            }
+        }
+
+        Platform.runLater(() -> {
+            addSliderEvents();
+            slrMusic.setValue(LocalVariables.getOptions().getMusicLevel());
+            slrEffect.setValue(LocalVariables.getOptions().getEffectLevel());
+        });
+        setRooms();
     }
 
     /**
@@ -128,7 +165,7 @@ public class MenuController implements Observer, RemotePropertyListener, Initial
      * @throws IOException if the FXML file cannot be found.
      */
     public void goToCharacterSelect(int roomID) throws IOException {
-        OmdatFXMLControllersMoeilijkDoen.setRoomID(roomID);
+        LocalVariables.setRoomID(roomID);
         Stage stage = (Stage) btnCreate.getScene().getWindow();
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(getClass().getResource("/fxml/CharacterSelect.fxml"));
@@ -176,13 +213,44 @@ public class MenuController implements Observer, RemotePropertyListener, Initial
      */
     @Override
     public void propertyChange(PropertyChangeEvent evt) throws RemoteException {
-        IRoom room = (IRoom) evt.getNewValue();
+        setRooms();
+    }
+
+    private void setRooms() throws RemoteException {
+        List<IRoom> rooms = admin.getRooms();
         Platform.runLater(() -> {
-            taMessages.appendText("Room " + room.toString() + " created"+ "\n");
+            lvRooms.getItems().clear();
+
+            for (IRoom r : rooms) {
+                lvRooms.getItems().add(r.toString());
+            }
+
         });
     }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+    }
+
+    /**
+     * Adds slider events.
+     */
+    private void addSliderEvents() {
+
+        slrEffect.valueProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+                mp.setVolumeEffecten(slrEffect.getValue());
+                LocalVariables.getOptions().setEffectLevel(slrMusic.getValue());
+            }
+        });
+
+        slrMusic.valueProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+                mp.setVolumeMusic(slrMusic.getValue());
+                LocalVariables.getOptions().setMusicLevel(slrMusic.getValue());
+            }
+        });
     }
 }

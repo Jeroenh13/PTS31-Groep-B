@@ -15,13 +15,13 @@
                   <Font name="NeuropolXRg-Regular" size="15.0" />
                </font>
             </Label>
-            <Slider layoutX="55.0" layoutY="170.0" value="100.0" />
+            <Slider fx:id="slrEffect" layoutX="55.0" layoutY="170.0" minorTickCount="1" showTickLabels="true" showTickMarks="true" value="100.0" />
             <Label layoutX="57.0" layoutY="151.0" text="Effecten">
                <font>
                   <Font name="NeuropolXRg-Regular" size="15.0" />
                </font>
             </Label>
-            <Slider layoutX="55.0" layoutY="110.0" value="100.0" />
+            <Slider fx:id="slrMusic" layoutX="55.0" layoutY="110.0" minorTickCount="1" showTickLabels="true" showTickMarks="true" value="100.0" />
             <Label layoutX="57.0" layoutY="91.0" text="Music">
                <font>
                   <Font name="NeuropolXRg-Regular" size="15.0" />
@@ -65,7 +65,10 @@
                   <Font name="NeuropolXRg-Regular" size="22.0" />
                </font>
             </Label>
-            <ScrollPane fx:id="spRooms" layoutX="26.0" layoutY="84.0" prefHeight="465.0" prefWidth="633.0" style="-fx-background: #c1c1c1;" />
+            <ScrollPane fx:id="spRooms" layoutX="26.0" layoutY="84.0" prefHeight="465.0" prefWidth="633.0" style="-fx-background: #c1c1c1;">
+               <content>
+                  <ListView fx:id="lvRooms" prefHeight="465.0" prefWidth="630.0" />
+               </content></ScrollPane>
          </children>
       </Pane>
       <Pane layoutX="930.0" prefHeight="734.0" prefWidth="242.0" style="-fx-background-color: #7da7d9;">

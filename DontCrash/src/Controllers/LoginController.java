@@ -6,7 +6,7 @@
 package Controllers;
 
 import dontcrash.Administration;
-import dontcrash.OmdatFXMLControllersMoeilijkDoen;
+import dontcrash.LocalVariables;
 import dontcrash.Player;
 import java.io.IOException;
 import java.rmi.RemoteException;
@@ -19,6 +19,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -52,18 +53,21 @@ public class LoginController {
      */
     public void btnLoginClick(Event evnt) throws IOException
     {
-        OmdatFXMLControllersMoeilijkDoen.setPlayer(new Player(1, txtNaam.getText(), 300, "blabla@gmail.com"));
+        /*
+        LocalVariables.setPlayer(new Player(1, txtNaam.getText(), 300, "blabla@gmail.com"));
             Stage stage=(Stage) txtNaam.getScene().getWindow();
             root = FXMLLoader.load(getClass().getResource("/fxml/menu.fxml"));
             Scene scene = new Scene(root);
             stage.setScene(scene);
             stage.show();
-        /*
+        */
+        
         String username = txtNaam.getText();
         String password = txtPassword.getText();
         
         if(admin.login(username, password))
         {
+            LocalVariables.setPlayer(admin.getPlayer(username));
             Stage stage=(Stage) txtNaam.getScene().getWindow();
             root = FXMLLoader.load(getClass().getResource("/fxml/menu.fxml"));
             Scene scene = new Scene(root);
@@ -71,7 +75,7 @@ public class LoginController {
             stage.show();
         }
         else
-            JOptionPane.showMessageDialog(null, "foute inloggegevens");*/
+            JOptionPane.showMessageDialog(null, "foute inloggegevens");
     }
     
     /**
@@ -87,34 +91,4 @@ public class LoginController {
             stage.setScene(scene);
             stage.show();
     }
-    
-    /**
-     * Handles the Game button click
-     * Shortcut to the gamescreen without loggin in
-     * @param evt
-     * @throws IOException 
-     */
-//    public void btnGameClick(Event evt) throws IOException
-//    {
-//        Stage stage=(Stage) txtNaam.getScene().getWindow();
-//        root = FXMLLoader.load(getClass().getResource("/fxml/GameScreen.fxml"));
-//        //int port = Server.createNewServer("Game");
-//        Scene scene = new Scene(root);
-//        stage.setScene(scene);
-//        stage.show();
-//    }
-    
-    /**
-     * cause fuck databases.
-     * @param evnt
-     * @throws java.io.IOException
-     */
-//    public void btnNoDBClick(Event evnt) throws IOException
-//    { 
-//        Stage stage=(Stage) txtNaam.getScene().getWindow();
-//        root = FXMLLoader.load(getClass().getResource("/fxml/menu.fxml"));
-//        Scene scene = new Scene(root);
-//        stage.setScene(scene);
-//        stage.show();  
-//    }
 }

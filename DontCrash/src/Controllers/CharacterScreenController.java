@@ -10,7 +10,7 @@ import RemoteObserver.RemotePropertyListener;
 import SharedInterfaces.IAdministator;
 import SharedInterfaces.IRoom;
 import dontcrash.ActualChat;
-import dontcrash.OmdatFXMLControllersMoeilijkDoen;
+import dontcrash.LocalVariables;
 import dontcrash.Player;
 import dontcrash.portsAndIps;
 import java.beans.PropertyChangeEvent;
@@ -73,9 +73,9 @@ public class CharacterScreenController implements Observer, RemotePropertyListen
         } catch (RemoteException ex) {
             Logger.getLogger(CharacterScreenController.class.getName()).log(Level.SEVERE, null, ex);
         }
-        room = admin.getRoom(OmdatFXMLControllersMoeilijkDoen.getRoomID());
+        room = admin.getRoom(LocalVariables.getRoomID());
         try {
-            this.ac = new ActualChat(portsAndIps.IP, room.getRoomChatPort(), portsAndIps.getNewPort(), OmdatFXMLControllersMoeilijkDoen.getPlayer().name, "Chat");
+            this.ac = new ActualChat(portsAndIps.IP, room.getRoomChatPort(), portsAndIps.getNewPort(), LocalVariables.getPlayer().name, "Chat");
         } catch (IOException ex) {
             Logger.getLogger(CharacterScreenController.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -90,7 +90,7 @@ public class CharacterScreenController implements Observer, RemotePropertyListen
      * @throws IOException
      */
     public void Start(Event evnt) throws IOException {
-        OmdatFXMLControllersMoeilijkDoen.setScoreNeeded(Integer.parseInt(txtScore.getText()));
+        LocalVariables.setScoreNeeded(Integer.parseInt(txtScore.getText()));
         Stage stage = (Stage) btnstart.getScene().getWindow();
         root = FXMLLoader.load(getClass().getResource("/fxml/GameScreen.fxml"));
         Scene scene = new Scene(root);
@@ -155,7 +155,7 @@ public class CharacterScreenController implements Observer, RemotePropertyListen
      * @throws IOException 
      */
     public void btnLeaveGameClick(Event evt) throws RemoteException, IOException {
-        boolean succes = admin.leaveGame(OmdatFXMLControllersMoeilijkDoen.getPlayer(), roomID);
+        boolean succes = admin.leaveGame(LocalVariables.getPlayer(), roomID);
         if (succes) {
             leaveRoom();
         }

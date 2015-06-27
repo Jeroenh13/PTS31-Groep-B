@@ -8,12 +8,29 @@ package dontcrash;
  *
  * @author Bas
  */
-public class OmdatFXMLControllersMoeilijkDoen {
+public class LocalVariables {
 
     private static int roomID;
     private static Player player;
     private static int scoreToWin;
-
+    private static Options options;
+    
+    /**
+     * gets the options
+     * @return options that are set
+     */
+    public static Options getOptions() {
+        return options;
+    }
+    
+        /**
+     * sets the options
+     * @param options 
+     */
+    public static void setOptions(Options options) {
+        LocalVariables.options = options;
+    }
+    
     /**
      *
      * TODO JAVADOC
@@ -36,7 +53,7 @@ public class OmdatFXMLControllersMoeilijkDoen {
      * @param player player to be set
      */
     public static void setPlayer(Player player) {
-        OmdatFXMLControllersMoeilijkDoen.player = player;
+        LocalVariables.player = player;
     }
 
     /**
@@ -58,16 +75,14 @@ public class OmdatFXMLControllersMoeilijkDoen {
         roomID = aRoomID;
         System.out.println(aRoomID);
     }
-    
-    public static int getScore()
-    {
+
+    public static int getScore() {
         return scoreToWin;
     }
-    
-    public static void setScoreNeeded(int score)
-    {
+
+    public static void setScoreNeeded(int score) {
         scoreToWin = score;
     }
-    
+
     //host functies toevoegen hier?
 }

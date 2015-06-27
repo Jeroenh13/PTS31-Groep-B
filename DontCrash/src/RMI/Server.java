@@ -194,7 +194,7 @@ public class Server {
         // Create server
         Server server = new Server();
         bindingName = "Admin";
-        Server serverCommands = new Server(1096, "Administrator");
+        Server serverCommands = new Server(1098, "Administrator");
     }
 
     /**

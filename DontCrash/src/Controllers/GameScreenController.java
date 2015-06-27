@@ -95,24 +95,24 @@ public class GameScreenController implements Observer, RemotePropertyListener, I
         }
 
         try {
-            room = admin.getRoom(OmdatFXMLControllersMoeilijkDoen.getRoomID());
-            String name = OmdatFXMLControllersMoeilijkDoen.getPlayer().name;
+            room = admin.getRoom(LocalVariables.getRoomID());
+            String name = LocalVariables.getPlayer().name;
             String hostname = room.getHost().name;
             if (hostname.equals(name)) {
                 admin.startNewGame(room.getRoomId());
-                room = admin.getRoom(OmdatFXMLControllersMoeilijkDoen.getRoomID());
+                room = admin.getRoom(LocalVariables.getRoomID());
                 game = room.getCurrentGame();
                 PLAY.setVisible(true);
             } else {
                 while (room.getCurrentGame() == null) {
                     Thread.sleep(500);
-                    room = admin.getRoom(OmdatFXMLControllersMoeilijkDoen.getRoomID());
+                    room = admin.getRoom(LocalVariables.getRoomID());
                     PLAY.setVisible(false);
                 }
                 game = room.getCurrentGame();
             }
             
-            lblScore.setText(String.valueOf(OmdatFXMLControllersMoeilijkDoen.getScore()));
+            lblScore.setText(String.valueOf(LocalVariables.getScore()));
             lblPlayer1.setText("");
             lblPlayer2.setText("");
             lblPlayer3.setText("");
@@ -129,7 +129,7 @@ public class GameScreenController implements Observer, RemotePropertyListener, I
             }
             game.addListener(this, "Game");
 
-            character = admin.newCharacter(OmdatFXMLControllersMoeilijkDoen.getRoomID(), OmdatFXMLControllersMoeilijkDoen.getPlayer(), admin.getNextCharacterID());
+            character = admin.newCharacter(LocalVariables.getRoomID(), LocalVariables.getPlayer(), admin.getNextCharacterID());
 
         } catch (RemoteException ex) {
             Logger.getLogger(GameScreenController.class.getName()).log(Level.SEVERE, null, ex);
@@ -152,9 +152,9 @@ public class GameScreenController implements Observer, RemotePropertyListener, I
             @Override
             public void handle(KeyEvent ke) {
                 try {
-                    room = admin.getRoom(OmdatFXMLControllersMoeilijkDoen.getRoomID());
+                    room = admin.getRoom(LocalVariables.getRoomID());
                     for (Player p : room.getPlayers()) {
-                        if (p.name.equals(OmdatFXMLControllersMoeilijkDoen.getPlayer().name)) {
+                        if (p.name.equals(LocalVariables.getPlayer().name)) {
                             character = p.character;
                             if (character.getinput) {
                                 if (ke.getCode() == KeyCode.LEFT) {
@@ -171,7 +171,7 @@ public class GameScreenController implements Observer, RemotePropertyListener, I
                                     }
                                 }
                             }
-                            admin.UpdateCharacter(OmdatFXMLControllersMoeilijkDoen.getRoomID(), character, p);
+                            admin.UpdateCharacter(LocalVariables.getRoomID(), character, p);
                         }
                     }
                 } catch (RemoteException ex) {

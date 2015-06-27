@@ -30,7 +30,7 @@ public class SocketServer implements Runnable {
         while (true) {
              try {
                  // create new Thread which runs Multiserverrunnable
-                 Thread t = new Thread(new RunServer(serverSocket.accept()));
+                 Thread t = new Thread(new AcceptServer(serverSocket.accept()));
                  // start Thread
                  t.start();
              } catch (IOException ex) {

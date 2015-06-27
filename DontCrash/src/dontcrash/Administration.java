@@ -294,4 +294,15 @@ public class Administration extends UnicastRemoteObject implements RemotePublish
             bp.inform(this, "Room"+room.toString(), null, null);
         return succes;
     }
+    
+        public Player getPlayer(String username) {
+        dbm.openConn();
+        try {
+            return dbm.getPlayer(username);
+        } catch (Exception e) {
+        } finally {
+            dbm.closeConn();
+        }
+        return null;
+    }
 }

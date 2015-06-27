@@ -17,7 +17,7 @@ import RMI.Server;
  *
  * @author Bas
  */
-class RunServer implements Runnable {
+class AcceptServer implements Runnable {
     
     
     Socket so = null;
@@ -27,7 +27,7 @@ class RunServer implements Runnable {
     ObjectInputStream in ;
     ObjectOutputStream out;
 
-    public RunServer(Socket accept) {
+    public AcceptServer(Socket accept) {
         so = accept;
     }
 
@@ -40,7 +40,7 @@ class RunServer implements Runnable {
             out = new ObjectOutputStream(outStream);
             out.writeObject(Server.createNewServer("Chat", "Chat"));
         } catch (IOException ex) {
-            Logger.getLogger(RunServer.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(AcceptServer.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     

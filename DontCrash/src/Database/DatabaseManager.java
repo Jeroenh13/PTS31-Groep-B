@@ -6,6 +6,7 @@
 package Database;
 
 import dontcrash.Player;
+import dontcrash.portsAndIps;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -36,9 +37,16 @@ public class DatabaseManager
         String PASS = "LxbdRdlzEx";
         */
                 
-        String URL = "jdbc:oracle:thin:@localhost:1521:xe";
+        String URL = "jdbc:oracle:thin:@"+portsAndIps.databaseIP+":1521:xe";
         String USER = "PTS3";
         String PASS = "PTS3";
+
+        try {
+            conn = DriverManager.getConnection(URL, USER, PASS);
+        } catch (SQLException ex) {
+            System.out.println("Could not make an connection");
+            System.out.println(ex.getErrorCode() + " -- " + ex.getMessage());
+        }
         
         try 
         {
@@ -179,5 +187,27 @@ public class DatabaseManager
         }
         
         return naam;
+    }
+    
+     public Player getPlayer(String username) {
+        try {
+            int id = 1;
+            int score = 0;
+            String email = "";
+            String query = "SELECT * FROM PLAYER WHERE name=?";
+            PreparedStatement stat = conn.prepareStatement(query);
+            stat.setString(1, username);
+            ResultSet rs = stat.executeQuery();
+            while (rs.next()) {
+                 id = rs.getInt("id");
+                 score = rs.getInt("rank");
+                 email = rs.getString("email");
+            }
+            return new Player(id,username,score,email);
+        } catch (Exception ex) {
+            System.out.println("Something went wrong. See next line for more info.");
+            System.out.println(ex.getMessage());
+        }
+        return null;
     }
 }
