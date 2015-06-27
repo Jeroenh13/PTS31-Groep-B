@@ -50,7 +50,7 @@ public class CharacterScreenController implements Observer, RemotePropertyListen
     @FXML
     TextField txtChat;
     @FXML
-    TextField txtScore;
+    TextField txtRondes;
 
     private ActualChat ac;
     private IRoom room;
@@ -66,7 +66,7 @@ public class CharacterScreenController implements Observer, RemotePropertyListen
      * @throws java.io.IOException IOException on ports
      */
     public CharacterScreenController() throws IOException {
-        RMIClient rmi = new RMIClient(portsAndIps.IP, 1096, "Admin");
+        RMIClient rmi = new RMIClient(portsAndIps.IP, portsAndIps.RMIPort, "Admin");
         admin = rmi.setUpNewAdministrator();
         try {
             UnicastRemoteObject.exportObject(this, portsAndIps.getNewPort());
@@ -90,7 +90,7 @@ public class CharacterScreenController implements Observer, RemotePropertyListen
      * @throws IOException
      */
     public void Start(Event evnt) throws IOException {
-        LocalVariables.setScoreNeeded(Integer.parseInt(txtScore.getText()));
+        LocalVariables.setScoreNeeded(Integer.parseInt(txtRondes.getText()));
         Stage stage = (Stage) btnstart.getScene().getWindow();
         root = FXMLLoader.load(getClass().getResource("/fxml/GameScreen.fxml"));
         Scene scene = new Scene(root);

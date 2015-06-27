@@ -19,15 +19,17 @@ public class portsAndIps {
      */
     public final static String databaseIP="10.0.0.11";
     
+    public static int RMIPort = 1098;
+    
     /**
      * IP Address of the server
      */
-    public final static String IP = "10.0.0.11";
+    public final static String IP = "localhost";
     /**
      * Default chat port of the server
      */
     public final static int defaultServerPortChat = 1099;
-    private static int lastPort = 1100;
+    private static int lastPort = 1200;
     
     private static boolean isPortInUse(int port) throws IOException {
         // Assume no connection is possible.
