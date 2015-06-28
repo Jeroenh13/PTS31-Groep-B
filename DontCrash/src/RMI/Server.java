@@ -26,7 +26,7 @@ import java.util.Enumeration;
  */
 public class Server {
 
-    private static final int portNumber = 1099;
+    private static final int portNumber = portsAndIps.defaultServerPortChat;
 
     // Set binding name for student administration
     private static String bindingName = "Chat";
@@ -194,7 +194,7 @@ public class Server {
         // Create server
         Server server = new Server();
         bindingName = "Admin";
-        Server serverCommands = new Server(1098, "Administrator");
+        Server serverCommands = new Server(portsAndIps.ServerPort, "Administrator");
     }
 
     /**

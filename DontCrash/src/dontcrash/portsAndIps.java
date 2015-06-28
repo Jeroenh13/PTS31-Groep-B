@@ -19,7 +19,9 @@ public class portsAndIps {
      */
     public final static String databaseIP="10.0.0.11";
     
-    public static int RMIPort = 1098;
+    public static int RMIPort = 1095;
+    public static int ServerPort = 1096;
+    public static int SocketPort = 1093;
     
     /**
      * IP Address of the server
@@ -28,7 +30,7 @@ public class portsAndIps {
     /**
      * Default chat port of the server
      */
-    public final static int defaultServerPortChat = 1099;
+    public final static int defaultServerPortChat = 1094;
     private static int lastPort = 1200;
     
     private static boolean isPortInUse(int port) throws IOException {

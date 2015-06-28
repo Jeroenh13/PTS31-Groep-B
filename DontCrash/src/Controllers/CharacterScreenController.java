@@ -66,7 +66,7 @@ public class CharacterScreenController implements Observer, RemotePropertyListen
      * @throws java.io.IOException IOException on ports
      */
     public CharacterScreenController() throws IOException {
-        RMIClient rmi = new RMIClient(portsAndIps.IP, portsAndIps.RMIPort, "Admin");
+        RMIClient rmi = new RMIClient(portsAndIps.IP, portsAndIps.ServerPort, "Admin");
         admin = rmi.setUpNewAdministrator();
         try {
             UnicastRemoteObject.exportObject(this, portsAndIps.getNewPort());

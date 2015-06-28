@@ -94,7 +94,7 @@ public class MenuController implements Observer, RemotePropertyListener, Initial
         });
 
         //makes connection to the admin.
-        RMIClient rmi = new RMIClient(portsAndIps.IP, 1098, "Admin");
+        RMIClient rmi = new RMIClient(portsAndIps.IP, portsAndIps.ServerPort, "Admin");
         admin = rmi.setUpNewAdministrator();
         try {
             UnicastRemoteObject.exportObject(this, portsAndIps.getNewPort());

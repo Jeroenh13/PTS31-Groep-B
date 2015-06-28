@@ -84,7 +84,7 @@ public class GameScreenController implements Observer, RemotePropertyListener, I
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        RMIClient rmi = new RMIClient(portsAndIps.IP, portsAndIps.RMIPort, "Admin");
+        RMIClient rmi = new RMIClient(portsAndIps.IP, portsAndIps.ServerPort, "Admin");
         admin = rmi.setUpNewAdministrator();
         try {
             UnicastRemoteObject.exportObject(this, portsAndIps.getNewPort());

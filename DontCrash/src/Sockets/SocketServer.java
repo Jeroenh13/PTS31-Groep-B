@@ -3,6 +3,7 @@
  */
 package Sockets;
 
+import dontcrash.portsAndIps;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.util.logging.Level;
@@ -21,7 +22,7 @@ public class SocketServer implements Runnable {
     public void run() {
          ServerSocket serverSocket = null;
         try {
-            serverSocket = new ServerSocket(1095);
+            serverSocket = new ServerSocket(portsAndIps.SocketPort);
         } catch (IOException e) {
             System.err.println("Could not listen on port: 1095.");
             System.exit(1);

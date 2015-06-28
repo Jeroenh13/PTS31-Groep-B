@@ -42,7 +42,7 @@ public class SocketClient implements Callable {
     public Integer call() throws Exception {
 
         try {
-            client = new Socket(portsAndIps.IP, 1095);
+            client = new Socket(portsAndIps.IP, portsAndIps.SocketPort);
             outStream = client.getOutputStream();
             out = new ObjectOutputStream(outStream);
             inStream = client.getInputStream();
