@@ -95,6 +95,7 @@ public class GameScreenController implements Observer, RemotePropertyListener, I
             if (isHost) {
                 PLAY.setVisible(true);
                 admin.startNewGame(room.getRoomId());
+                room = admin.getRoom(LocalVariables.getRoomID());
                 game = room.getCurrentGame();
             } else {
                 room = admin.getRoom(LocalVariables.getRoomID());

@@ -83,8 +83,20 @@ public class CharacterScreenController implements Observer, RemotePropertyListen
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        btnstart.setDisable(true);
+        txtRondes.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                if(newValue.matches("^[0-9]+$")){
+                    btnstart.setDisable(false);
+                }
+                else{
+                    btnstart.setDisable(true);
+                }
+            }
+        });
+        
         try {
-
             RMIClient rmi = new RMIClient(portsAndIps.IP, portsAndIps.ServerPort, "Admin");
             admin = rmi.setUpNewAdministrator();
 

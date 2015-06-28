@@ -54,7 +54,7 @@ public class Game extends UnicastRemoteObject implements RemotePublisher, IGame,
      * @throws java.rmi.RemoteException
      */
     public Game(List<Player> players, int roomID) throws RemoteException {
-        RMIClient rmi = new RMIClient(portsAndIps.IP, portsAndIps.RMIPort, "Admin");
+        RMIClient rmi = new RMIClient(portsAndIps.IP, portsAndIps.ServerPort, "Admin");
         admin = rmi.setUpNewAdministrator();
         newPoints = new ArrayList<>();
         oldPoints = new ArrayList<>();
@@ -100,6 +100,7 @@ public class Game extends UnicastRemoteObject implements RemotePublisher, IGame,
     @Override
     public void startRun() {
         try {
+
             IRoom r = admin.getRoom(roomID);
             Color[] colors = new Color[]{Color.ORANGE, Color.RED, Color.BLUE, Color.BROWN};
             int colorcnt = 0;

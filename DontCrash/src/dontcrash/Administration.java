@@ -30,7 +30,7 @@ import java.util.logging.Logger;
  */
 public class Administration extends UnicastRemoteObject implements RemotePublisher, IAdministator {
 
-    BasicPublisher bp;
+    private final transient BasicPublisher bp;
 
     private final List<Player> players;
 
