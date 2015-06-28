@@ -290,8 +290,12 @@ public class Administration extends UnicastRemoteObject implements RemotePublish
     public boolean leaveGame(Player player, int roomID) throws RemoteException {
         IRoom room = getRoom(roomID);
         boolean succes = room.removePlayer(player);
-        if(room.getHost() == null)
-            bp.inform(this, "Room"+room.toString(), null, null);
+        if (room.getHost() == null) {
+            bp.inform(this, "Room" + room.toString(), null, "Admin left, room closed.");
+        }
+        if (room.getHost() == null || room.getPlayers().isEmpty()) {
+            rooms.remove(room);
+        }
         return succes;
     }
     

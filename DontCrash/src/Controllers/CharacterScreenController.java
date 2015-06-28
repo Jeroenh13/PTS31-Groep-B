@@ -15,19 +15,23 @@ import dontcrash.Player;
 import dontcrash.portsAndIps;
 import java.beans.PropertyChangeEvent;
 import java.io.IOException;
+import java.net.URL;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Platform;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
@@ -36,7 +40,7 @@ import javafx.stage.Stage;
  *
  * @author Kitty
  */
-public class CharacterScreenController implements Observer, RemotePropertyListener {
+public class CharacterScreenController implements Observer, RemotePropertyListener, Initializable {
 
     @FXML
     Button btnstart;
@@ -44,6 +48,8 @@ public class CharacterScreenController implements Observer, RemotePropertyListen
     Button btnLeaveGame;
     @FXML
     Parent root;
+    @FXML
+    Label Rondes;
 
     @FXML
     TextArea taChat;
@@ -55,6 +61,7 @@ public class CharacterScreenController implements Observer, RemotePropertyListen
     private ActualChat ac;
     private IRoom room;
     private IAdministator admin;
+    private boolean isHost;
 
     private int roomID;
     //private int roomNeededScore;
@@ -66,21 +73,39 @@ public class CharacterScreenController implements Observer, RemotePropertyListen
      * @throws java.io.IOException IOException on ports
      */
     public CharacterScreenController() throws IOException {
-        RMIClient rmi = new RMIClient(portsAndIps.IP, portsAndIps.ServerPort, "Admin");
-        admin = rmi.setUpNewAdministrator();
+        
+    }
+
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
         try {
-            UnicastRemoteObject.exportObject(this, portsAndIps.getNewPort());
+            RMIClient rmi = new RMIClient(portsAndIps.IP, portsAndIps.ServerPort, "Admin");
+            admin = rmi.setUpNewAdministrator();
+            try {
+                UnicastRemoteObject.exportObject(this, portsAndIps.getNewPort());
+            } catch (RemoteException ex) {
+                Logger.getLogger(CharacterScreenController.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (IOException ex) {
+                Logger.getLogger(CharacterScreenController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            room = admin.getRoom(LocalVariables.getRoomID());
+            try {
+                this.ac = new ActualChat(portsAndIps.IP, room.getRoomChatPort(), portsAndIps.getNewPort(), LocalVariables.getPlayer().name, "Chat");
+            } catch (IOException ex) {
+                Logger.getLogger(CharacterScreenController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            ac.addObserver(this);
+            admin.addListener(this, "Room" + room.toString());
+            setRoomId(room.getRoomId());
+            isHost = room.getHost().playerID == LocalVariables.getPlayer().playerID;
+            if (!isHost) {
+                txtRondes.setVisible(false);
+                Rondes.setVisible(false);
+                btnstart.setVisible(false);
+            }
         } catch (RemoteException ex) {
             Logger.getLogger(CharacterScreenController.class.getName()).log(Level.SEVERE, null, ex);
         }
-        room = admin.getRoom(LocalVariables.getRoomID());
-        try {
-            this.ac = new ActualChat(portsAndIps.IP, room.getRoomChatPort(), portsAndIps.getNewPort(), LocalVariables.getPlayer().name, "Chat");
-        } catch (IOException ex) {
-            Logger.getLogger(CharacterScreenController.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        ac.addObserver(this);
-        admin.addListener(this, "Room" + room.toString());
     }
 
     /**
@@ -136,8 +161,9 @@ public class CharacterScreenController implements Observer, RemotePropertyListen
 
     /**
      * Kicks player from the room.
+     *
      * @param evt
-     * @throws RemoteException 
+     * @throws RemoteException
      */
     @Override
     public void propertyChange(PropertyChangeEvent evt) throws RemoteException {
@@ -150,9 +176,10 @@ public class CharacterScreenController implements Observer, RemotePropertyListen
 
     /**
      * Removes a player from the room.
+     *
      * @param evt button event
-     * @throws RemoteException 
-     * @throws IOException 
+     * @throws RemoteException
+     * @throws IOException
      */
     public void btnLeaveGameClick(Event evt) throws RemoteException, IOException {
         boolean succes = admin.leaveGame(LocalVariables.getPlayer(), roomID);
@@ -163,25 +190,30 @@ public class CharacterScreenController implements Observer, RemotePropertyListen
 
     /**
      * Returns player to the menu
-     * @throws IOException 
+     *
+     * @throws IOException
      */
     private void leaveRoom() throws IOException {
 
-        admin.removeListener(this, "Room" + room.toString());
-        ac.removeObserver();
-        ac.deleteObservers();
-        Platform.runLater(() -> {
-            Stage stage = (Stage) btnstart.getScene().getWindow();
-            try {
-                root = FXMLLoader.load(getClass().getResource("/fxml/Menu.fxml"));
-            } catch (IOException ex) {
-                Logger.getLogger(CharacterScreenController.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            Scene scene = new Scene(root);
-            stage.setScene(scene);
-            stage.show();
-        });
+        try {
+            admin.removeListener(this, "Room" + room.toString());
+            ac.removeObserver();
+            ac.deleteObservers();
+            Platform.runLater(() -> {
+                Stage stage = (Stage) btnstart.getScene().getWindow();
+                try {
+                    root = FXMLLoader.load(getClass().getResource("/fxml/Menu.fxml"));
+
+                } catch (IOException ex) {
+
+                }
+                Scene scene = new Scene(root);
+                stage.setScene(scene);
+                stage.show();
+            });
+        } catch (Exception e) {
+        }
 
     }
-   
+
 }

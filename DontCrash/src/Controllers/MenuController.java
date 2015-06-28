@@ -167,16 +167,13 @@ public class MenuController implements Observer, RemotePropertyListener, Initial
     public void goToCharacterSelect(int roomID) throws IOException {
         LocalVariables.setRoomID(roomID);
         Stage stage = (Stage) btnCreate.getScene().getWindow();
-        FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(getClass().getResource("/fxml/CharacterSelect.fxml"));
-        loader.load();
-        root = loader.getRoot();
+        root = FXMLLoader.load(getClass().getResource("/fxml/CharacterSelect.fxml"));
         Scene scene = new Scene(root);
         ac.removeObserver();
         ac.deleteObserver(this);
         stage.setScene(scene);
         stage.show();
-    }
+     }
 
     /**
      * Sends a message to the server for the chat
