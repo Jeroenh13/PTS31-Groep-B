@@ -77,6 +77,7 @@ public class GameScreenController implements Observer, RemotePropertyListener, I
     //Powerup stuff
     private final int spawnChancePowerUp = 40; // Between 0 and 10000 chance every tick to spawn powerup
     private boolean invincible = false;
+    private boolean isHost;
 
     public GameScreenController() throws IOException {
 
@@ -88,30 +89,20 @@ public class GameScreenController implements Observer, RemotePropertyListener, I
         admin = rmi.setUpNewAdministrator();
         try {
             UnicastRemoteObject.exportObject(this, portsAndIps.getNewPort());
-        } catch (RemoteException ex) {
-            Logger.getLogger(CharacterScreenController.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
-            Logger.getLogger(GameScreenController.class.getName()).log(Level.SEVERE, null, ex);
-        }
 
-        try {
             room = admin.getRoom(LocalVariables.getRoomID());
-            String name = LocalVariables.getPlayer().name;
-            String hostname = room.getHost().name;
-            if (hostname.equals(name)) {
-                admin.startNewGame(room.getRoomId());
-                room = admin.getRoom(LocalVariables.getRoomID());
-                game = room.getCurrentGame();
+            isHost = room.getHost().playerID == LocalVariables.getPlayer().playerID;
+            if (isHost) {
                 PLAY.setVisible(true);
+                admin.startNewGame(room.getRoomId());
+                game = room.getCurrentGame();
             } else {
-                while (room.getCurrentGame() == null) {
-                    Thread.sleep(500);
-                    room = admin.getRoom(LocalVariables.getRoomID());
-                    PLAY.setVisible(false);
-                }
+                room = admin.getRoom(LocalVariables.getRoomID());
+                PLAY.setVisible(false);
+
                 game = room.getCurrentGame();
             }
-            
+
             lblScore.setText(String.valueOf(LocalVariables.getScore()));
             lblPlayer1.setText("");
             lblPlayer2.setText("");
@@ -127,13 +118,14 @@ public class GameScreenController implements Observer, RemotePropertyListener, I
                     lblPlayer1.setText(room.getPlayers().get(0).name);
                     break;
             }
-            game.addListener(this, "Game");
-
+            if (game != null) {
+                game.addListener(this, "Game");
+            }
             character = admin.newCharacter(LocalVariables.getRoomID(), LocalVariables.getPlayer(), admin.getNextCharacterID());
 
         } catch (RemoteException ex) {
-            Logger.getLogger(GameScreenController.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (InterruptedException ex) {
+            Logger.getLogger(CharacterScreenController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
             Logger.getLogger(GameScreenController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }

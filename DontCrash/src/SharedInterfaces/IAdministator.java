@@ -115,5 +115,14 @@ public interface IAdministator  extends RemotePublisher {
      * @throws RemoteException 
      */
     public boolean leaveGame(Player player, int roomID)throws RemoteException;
+
+    /**
+     * Informs the listeners
+     * @param prop
+     * @param object
+     * @param start
+     * @throws RemoteException 
+     */
+    public void AdminInform(String prop, Object object, Object start)throws RemoteException;
     
 }

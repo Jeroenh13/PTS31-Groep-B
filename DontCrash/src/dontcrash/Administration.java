@@ -2,7 +2,6 @@
 /*
  * Class that holds all data and connects different classes.
  */
-
 package dontcrash;
 
 import Database.DatabaseManager;
@@ -26,7 +25,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * 
+ *
  * @author Bas
  */
 public class Administration extends UnicastRemoteObject implements RemotePublisher, IAdministator {
@@ -51,14 +50,14 @@ public class Administration extends UnicastRemoteObject implements RemotePublish
      * @throws RemoteException Connection error
      */
     public Administration() throws RemoteException {
-        bp = new BasicPublisher(new String[]{"Room"});
+        bp = new BasicPublisher(new String[]{"Room", "CharSelect"});
         this.nextRoomID = 1;
         this.nextPlayerID = 1;
         this.nextCharacterID = 1;
-        this.rooms = new ArrayList<IRoom>();
+        this.rooms = new ArrayList<>();
         this.dbm = new DatabaseManager();
 
-        this.players = new ArrayList<Player>();
+        this.players = new ArrayList<>();
         /*
          dbm.openConn();
          players = dbm.getPlayers();
@@ -105,7 +104,7 @@ public class Administration extends UnicastRemoteObject implements RemotePublish
             room.chatPort = setUpNewChat();
             this.nextRoomID++;
             rooms.add(room);
-            bp.inform(this, "Room", null, (IRoom)room);
+            bp.inform(this, "Room", null, (IRoom) room);
         } catch (IOException | InterruptedException | ExecutionException ex) {
             Logger.getLogger(Administration.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -203,6 +202,7 @@ public class Administration extends UnicastRemoteObject implements RemotePublish
 
     /**
      * gets the next character id
+     *
      * @return the next characterID
      */
     @Override
@@ -230,7 +230,7 @@ public class Administration extends UnicastRemoteObject implements RemotePublish
     }
 
     /**
-     * 
+     *
      * @param roomID
      * @return returns a list of players
      * @throws java.rmi.RemoteException
@@ -276,9 +276,10 @@ public class Administration extends UnicastRemoteObject implements RemotePublish
 
     /**
      * sets up a new chat server
+     *
      * @return what port the new server runs on.
      * @throws InterruptedException
-     * @throws ExecutionException 
+     * @throws ExecutionException
      */
     public int setUpNewChat() throws InterruptedException, ExecutionException {
         ExecutorService pool = Executors.newFixedThreadPool(1);
@@ -298,8 +299,8 @@ public class Administration extends UnicastRemoteObject implements RemotePublish
         }
         return succes;
     }
-    
-        public Player getPlayer(String username) {
+
+    public Player getPlayer(String username) {
         dbm.openConn();
         try {
             return dbm.getPlayer(username);
@@ -308,5 +309,10 @@ public class Administration extends UnicastRemoteObject implements RemotePublish
             dbm.closeConn();
         }
         return null;
+    }
+
+    @Override
+    public void AdminInform(String property, Object oldVal, Object newVal) throws RemoteException{
+        bp.inform(this, property, oldVal, newVal);
     }
 }

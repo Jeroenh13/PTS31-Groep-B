@@ -6,7 +6,9 @@
 package Controllers;
 
 import RMI.RMIClient;
+import RemoteObserver.BasicPublisher;
 import RemoteObserver.RemotePropertyListener;
+import RemoteObserver.RemotePublisher;
 import SharedInterfaces.IAdministator;
 import SharedInterfaces.IRoom;
 import dontcrash.ActualChat;
@@ -24,6 +26,8 @@ import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -35,6 +39,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -73,27 +78,21 @@ public class CharacterScreenController implements Observer, RemotePropertyListen
      * @throws java.io.IOException IOException on ports
      */
     public CharacterScreenController() throws IOException {
-        
+
     }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         try {
+
             RMIClient rmi = new RMIClient(portsAndIps.IP, portsAndIps.ServerPort, "Admin");
             admin = rmi.setUpNewAdministrator();
-            try {
-                UnicastRemoteObject.exportObject(this, portsAndIps.getNewPort());
-            } catch (RemoteException ex) {
-                Logger.getLogger(CharacterScreenController.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (IOException ex) {
-                Logger.getLogger(CharacterScreenController.class.getName()).log(Level.SEVERE, null, ex);
-            }
+
+            UnicastRemoteObject.exportObject(this, portsAndIps.getNewPort());
+
             room = admin.getRoom(LocalVariables.getRoomID());
-            try {
-                this.ac = new ActualChat(portsAndIps.IP, room.getRoomChatPort(), portsAndIps.getNewPort(), LocalVariables.getPlayer().name, "Chat");
-            } catch (IOException ex) {
-                Logger.getLogger(CharacterScreenController.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            this.ac = new ActualChat(portsAndIps.IP, room.getRoomChatPort(), portsAndIps.getNewPort(), LocalVariables.getPlayer().name, "Chat");
+
             ac.addObserver(this);
             admin.addListener(this, "Room" + room.toString());
             setRoomId(room.getRoomId());
@@ -102,8 +101,11 @@ public class CharacterScreenController implements Observer, RemotePropertyListen
                 txtRondes.setVisible(false);
                 Rondes.setVisible(false);
                 btnstart.setVisible(false);
+                admin.addListener(this, "CharSelect");
             }
         } catch (RemoteException ex) {
+            Logger.getLogger(CharacterScreenController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
             Logger.getLogger(CharacterScreenController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
@@ -115,7 +117,15 @@ public class CharacterScreenController implements Observer, RemotePropertyListen
      * @throws IOException
      */
     public void Start(Event evnt) throws IOException {
-        LocalVariables.setScoreNeeded(Integer.parseInt(txtRondes.getText()));
+        gotoGame(true);
+    }
+
+    public void gotoGame(boolean host) throws IOException {
+        if (host) {
+            admin.AdminInform("CharSelect", null, "Start");
+            LocalVariables.setScoreNeeded(Integer.parseInt(txtRondes.getText()));
+        }
+
         Stage stage = (Stage) btnstart.getScene().getWindow();
         root = FXMLLoader.load(getClass().getResource("/fxml/GameScreen.fxml"));
         Scene scene = new Scene(root);
@@ -167,10 +177,25 @@ public class CharacterScreenController implements Observer, RemotePropertyListen
      */
     @Override
     public void propertyChange(PropertyChangeEvent evt) throws RemoteException {
-        try {
-            leaveRoom();
-        } catch (IOException ex) {
-            Logger.getLogger(CharacterScreenController.class.getName()).log(Level.SEVERE, null, ex);
+        if (evt.getNewValue().equals("Start")) {
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        gotoGame(false);
+                    } catch (IOException ex) {
+                        Logger.getLogger(CharacterScreenController.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+            });
+        } else {
+            try {
+                leaveRoom();
+
+            } catch (IOException ex) {
+                Logger.getLogger(CharacterScreenController.class
+                        .getName()).log(Level.SEVERE, null, ex);
+            }
         }
     }
 
@@ -213,7 +238,5 @@ public class CharacterScreenController implements Observer, RemotePropertyListen
             });
         } catch (Exception e) {
         }
-
     }
-
 }
