@@ -19,5 +19,7 @@ import java.rmi.RemoteException;
       * @throws RemoteException 
       */
     public void startRun() throws RemoteException;
+
+    public void Close() throws RemoteException;
     
 }

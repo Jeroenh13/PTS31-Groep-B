@@ -58,7 +58,7 @@ public class CharacterScreenController implements Observer, RemotePropertyListen
     Parent root;
     @FXML
     Label Rondes;
-    
+
     @FXML
     Label lblPlayer1;
     @FXML
@@ -68,15 +68,15 @@ public class CharacterScreenController implements Observer, RemotePropertyListen
     @FXML
     Label lblPlayer4;
 
-    @FXML     
-    ImageView imgPlayer1;     
-    @FXML     
-    ImageView imgPlayer2;     
-    @FXML     
-    ImageView imgPlayer3;     
-    @FXML     
+    @FXML
+    ImageView imgPlayer1;
+    @FXML
+    ImageView imgPlayer2;
+    @FXML
+    ImageView imgPlayer3;
+    @FXML
     ImageView imgPlayer4;
-    
+
     @FXML
     TextArea taChat;
     @FXML
@@ -108,25 +108,24 @@ public class CharacterScreenController implements Observer, RemotePropertyListen
         imgPlayer2.setVisible(false);
         imgPlayer3.setVisible(false);
         imgPlayer4.setVisible(false);
-        
+
         lblPlayer1.setVisible(false);
         lblPlayer2.setVisible(false);
         lblPlayer3.setVisible(false);
         lblPlayer4.setVisible(false);
-        
+
         btnstart.setDisable(true);
         txtRondes.textProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                if(newValue.matches("^[0-9]+$")){
+                if (newValue.matches("^[0-9]+$")) {
                     btnstart.setDisable(false);
-                }
-                else{
+                } else {
                     btnstart.setDisable(true);
                 }
             }
         });
-        
+
         try {
             RMIClient rmi = new RMIClient(portsAndIps.IP, portsAndIps.ServerPort, "Admin");
             admin = rmi.setUpNewAdministrator();
@@ -144,8 +143,8 @@ public class CharacterScreenController implements Observer, RemotePropertyListen
                 txtRondes.setVisible(false);
                 Rondes.setVisible(false);
                 btnstart.setVisible(false);
-                admin.addListener(this, "CharSelect");
             }
+            admin.addListener(this, "CharSelect");
             updateLabels();
         } catch (RemoteException ex) {
             Logger.getLogger(CharacterScreenController.class.getName()).log(Level.SEVERE, null, ex);
@@ -153,9 +152,11 @@ public class CharacterScreenController implements Observer, RemotePropertyListen
             Logger.getLogger(CharacterScreenController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
-    public void updateLabels() throws RemoteException{
-        switch (room.getPlayers().size()) {
+
+    public void updateLabels() {
+        try {
+            room = admin.getRoom(LocalVariables.getRoomID());
+            switch (room.getPlayers().size()) {
                 case 4:
                     lblPlayer4.setText(room.getPlayers().get(3).name);
                     lblPlayer4.setVisible(true);
@@ -173,6 +174,9 @@ public class CharacterScreenController implements Observer, RemotePropertyListen
                     lblPlayer1.setVisible(true);
                     imgPlayer1.setVisible(true);
                     break;
+            }
+        } catch (RemoteException ex) {
+            Logger.getLogger(CharacterScreenController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -191,7 +195,6 @@ public class CharacterScreenController implements Observer, RemotePropertyListen
             admin.AdminInform("CharSelect", null, "Start");
             LocalVariables.setScoreNeeded(Integer.parseInt(txtRondes.getText()));
         }
-
         Stage stage = (Stage) btnstart.getScene().getWindow();
         root = FXMLLoader.load(getClass().getResource("/fxml/GameScreen.fxml"));
         Scene scene = new Scene(root);
@@ -244,30 +247,28 @@ public class CharacterScreenController implements Observer, RemotePropertyListen
     @Override
     public void propertyChange(PropertyChangeEvent evt) throws RemoteException {
         if (evt.getNewValue().equals("Start")) {
+            if (!isHost) {
+                Platform.runLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            gotoGame(false);
+                        } catch (IOException ex) {
+                            Logger.getLogger(CharacterScreenController.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    }
+                });
+            }
+        } else if (evt.getNewValue().equals("Join")) {
             Platform.runLater(new Runnable() {
                 @Override
                 public void run() {
-                    try {
-                        gotoGame(false);
-                    } catch (IOException ex) {
-                        Logger.getLogger(CharacterScreenController.class.getName()).log(Level.SEVERE, null, ex);
-                    }
+                    updateLabels();
                 }
             });
-        }else if(evt.getNewValue().equals("Join")) {
-            try{
-                updateLabels();
-            }
-            catch (IOException ex) {
-                Logger.getLogger(CharacterScreenController.class
-                        .getName()).log(Level.SEVERE, null, ex);
-            }
-        }
-        
-        else {
+        } else {
             try {
                 leaveRoom();
-
             } catch (IOException ex) {
                 Logger.getLogger(CharacterScreenController.class
                         .getName()).log(Level.SEVERE, null, ex);
@@ -283,7 +284,7 @@ public class CharacterScreenController implements Observer, RemotePropertyListen
      * @throws IOException
      */
     public void btnLeaveGameClick(Event evt) throws RemoteException, IOException {
-        boolean succes = admin.leaveGame(LocalVariables.getPlayer(), roomID);
+        boolean succes = admin.LeaveRoom(LocalVariables.getPlayer(), roomID);
         if (succes) {
             leaveRoom();
         }

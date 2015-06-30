@@ -153,7 +153,6 @@ public class MenuController implements Observer, RemotePropertyListener, Initial
     public void joinRoom(Event evnt) throws IOException {
         int roomID = Integer.parseInt((String) lvRooms.getSelectionModel().getSelectedItem());
         if (admin.joinRoom(p, roomID)) {
-            admin.AdminInform("CharSelect", null, "Join");
             goToCharacterSelect(roomID);
         }
 

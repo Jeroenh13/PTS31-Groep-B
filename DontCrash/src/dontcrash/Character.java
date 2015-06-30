@@ -43,7 +43,7 @@ public class Character implements Serializable
         this.name = player.name;
         this.characterID = characterID;
         direction = 2;
-        speed = 2;
+        speed = 1;
         invincible = false;
     }
     

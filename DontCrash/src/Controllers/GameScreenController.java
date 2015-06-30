@@ -28,6 +28,9 @@ import javafx.event.EventHandler;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.*;
@@ -35,6 +38,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
+import javafx.stage.Stage;
 
 /**
  *
@@ -44,6 +48,10 @@ public class GameScreenController implements Observer, RemotePropertyListener, I
 
     @FXML
     Button PLAY;
+    @FXML
+    Button Leave;
+    @FXML
+    Parent root;
     @FXML
     ImageView imgview;
     @FXML
@@ -109,10 +117,6 @@ public class GameScreenController implements Observer, RemotePropertyListener, I
                 admin.startNewGame(room.getRoomId(), gameCanvas.getLayoutX(), gameCanvas.getLayoutY(), gameCanvas.getWidth(), gameCanvas.getHeight());
                 room = admin.getRoom(LocalVariables.getRoomID());
                 game = room.getCurrentGame();
-            } else {
-                room = admin.getRoom(LocalVariables.getRoomID());
-                PLAY.setVisible(false);
-                game = room.getCurrentGame();
             }
 
             lblScore.setText(String.valueOf(LocalVariables.getScore()));
@@ -120,19 +124,18 @@ public class GameScreenController implements Observer, RemotePropertyListener, I
             lblPlayer2.setText("");
             lblPlayer3.setText("");
             lblPlayer4.setText("");
-            switch (room.getPlayers().size()) {
-                case 4:
-                    lblPlayer4.setText(room.getPlayers().get(3).name);
-                case 3:
-                    lblPlayer3.setText(room.getPlayers().get(2).name);
-                case 2:
-                    lblPlayer2.setText(room.getPlayers().get(1).name);
-                    lblPlayer1.setText(room.getPlayers().get(0).name);
-                    break;
+            UpdateLabels(room);
+
+            if (!isHost) {
+                while (game == null) {
+                    Thread.sleep(50);
+                    room = admin.getRoom(LocalVariables.getRoomID());
+                    PLAY.setVisible(false);
+                    game = room.getCurrentGame();
+                }
             }
-            if (game != null) {
-                game.addListener(this, "Game");
-            }
+
+            game.addListener(this, "Game");
             for (Player p : room.getPlayers()) {
                 if (p.playerID == LocalVariables.curPlayerID) {
                     player = p;
@@ -146,6 +149,26 @@ public class GameScreenController implements Observer, RemotePropertyListener, I
             Logger.getLogger(CharacterScreenController.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
             Logger.getLogger(GameScreenController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (InterruptedException ex) {
+            Logger.getLogger(GameScreenController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public void UpdateLabels(IRoom room) {
+        try {
+            switch (room.getPlayers().size()) {
+                case 4:
+                    lblPlayer4.setText(room.getPlayers().get(3).name + "  ---  " + room.getPlayers().get(3).score);
+                case 3:
+                    lblPlayer3.setText(room.getPlayers().get(2).name + "  ---  " + room.getPlayers().get(2).score);
+                case 2:
+                    lblPlayer2.setText(room.getPlayers().get(1).name + "  ---  " + room.getPlayers().get(1).score);
+                case 1:
+                    lblPlayer1.setText(room.getPlayers().get(0).name + "  ---  " + room.getPlayers().get(0).score);
+                    break;
+            }
+        } catch (RemoteException ex) {
+            Logger.getLogger(GameScreenController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -155,6 +178,40 @@ public class GameScreenController implements Observer, RemotePropertyListener, I
             PLAY.setVisible(false);
         } catch (RemoteException ex) {
             Logger.getLogger(GameScreenController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public void btnLeaveGame(Event envt) {
+        try {
+            boolean succes = admin.LeaveGame(LocalVariables.getPlayer(), room.getRoomId());
+            if (succes) {
+                leaveRoom();
+            }
+        } catch (RemoteException ex) {
+            Logger.getLogger(GameScreenController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(GameScreenController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    private void leaveRoom() throws IOException {
+        try {
+            game.removeListener(this, "Game");
+            ac.removeObserver();
+            ac.deleteObservers();
+            Platform.runLater(() -> {
+                Stage stage = (Stage) Leave.getScene().getWindow();
+                try {
+                    root = FXMLLoader.load(getClass().getResource("/fxml/Menu.fxml"));
+
+                } catch (IOException ex) {
+
+                }
+                Scene scene = new Scene(root);
+                stage.setScene(scene);
+                stage.show();
+            });
+        } catch (Exception e) {
         }
     }
 
@@ -221,16 +278,19 @@ public class GameScreenController implements Observer, RemotePropertyListener, I
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
-                if("Start".equals(evt.getOldValue())){
-                     GraphicsContext gc = gameCanvas.getGraphicsContext2D();
-                    gc.setFill(Color.BLACK);
-                    gc.clearRect(gameCanvas.getLayoutX(), gameCanvas.getLayoutY(), gameCanvas.getWidth(), gameCanvas.getHeight());
-                }
-                else if ("GameOver".equals(evt.getNewValue())) {
+                if ("Start".equals(evt.getOldValue())) {
                     GraphicsContext gc = gameCanvas.getGraphicsContext2D();
-                    gc.clearRect(gameCanvas.getLayoutX(), gameCanvas.getLayoutY(), gameCanvas.getWidth(), gameCanvas.getHeight());
-                    gc.setFill(Color.GREEN);
-                    gc.strokeText("Round Over", 200, 200);                    
+                    gc.clearRect(gameCanvas.getLayoutX(), gameCanvas.getLayoutY(), gameCanvas.getWidth() + 10, gameCanvas.getHeight()+10);
+                } else if ("GameOver".equals(evt.getNewValue())) {
+                    try {
+                        UpdateLabels(admin.getRoom(LocalVariables.getRoomID()));
+                        GraphicsContext gc = gameCanvas.getGraphicsContext2D();
+                        gc.clearRect(gameCanvas.getLayoutX(), gameCanvas.getLayoutY(), gameCanvas.getWidth() + 10, gameCanvas.getHeight()+10);
+                        gc.setFill(Color.GREEN);
+                        gc.strokeText("Round Over", 200, 200);
+                    } catch (RemoteException ex) {
+                        Logger.getLogger(GameScreenController.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                 } else if ("Points".equals((String) evt.getOldValue())) // If it is a arraylist of points
                 {
                     //ArrayList<Point> oldPoints = (ArrayList<Point>) evt.getOldValue();
@@ -241,10 +301,8 @@ public class GameScreenController implements Observer, RemotePropertyListener, I
                         draw(np);
                         //}
                     }
-
                     // }
                 } else if ("Powerup".equals((String) evt.getOldValue())) {
-
                     if (evt.getNewValue() instanceof DrawablePowerup) {
                         drawPowerup((DrawablePowerup) evt.getNewValue());
                     } else if (evt.getNewValue() instanceof String) {
@@ -266,10 +324,16 @@ public class GameScreenController implements Observer, RemotePropertyListener, I
                         redrawPoints();
                         drawPowerups(powerups);
                     }
+                } else if ("Left".equals(evt.getOldValue())){
+                    try {
+                        leaveRoom();
+                    } catch (IOException ex) {
+                        Logger.getLogger(CharacterScreenController.class
+                                .getName()).log(Level.SEVERE, null, ex);
+                    }
                 }
             }
         });
-
     }
 
     public void draw(Point p) {

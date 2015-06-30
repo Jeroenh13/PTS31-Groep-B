@@ -287,6 +287,7 @@ public class Administration extends UnicastRemoteObject implements RemotePublish
                 if (c.oldPoint != null) {
                     p.character.oldPoint = c.oldPoint;
                 }
+                p.score = player.score;
             }
         }
     }
@@ -305,7 +306,7 @@ public class Administration extends UnicastRemoteObject implements RemotePublish
     }
 
     @Override
-    public boolean leaveGame(Player player, int roomID) throws RemoteException {
+    public boolean LeaveRoom(Player player, int roomID) throws RemoteException {
         IRoom room = getRoom(roomID);
         boolean succes = room.removePlayer(player);
         if (room.getHost() == null) {
@@ -316,6 +317,21 @@ public class Administration extends UnicastRemoteObject implements RemotePublish
         }
         return succes;
     }
+    
+        @Override
+    public boolean LeaveGame(Player player, int roomID) throws RemoteException {
+        IRoom room = getRoom(roomID);
+        boolean succes = room.removePlayer(player);
+        if (room.getHost() == null) {
+            room.getCurrentGame().Close();
+        }
+        if (room.getHost() == null || room.getPlayers().isEmpty()) {
+            rooms.remove(room);
+        }
+        return succes;
+    }
+    
+    
 
     public Player getPlayer(String username) {
         if (username.equals("admin")) {

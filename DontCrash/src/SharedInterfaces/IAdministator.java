@@ -118,7 +118,7 @@ public interface IAdministator  extends RemotePublisher {
      * @return If the leaving the room succeeded.
      * @throws RemoteException 
      */
-    public boolean leaveGame(Player player, int roomID)throws RemoteException;
+    public boolean LeaveRoom(Player player, int roomID)throws RemoteException;
 
     /**
      * Informs the listeners
@@ -128,5 +128,7 @@ public interface IAdministator  extends RemotePublisher {
      * @throws RemoteException 
      */
     public void AdminInform(String prop, Object object, Object start)throws RemoteException;
+
+    public boolean LeaveGame(Player player, int roomId) throws RemoteException;
     
 }
