@@ -345,33 +345,38 @@ public class Game extends UnicastRemoteObject implements RemotePublisher, IGame,
 
         @Override
         public void run() {
-            int cnt = 0;
-            calculatePoints();
-            for (Player p : players) {
-                if (p.character.gameOver) {
-                    cnt++;
-                }
-            }
-
-            if (cnt == players.size()) {
-                try {
-                    bp.inform(this, "Game", "GameOver", "GameOver");
-                    timer.cancel();
-                    timer.purge();
-                    oldPoints = new ArrayList<>();
-                    newPoints = new ArrayList<>();
-                    Thread.sleep(2000);
-                    startRun();
-                } catch (InterruptedException ex) {
-                    Logger.getLogger(Game.class.getName()).log(Level.SEVERE, null, ex);
+            try {
+                int cnt = 0;
+                calculatePoints();
+                for (Player p : players) {
+                    if (p.character.gameOver) {
+                        cnt++;
+                    }
                 }
 
-            } else {
-                bp.inform(this, "Game", "Points", newPoints);
-                oldPoints = newPoints;
-                newPoints = oldPoints;
+                if (cnt == players.size()) {
+                    try {
+                        bp.inform(this, "Game", "GameOver", "GameOver");
+                        timer.cancel();
+                        timer.purge();
+                        oldPoints = new ArrayList<>();
+                        newPoints = new ArrayList<>();
+                        Thread.sleep(2000);
+                        startRun();
+                    } catch (InterruptedException ex) {
+                        Logger.getLogger(Game.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+
+                } else {
+                    bp.inform(this, "Game", "Points", newPoints);
+                    oldPoints = newPoints;
+                    newPoints = oldPoints;
+                }
+            } catch (Exception ex) {
+                Logger.getLogger(Game.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
+
     }
     /*
      private ArrayList<Point> moveToPoint(Point previousPosition, Point currentPosition) {

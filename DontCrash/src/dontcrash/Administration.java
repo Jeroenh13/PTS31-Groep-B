@@ -43,7 +43,6 @@ public class Administration extends UnicastRemoteObject implements RemotePublish
     private int nextCharacterID;
 
     private final transient DatabaseManager dbm;
-    
 
     /**
      * create a new administration
@@ -252,9 +251,9 @@ public class Administration extends UnicastRemoteObject implements RemotePublish
     }
 
     @Override
-    public void startNewGame(int roomID,double x, double y, double w, double h) throws RemoteException {
+    public void startNewGame(int roomID, double x, double y, double w, double h) throws RemoteException {
         IRoom startRoom = getRoom(roomID);
-        startRoom.startGame(x,y,w,h);
+        startRoom.startGame(x, y, w, h);
     }
 
     @Override
@@ -274,7 +273,20 @@ public class Administration extends UnicastRemoteObject implements RemotePublish
         IRoom tempRoom = getRoom(roomID);
         for (Player p : tempRoom.getPlayers()) {
             if (p.name.equals(player.name)) {
-                p.character = c;
+                p.character.blue = c.blue;
+                p.character.green = c.green;
+                p.character.red = c.red;
+                p.character.direction = c.direction;
+                p.character.getinput = c.getinput;
+                p.character.curX = c.curX;
+                p.character.curY = c.curY;
+                p.character.gameOver = c.gameOver;
+                p.character.invincible = c.invincible;
+                p.character.size = c.size;
+                p.character.speed = c.speed;
+                if (c.oldPoint != null) {
+                    p.character.oldPoint = c.oldPoint;
+                }
             }
         }
     }
@@ -306,10 +318,9 @@ public class Administration extends UnicastRemoteObject implements RemotePublish
     }
 
     public Player getPlayer(String username) {
-        if(username.equals("admin")){
-            for(Player p : players)
-            {
-                if(p.name == "admin"){
+        if (username.equals("admin")) {
+            for (Player p : players) {
+                if (p.name == "admin") {
                     return p;
                 }
             }

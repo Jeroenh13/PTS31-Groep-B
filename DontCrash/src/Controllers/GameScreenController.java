@@ -233,19 +233,26 @@ public class GameScreenController implements Observer, RemotePropertyListener, I
                     // }
                 } else if ("Powerup".equals((String) evt.getOldValue())) {
                     if ("ClearBoard".equals((String) evt.getNewValue())) {
-                        GraphicsContext gc = gameCanvas.getGraphicsContext2D();
-                        gc.clearRect(0, 0, gc.getCanvas().getWidth(), gc.getCanvas().getHeight());
-                        powerups.clear();
+                        Platform.runLater(new Runnable() {
+
+                            @Override
+                            public void run() {
+                                GraphicsContext gc = gameCanvas.getGraphicsContext2D();
+                                gc.clearRect(0, 0, gc.getCanvas().getWidth(), gc.getCanvas().getHeight());
+                                powerups.clear();
+                            }
+                        });
+
                     }
                     if (evt.getNewValue() instanceof DrawablePowerup) {
-                        drawPowerup((DrawablePowerup)evt.getNewValue());
+                        drawPowerup((DrawablePowerup) evt.getNewValue());
                     } else {
                         ArrayList<DrawablePowerup> powerups = (ArrayList<DrawablePowerup>) evt.getNewValue();
                         GraphicsContext gc = gameCanvas.getGraphicsContext2D();
                         gc.clearRect(0, 0, gc.getCanvas().getWidth(), gc.getCanvas().getHeight());
                         redrawPoints();
                         drawPowerups(powerups);
-                    }                    
+                    }
                 }
             }
 
@@ -262,15 +269,16 @@ public class GameScreenController implements Observer, RemotePropertyListener, I
 
     public void drawPowerup(DrawablePowerup powerup) {
         GraphicsContext gc = gameCanvas.getGraphicsContext2D();
-            gc.setStroke(Color.CRIMSON);
-            gc.setFill(Color.CRIMSON);
-            gc.fillOval(powerup.minX, powerup.minY, powerup.maxX - powerup.minX, powerup.maxY -powerup.minY);
-            gc.strokeOval(powerup.minX, powerup.minY, powerup.maxX - powerup.minX, powerup.maxY - powerup.minY);
-       
+        gc.setStroke(Color.CRIMSON);
+        gc.setFill(Color.CRIMSON);
+        gc.fillOval(powerup.minX, powerup.minY, powerup.maxX - powerup.minX, powerup.maxY - powerup.minY);
+        gc.strokeOval(powerup.minX, powerup.minY, powerup.maxX - powerup.minX, powerup.maxY - powerup.minY);
+
     }
+
     public void drawPowerups(ArrayList<DrawablePowerup> powerups) {
         GraphicsContext gc = gameCanvas.getGraphicsContext2D();
-        for (DrawablePowerup p : powerups) {    
+        for (DrawablePowerup p : powerups) {
             gc.setStroke(Color.CRIMSON);
             gc.setFill(Color.CRIMSON);
             gc.fillOval(p.minX, p.minY, p.maxX - p.minX, p.maxY - p.minY);
