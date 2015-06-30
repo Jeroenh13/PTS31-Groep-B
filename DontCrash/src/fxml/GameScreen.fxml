@@ -48,6 +48,11 @@
                </font></Button>
             <TextArea fx:id="taChat" editable="false" layoutY="429.0" prefHeight="206.0" prefWidth="169.0" />
             <TextField fx:id="txtChat" layoutY="643.0" onAction="#txtChatSend" prefHeight="25.0" prefWidth="169.0" style="-fx-background-color: c1c1c1;" />
+            <Button id="btnToggle" fx:id="Leave" layoutY="320.0" mnemonicParsing="false" onAction="#btnLeaveGame" prefHeight="25.0" prefWidth="169.0" style="-fx-background-color: #c1c1c1;" text="Leave Game">
+               <font>
+                  <Font name="NeuropolXRg-Regular" size="15.0" />
+               </font>
+            </Button>
          </children></AnchorPane>
     <AnchorPane id="apGane" minHeight="0.0" minWidth="0.0" prefHeight="434.0" prefWidth="488.0">
          <children>
