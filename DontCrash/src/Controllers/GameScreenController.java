@@ -232,20 +232,21 @@ public class GameScreenController implements Observer, RemotePropertyListener, I
 
                     // }
                 } else if ("Powerup".equals((String) evt.getOldValue())) {
-                    if ("ClearBoard".equals((String) evt.getNewValue())) {
-                        Platform.runLater(new Runnable() {
 
-                            @Override
-                            public void run() {
-                                GraphicsContext gc = gameCanvas.getGraphicsContext2D();
-                                gc.clearRect(0, 0, gc.getCanvas().getWidth(), gc.getCanvas().getHeight());
-                                powerups.clear();
-                            }
-                        });
-
-                    }
                     if (evt.getNewValue() instanceof DrawablePowerup) {
                         drawPowerup((DrawablePowerup) evt.getNewValue());
+                    } else if (evt.getNewValue() instanceof String) {
+                        if ("ClearBoard".equals((String) evt.getNewValue())) {
+                            Platform.runLater(new Runnable() {
+
+                                @Override
+                                public void run() {
+                                    GraphicsContext gc = gameCanvas.getGraphicsContext2D();
+                                    gc.clearRect(0, 0, gc.getCanvas().getWidth(), gc.getCanvas().getHeight());
+                                    powerups.clear();
+                                }
+                            });
+                        }
                     } else {
                         ArrayList<DrawablePowerup> powerups = (ArrayList<DrawablePowerup>) evt.getNewValue();
                         GraphicsContext gc = gameCanvas.getGraphicsContext2D();
