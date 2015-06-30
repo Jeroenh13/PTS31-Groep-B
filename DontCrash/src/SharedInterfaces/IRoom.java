@@ -25,10 +25,14 @@ public interface IRoom extends Serializable
     
     /**
      * Starts the game.
+     * @param x
+     * @param y
+     * @param w
+     * @param h
      * @return the started game.
      * @throws RemoteException 
      */
-    public IGame startGame()throws RemoteException;
+    public IGame startGame(double x, double y, double w, double h)throws RemoteException;
 
     /**
      * Adds player to this room, if the player isnt already in this room

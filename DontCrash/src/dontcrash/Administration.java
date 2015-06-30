@@ -43,6 +43,7 @@ public class Administration extends UnicastRemoteObject implements RemotePublish
     private int nextCharacterID;
 
     private final transient DatabaseManager dbm;
+    
 
     /**
      * create a new administration
@@ -251,9 +252,9 @@ public class Administration extends UnicastRemoteObject implements RemotePublish
     }
 
     @Override
-    public void startNewGame(int roomID) throws RemoteException {
+    public void startNewGame(int roomID,double x, double y, double w, double h) throws RemoteException {
         IRoom startRoom = getRoom(roomID);
-        startRoom.startGame();
+        startRoom.startGame(x,y,w,h);
     }
 
     @Override

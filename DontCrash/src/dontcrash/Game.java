@@ -39,6 +39,10 @@ public class Game extends UnicastRemoteObject implements RemotePublisher, IGame,
     private ArrayList<Point> newPoints;
     private ArrayList<Point> oldPoints;
     private ArrayList<Point> allPoints;
+    private double x;
+    private double y;
+    private double w;
+    private double h;
 
     private ArrayList<DrawablePowerup> powerups;
 
@@ -51,16 +55,24 @@ public class Game extends UnicastRemoteObject implements RemotePublisher, IGame,
      *
      * @param players of the game
      * @param roomID
+     * @param x
+     * @param y
+     * @param w
+     * @param h
      * @throws java.rmi.RemoteException
      */
-    public Game(List<Player> players, int roomID) throws RemoteException {
+    public Game(List<Player> players, int roomID, double x, double y, double w, double h) throws RemoteException {
         RMIClient rmi = new RMIClient(portsAndIps.IP, portsAndIps.ServerPort, "Admin");
         admin = rmi.setUpNewAdministrator();
         newPoints = new ArrayList<>();
         oldPoints = new ArrayList<>();
         allPoints = new ArrayList<>();
-
         powerups = new ArrayList();
+
+        this.x = x;
+        this.y = y;
+        this.w = w;
+        this.h = h;
 
         this.roomID = roomID;
         this.players = players;
@@ -100,17 +112,17 @@ public class Game extends UnicastRemoteObject implements RemotePublisher, IGame,
     @Override
     public void startRun() {
         try {
-
             IRoom r = admin.getRoom(roomID);
             Color[] colors = new Color[]{Color.ORANGE, Color.RED, Color.BLUE, Color.BROWN};
             int colorcnt = 0;
             for (Player p : r.getPlayers()) {
                 dontcrash.Character c = p.character;
+                c.gameOver = false;
                 c.setColor(colors[colorcnt]);
                 Random rnd = new Random();
-                int x = rnd.nextInt(600);
+                int x = rnd.nextInt((int) w);
                 c.curX = x;
-                int y = rnd.nextInt(500);
+                int y = rnd.nextInt((int) h/2);
                 c.curY = y;
                 oldPoints.add(new Point(x, y, colors[colorcnt].getRed(), colors[colorcnt].getGreen(), colors[colorcnt].getBlue(), p.character.size));
                 newPoints.add(new Point(x, y, colors[colorcnt].getRed(), colors[colorcnt].getGreen(), colors[colorcnt].getBlue(), p.character.size));
@@ -189,7 +201,7 @@ public class Game extends UnicastRemoteObject implements RemotePublisher, IGame,
     }
 
     private boolean checkPoint(Point loc) {
-        if (loc.Y >= 714.0 || loc.Y <= 0 || loc.X >= 989.0 || loc.X <= 0) {
+        if (loc.Y <= y || loc.Y >= h || loc.X <= x || loc.X >= h) {
             return true;
         }
 
@@ -320,7 +332,7 @@ public class Game extends UnicastRemoteObject implements RemotePublisher, IGame,
         } else if (powerup.type == PowerupType.CLEARBOARD) {
             allPoints.clear();
             powerups.clear();
-            bp.inform(this, "Game","Powerup", powerups);
+            bp.inform(this, "Game", "Powerup", powerups);
         }
     }
 
@@ -328,10 +340,32 @@ public class Game extends UnicastRemoteObject implements RemotePublisher, IGame,
 
         @Override
         public void run() {
+            int cnt = 0;
             calculatePoints();
-            bp.inform(this, "Game", "Points", newPoints);
-            oldPoints = newPoints;
-            newPoints = oldPoints;
+            for (Player p : players) {
+                if (p.character.gameOver) {
+                    cnt++;
+                }
+            }
+            
+            if (cnt == players.size()) {
+                try {
+                    bp.inform(this, "Game", "GameOver", "GameOver");
+                    timer.cancel();
+                    timer.purge();
+                    oldPoints = new ArrayList<>();
+                    newPoints = new ArrayList<>();
+                    Thread.sleep(2000);
+                    startRun();
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(Game.class.getName()).log(Level.SEVERE, null, ex);
+                }
+
+            } else {
+                bp.inform(this, "Game", "Points", newPoints);
+                oldPoints = newPoints;
+                newPoints = oldPoints;
+            }
         }
     }
     /*

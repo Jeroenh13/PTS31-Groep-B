@@ -15,7 +15,7 @@ import java.util.List;
  */
 public interface IAdministator  extends RemotePublisher {
     
-    /**
+     /**
      * Starts a new server
      * @param type of the server
      * @return 
@@ -69,9 +69,13 @@ public interface IAdministator  extends RemotePublisher {
     /**
      * Starts a new game
      * @param roomID room the game needs to be started in.
+     * @param x
+     * @param y
+     * @param w
+     * @param h
      * @throws RemoteException 
      */
-    public void startNewGame(int roomID) throws RemoteException;
+    public void startNewGame(int roomID,double x, double y, double w, double h) throws RemoteException;
    
     /**
      * 

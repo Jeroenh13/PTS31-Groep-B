@@ -41,8 +41,7 @@ public class Character implements Serializable
         gameOver = false;
         this.name = player.name;
         this.characterID = characterID;
-        Random rnd = new Random();
-        direction = rnd.nextInt(3);
+        direction = 2;
         speed = 2;
         invincible = false;
     }

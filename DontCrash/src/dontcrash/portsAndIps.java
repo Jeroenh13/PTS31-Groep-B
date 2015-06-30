@@ -31,7 +31,7 @@ public class portsAndIps {
      * Default chat port of the server
      */
     public final static int defaultServerPortChat = 1094;
-    private static int lastPort = 1200;
+    private static int lastPort = 1100;
     
     private static boolean isPortInUse(int port) throws IOException {
         // Assume no connection is possible.
