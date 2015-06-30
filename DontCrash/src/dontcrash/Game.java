@@ -122,15 +122,15 @@ public class Game extends UnicastRemoteObject implements RemotePublisher, IGame,
                 Random rnd = new Random();
                 int x = rnd.nextInt((int) w);
                 c.curX = x;
-                int y = rnd.nextInt((int) h/2);
+                int y = rnd.nextInt((int) h / 2);
                 c.curY = y;
                 c.setOldPoint(new Point(x, y, colors[colorcnt].getRed(), colors[colorcnt].getGreen(), colors[colorcnt].getBlue(), p.character.size));
                 oldPoints.add(new Point(x, y, colors[colorcnt].getRed(), colors[colorcnt].getGreen(), colors[colorcnt].getBlue(), p.character.size));
                 newPoints.add(new Point(x, y, colors[colorcnt].getRed(), colors[colorcnt].getGreen(), colors[colorcnt].getBlue(), p.character.size));
                 admin.UpdateCharacter(roomID, c, p);
-                allPoints.addAll(oldPoints);
                 colorcnt++;
             }
+            allPoints.addAll(oldPoints);
         } catch (RemoteException ex) {
             Logger.getLogger(Game.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -172,7 +172,10 @@ public class Game extends UnicastRemoteObject implements RemotePublisher, IGame,
                             point = new Point(c.X() - c.speed(), op.Y, op.red, op.green, op.blue, c.size);
                             c.setX(c.X() - c.speed());
                             //imgview.setRotate(180);
+                        } else {
+                            System.out.println("Ïnvalid direction detected");
                         }
+
                         if (!checkPoint(point)) {
                             allPoints.add(point);
                             newPoints.add(point);
@@ -184,12 +187,13 @@ public class Game extends UnicastRemoteObject implements RemotePublisher, IGame,
                         DrawablePowerup hitdpu = checkPointPowerup(point);
                         if (hitdpu != null) {
                             applyPowerup(hitdpu.powerup, c);
+                            bp.inform(this, "Game", "Powerup", powerups);
                         }
                         //Spawn new powerup
                         DrawablePowerup dpu = spawnPowerUp();
                         if (dpu != null) {
                             powerups.add(dpu);
-                            bp.inform(this, "Game", "Powerup", powerups);
+                            bp.inform(this, "Game", "Powerup", dpu);
                         }
                     }
 
@@ -219,7 +223,6 @@ public class Game extends UnicastRemoteObject implements RemotePublisher, IGame,
         for (DrawablePowerup p : powerups) {
             if (p.minX <= loc.X && p.maxX >= loc.X && p.minY <= loc.Y && p.maxY >= loc.Y) {
                 powerups.remove(p);
-                bp.inform(this, "Game", "Powerup", powerups);
                 return p;
             }
         }
@@ -240,12 +243,12 @@ public class Game extends UnicastRemoteObject implements RemotePublisher, IGame,
                 case 2: //Speed down
                     powerup = new Powerup(PowerupType.DECREASESPEED, tijdsduur, (float) 0.5, 1);
                     break;
-                /*case 3: //Size up
-                 powerup = new Powerup(PowerupType.INCREASESIZE, tijdsduur, (float) 2, 1);
-                 break;
-                 case 4: //Size down
-                 powerup = new Powerup(PowerupType.DECREASESIZE, tijdsduur, (float) 0.5, 1);
-                 break;*/
+                case 3: //Size up
+                    powerup = new Powerup(PowerupType.INCREASESIZE, tijdsduur, (float) 2, 1);
+                    break;
+                case 4: //Size down
+                    powerup = new Powerup(PowerupType.DECREASESIZE, tijdsduur, (float) 0.5, 1);
+                    break;
                 case 5: //ClearBoard
                     powerup = new Powerup(PowerupType.CLEARBOARD, 0, 0, 1);
                     break;
@@ -334,7 +337,7 @@ public class Game extends UnicastRemoteObject implements RemotePublisher, IGame,
         } else if (powerup.type == PowerupType.CLEARBOARD) {
             allPoints.clear();
             powerups.clear();
-            bp.inform(this, "Game", "Powerup", powerups);
+            bp.inform(this, "Game", "Powerup", "ClearBoard");
         }
     }
 
@@ -349,7 +352,7 @@ public class Game extends UnicastRemoteObject implements RemotePublisher, IGame,
                     cnt++;
                 }
             }
-            
+
             if (cnt == players.size()) {
                 try {
                     bp.inform(this, "Game", "GameOver", "GameOver");

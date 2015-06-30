@@ -106,7 +106,7 @@ public class GameScreenController implements Observer, RemotePropertyListener, I
             isHost = room.getHost().playerID == LocalVariables.getPlayer().playerID;
             if (isHost) {
                 PLAY.setVisible(true);
-                admin.startNewGame(room.getRoomId(),gameCanvas.getLayoutX(),gameCanvas.getLayoutY(),gameCanvas.getWidth(),gameCanvas.getHeight());
+                admin.startNewGame(room.getRoomId(), gameCanvas.getLayoutX(), gameCanvas.getLayoutY(), gameCanvas.getWidth(), gameCanvas.getHeight());
                 room = admin.getRoom(LocalVariables.getRoomID());
                 game = room.getCurrentGame();
             } else {
@@ -219,7 +219,7 @@ public class GameScreenController implements Observer, RemotePropertyListener, I
                 if ("GameOver".equals(evt.getNewValue())) {
                     GraphicsContext gc = gameCanvas.getGraphicsContext2D();
                     gc.clearRect(gameCanvas.getLayoutX(), gameCanvas.getLayoutY(), gameCanvas.getWidth(), gameCanvas.getHeight());
-                } else if ("Points".equals((String)evt.getOldValue())) // If it is a arraylist of points
+                } else if ("Points".equals((String) evt.getOldValue())) // If it is a arraylist of points
                 {
                     //ArrayList<Point> oldPoints = (ArrayList<Point>) evt.getOldValue();
                     ArrayList<Point> newPoints = (ArrayList<Point>) evt.getNewValue();
@@ -229,11 +229,23 @@ public class GameScreenController implements Observer, RemotePropertyListener, I
                         draw(np);
                         //}
                     }
-                    
+
                     // }
-                } else if ("Powerup".equals((String)evt.getOldValue())) {
-                    ArrayList<DrawablePowerup> powerups = (ArrayList<DrawablePowerup>) evt.getNewValue();
-                    drawPowerups(powerups);
+                } else if ("Powerup".equals((String) evt.getOldValue())) {
+                    if ("ClearBoard".equals((String) evt.getNewValue())) {
+                        GraphicsContext gc = gameCanvas.getGraphicsContext2D();
+                        gc.clearRect(0, 0, gc.getCanvas().getWidth(), gc.getCanvas().getHeight());
+                        powerups.clear();
+                    }
+                    if (evt.getNewValue() instanceof DrawablePowerup) {
+                        drawPowerup((DrawablePowerup)evt.getNewValue());
+                    } else {
+                        ArrayList<DrawablePowerup> powerups = (ArrayList<DrawablePowerup>) evt.getNewValue();
+                        GraphicsContext gc = gameCanvas.getGraphicsContext2D();
+                        gc.clearRect(0, 0, gc.getCanvas().getWidth(), gc.getCanvas().getHeight());
+                        redrawPoints();
+                        drawPowerups(powerups);
+                    }                    
                 }
             }
 
@@ -248,13 +260,30 @@ public class GameScreenController implements Observer, RemotePropertyListener, I
         gc.strokeOval(p.X, p.Y, 1, 1);
     }
 
+    public void drawPowerup(DrawablePowerup powerup) {
+        GraphicsContext gc = gameCanvas.getGraphicsContext2D();
+            gc.setStroke(Color.CRIMSON);
+            gc.setFill(Color.CRIMSON);
+            gc.fillOval(powerup.minX, powerup.minY, powerup.maxX - powerup.minX, powerup.maxY -powerup.minY);
+            gc.strokeOval(powerup.minX, powerup.minY, powerup.maxX - powerup.minX, powerup.maxY - powerup.minY);
+       
+    }
     public void drawPowerups(ArrayList<DrawablePowerup> powerups) {
-        for (DrawablePowerup p : powerups) {
-            GraphicsContext gc = gameCanvas.getGraphicsContext2D();
+        GraphicsContext gc = gameCanvas.getGraphicsContext2D();
+        for (DrawablePowerup p : powerups) {    
             gc.setStroke(Color.CRIMSON);
             gc.setFill(Color.CRIMSON);
             gc.fillOval(p.minX, p.minY, p.maxX - p.minX, p.maxY - p.minY);
             gc.strokeOval(p.minX, p.minY, p.maxX - p.minX, p.maxY - p.minY);
+        }
+    }
+
+    public void redrawPoints() {
+        GraphicsContext gc = gameCanvas.getGraphicsContext2D();
+        for (Point p : positions) {
+            gc.setLineWidth(p.size);
+            gc.setStroke(Color.color(p.red, p.green, p.blue));
+            gc.strokeOval(p.X, p.Y, 1, 1);
         }
     }
 }
