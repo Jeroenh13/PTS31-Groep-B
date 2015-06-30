@@ -42,11 +42,11 @@ public class Room implements Serializable, IRoom
      * @throws RemoteException
      */
     @Override
-    public IGame startGame() throws RemoteException
+    public IGame startGame(double x, double y, double w, double h) throws RemoteException
     {
         //if(this.currentGame != null || this.players.isEmpty())
         //    return null;
-        IGame game = new Game(this.players,this.roomID);
+        IGame game = new Game(this.players,this.roomID, x, y, w, h);
         this.currentGame = game;
         return game;
     }

@@ -39,6 +39,10 @@ public class Game extends UnicastRemoteObject implements RemotePublisher, IGame,
     private ArrayList<Point> newPoints;
     private ArrayList<Point> oldPoints;
     private ArrayList<Point> allPoints;
+    private double x;
+    private double y;
+    private double w;
+    private double h;
 
     private ArrayList<DrawablePowerup> powerups;
 
@@ -51,16 +55,24 @@ public class Game extends UnicastRemoteObject implements RemotePublisher, IGame,
      *
      * @param players of the game
      * @param roomID
+     * @param x
+     * @param y
+     * @param w
+     * @param h
      * @throws java.rmi.RemoteException
      */
-    public Game(List<Player> players, int roomID) throws RemoteException {
+    public Game(List<Player> players, int roomID, double x, double y, double w, double h) throws RemoteException {
         RMIClient rmi = new RMIClient(portsAndIps.IP, portsAndIps.ServerPort, "Admin");
         admin = rmi.setUpNewAdministrator();
         newPoints = new ArrayList<>();
         oldPoints = new ArrayList<>();
         allPoints = new ArrayList<>();
-
         powerups = new ArrayList();
+
+        this.x = x;
+        this.y = y;
+        this.w = w;
+        this.h = h;
 
         this.roomID = roomID;
         this.players = players;
@@ -100,24 +112,26 @@ public class Game extends UnicastRemoteObject implements RemotePublisher, IGame,
     @Override
     public void startRun() {
         try {
-
+            bp.inform(this, "Game", "Start", null);
             IRoom r = admin.getRoom(roomID);
             Color[] colors = new Color[]{Color.ORANGE, Color.RED, Color.BLUE, Color.BROWN};
             int colorcnt = 0;
             for (Player p : r.getPlayers()) {
                 dontcrash.Character c = p.character;
+                c.gameOver = false;
                 c.setColor(colors[colorcnt]);
                 Random rnd = new Random();
-                int x = rnd.nextInt(600);
+                int x = rnd.nextInt((int) w);
                 c.curX = x;
-                int y = rnd.nextInt(500);
+                int y = rnd.nextInt((int) h / 2);
                 c.curY = y;
+                c.setOldPoint(new Point(x, y, colors[colorcnt].getRed(), colors[colorcnt].getGreen(), colors[colorcnt].getBlue(), p.character.size));
                 oldPoints.add(new Point(x, y, colors[colorcnt].getRed(), colors[colorcnt].getGreen(), colors[colorcnt].getBlue(), p.character.size));
                 newPoints.add(new Point(x, y, colors[colorcnt].getRed(), colors[colorcnt].getGreen(), colors[colorcnt].getBlue(), p.character.size));
                 admin.UpdateCharacter(roomID, c, p);
-                allPoints.addAll(oldPoints);
                 colorcnt++;
             }
+            allPoints.addAll(oldPoints);
         } catch (RemoteException ex) {
             Logger.getLogger(Game.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -134,51 +148,56 @@ public class Game extends UnicastRemoteObject implements RemotePublisher, IGame,
                 dontcrash.Character c = p.character;
                 if (!c.gameOver) {
                     c.getinput = false;
-                    for (Point op : oldPoints) {
-                        if (op.red == c.red && op.green == c.green && op.blue == c.blue) {
-                            //0 i up
-                            if (c.getDirection() == 0) {
-                                point = new Point(op.X, c.Y() - c.speed(), op.red, op.green, op.blue, c.size);
-                                c.setY(c.Y() - c.speed());
+                    Point op = c.oldPoint;
+                    if (op.red == c.red && op.green == c.green && op.blue == c.blue) {
+                        //0 i up
+                        if (c.getDirection() == 0) {
+                            point = new Point(op.X, c.Y() - c.speed(), op.red, op.green, op.blue, c.size);
+                            c.setY(c.Y() - c.speed());
                                 //imgview.setRotate(270);
 
-                                //1 is Right
-                            } else if (c.getDirection() == 1) {
-                                point = new Point(c.X() + c.speed(), op.Y, op.red, op.green, op.blue, c.size);
-                                c.setX(c.X() + c.speed());
+                            //1 is Right
+                        } else if (c.getDirection() == 1) {
+                            point = new Point(c.X() + c.speed(), op.Y, op.red, op.green, op.blue, c.size);
+                            c.setX(c.X() + c.speed());
                                 //imgview.setRotate(0);
 
-                                //2 is Bottom
-                            } else if (c.getDirection() == 2) {
-                                point = new Point(op.X, c.Y() + c.speed(), op.red, op.green, op.blue, c.size);
-                                c.setY(c.Y() + c.speed());
+                            //2 is Bottom
+                        } else if (c.getDirection() == 2) {
+                            point = new Point(op.X, c.Y() + c.speed(), op.red, op.green, op.blue, c.size);
+                            c.setY(c.Y() + c.speed());
                                 //imgview.setRotate(90);
 
-                                //3 is Left
-                            } else if (c.getDirection() == 3) {
-                                point = new Point(c.X() - c.speed(), op.Y, op.red, op.green, op.blue, c.size);
-                                c.setX(c.X() - c.speed());
-                                //imgview.setRotate(180);
-                            }
-                            if (!checkPoint(point)) {
-                                allPoints.add(point);
-                                newPoints.add(point);
-                            } else {
-                                c.gameOver = true;
-                            }
-                            //Check collision with powerup
-                            DrawablePowerup hitdpu = checkPointPowerup(point);
-                            if (hitdpu != null) {
-                                applyPowerup(hitdpu.powerup, c);
-                            }
-                            //Spawn new powerup
-                            DrawablePowerup dpu = spawnPowerUp();
-                            if (dpu != null) {
-                                powerups.add(dpu);
-                                bp.inform(this, "Game", "Powerup", powerups);
-                            }
+                            //3 is Left
+                        } else if (c.getDirection() == 3) {
+                            point = new Point(c.X() - c.speed(), op.Y, op.red, op.green, op.blue, c.size);
+                            c.setX(c.X() - c.speed());
+                            //imgview.setRotate(180);
+                        } else {
+                            System.out.println("Ïnvalid direction detected");
+                        }
+
+                        if (!checkPoint(point)) {
+                            allPoints.add(point);
+                            newPoints.add(point);
+                            c.setOldPoint(point);
+                        } else {
+                            c.gameOver = true;
+                        }
+                        //Check collision with powerup
+                        DrawablePowerup hitdpu = checkPointPowerup(point);
+                        if (hitdpu != null) {
+                            applyPowerup(hitdpu.powerup, c);
+                            bp.inform(this, "Game", "Powerup", powerups);
+                        }
+                        //Spawn new powerup
+                        DrawablePowerup dpu = spawnPowerUp();
+                        if (dpu != null) {
+                            powerups.add(dpu);
+                            bp.inform(this, "Game", "Powerup", dpu);
                         }
                     }
+
                     c.getinput = true;
                     admin.UpdateCharacter(roomID, c, p);
                 }
@@ -189,7 +208,7 @@ public class Game extends UnicastRemoteObject implements RemotePublisher, IGame,
     }
 
     private boolean checkPoint(Point loc) {
-        if (loc.Y >= 714.0 || loc.Y <= 0 || loc.X >= 989.0 || loc.X <= 0) {
+        if (loc.Y <= 0 || loc.Y >= h || loc.X <= 0 || loc.X >= w) {
             return true;
         }
 
@@ -205,7 +224,6 @@ public class Game extends UnicastRemoteObject implements RemotePublisher, IGame,
         for (DrawablePowerup p : powerups) {
             if (p.minX <= loc.X && p.maxX >= loc.X && p.minY <= loc.Y && p.maxY >= loc.Y) {
                 powerups.remove(p);
-                bp.inform(this, "Game", "Powerup", powerups);
                 return p;
             }
         }
@@ -226,12 +244,12 @@ public class Game extends UnicastRemoteObject implements RemotePublisher, IGame,
                 case 2: //Speed down
                     powerup = new Powerup(PowerupType.DECREASESPEED, tijdsduur, (float) 0.5, 1);
                     break;
-                /*case 3: //Size up
-                 powerup = new Powerup(PowerupType.INCREASESIZE, tijdsduur, (float) 2, 1);
-                 break;
-                 case 4: //Size down
-                 powerup = new Powerup(PowerupType.DECREASESIZE, tijdsduur, (float) 0.5, 1);
-                 break;*/
+                case 3: //Size up
+                    powerup = new Powerup(PowerupType.INCREASESIZE, tijdsduur, (float) 2, 1);
+                    break;
+                case 4: //Size down
+                    powerup = new Powerup(PowerupType.DECREASESIZE, tijdsduur, (float) 0.5, 1);
+                    break;
                 case 5: //ClearBoard
                     powerup = new Powerup(PowerupType.CLEARBOARD, 0, 0, 1);
                     break;
@@ -320,7 +338,7 @@ public class Game extends UnicastRemoteObject implements RemotePublisher, IGame,
         } else if (powerup.type == PowerupType.CLEARBOARD) {
             allPoints.clear();
             powerups.clear();
-            bp.inform(this, "Game","Powerup", powerups);
+            bp.inform(this, "Game", "Powerup", "ClearBoard");
         }
     }
 
@@ -328,11 +346,39 @@ public class Game extends UnicastRemoteObject implements RemotePublisher, IGame,
 
         @Override
         public void run() {
-            calculatePoints();
-            bp.inform(this, "Game", "Points", newPoints);
-            oldPoints = newPoints;
-            newPoints = oldPoints;
+            try {
+                int cnt = 0;
+                calculatePoints();
+                for (Player p : players) {
+                    if (p.character.gameOver) {
+                        cnt++;
+                    }
+                }
+
+                if (cnt == players.size()) {
+                    try {
+                        bp.inform(this, "Game", "GameOver", "GameOver");
+                        timer.cancel();
+                        timer.purge();
+                        oldPoints = new ArrayList<>();
+                        newPoints = new ArrayList<>();
+                        powerups = new ArrayList<>();
+                        Thread.sleep(2000);
+                        startRun();
+                    } catch (InterruptedException ex) {
+                        Logger.getLogger(Game.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+
+                } else {
+                    bp.inform(this, "Game", "Points", newPoints);
+                    oldPoints = newPoints;
+                    newPoints = oldPoints;
+                }
+            } catch (Exception ex) {
+                Logger.getLogger(Game.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
+
     }
     /*
      private ArrayList<Point> moveToPoint(Point previousPosition, Point currentPosition) {

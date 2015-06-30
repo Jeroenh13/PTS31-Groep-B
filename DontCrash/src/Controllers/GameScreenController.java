@@ -72,7 +72,7 @@ public class GameScreenController implements Observer, RemotePropertyListener, I
     private IGame game = null;
     private IRoom room = null;
     private Player player = null;
-    private ActualChat ac = null;
+    private ActualChat ac;
 
     ArrayList<Point> positions = new ArrayList<>();
     ArrayList<DrawablePowerup> powerups = new ArrayList<>();
@@ -96,17 +96,17 @@ public class GameScreenController implements Observer, RemotePropertyListener, I
         admin = rmi.setUpNewAdministrator();
         try {
             UnicastRemoteObject.exportObject(this, portsAndIps.getNewPort());
+            room = admin.getRoom(LocalVariables.getRoomID());
 
             this.ac = new ActualChat(portsAndIps.IP, room.getRoomChatPort(), portsAndIps.getNewPort(), LocalVariables.getPlayer().name, "Chat");
 
             ac.addObserver(this);
             admin.addListener(this, "Room" + room.toString());
 
-            room = admin.getRoom(LocalVariables.getRoomID());
             isHost = room.getHost().playerID == LocalVariables.getPlayer().playerID;
             if (isHost) {
                 PLAY.setVisible(true);
-                admin.startNewGame(room.getRoomId());
+                admin.startNewGame(room.getRoomId(), gameCanvas.getLayoutX(), gameCanvas.getLayoutY(), gameCanvas.getWidth(), gameCanvas.getHeight());
                 room = admin.getRoom(LocalVariables.getRoomID());
                 game = room.getCurrentGame();
             } else {
@@ -138,6 +138,7 @@ public class GameScreenController implements Observer, RemotePropertyListener, I
                     player = p;
                 }
             }
+            player.character = admin.newCharacter(LocalVariables.getRoomID(), player, admin.getNextCharacterID());
             lblScore.setText(String.valueOf(room.getNeededScore()));
             character = admin.newCharacter(LocalVariables.getRoomID(), LocalVariables.getPlayer(), admin.getNextCharacterID());
 
@@ -163,7 +164,12 @@ public class GameScreenController implements Observer, RemotePropertyListener, I
             public void handle(KeyEvent ke) {
                 try {
                     room = admin.getRoom(LocalVariables.getRoomID());
-                    if (player.name.equals(LocalVariables.getPlayer().name)) {
+                    for (Player p : room.getPlayers()) {
+                        if (p.playerID == LocalVariables.curPlayerID) {
+                            player = p;
+                        }
+                    }
+                    if (player.playerID == (LocalVariables.getPlayer().playerID)) {
                         character = player.character;
                         if (character.getinput) {
                             if (ke.getCode() == KeyCode.LEFT) {
@@ -179,7 +185,6 @@ public class GameScreenController implements Observer, RemotePropertyListener, I
                                     character.setDirection(character.getDirection() + 1);
                                 }
                             }
-
                             admin.UpdateCharacter(LocalVariables.getRoomID(), character, player);
                         }
                     }
@@ -216,9 +221,17 @@ public class GameScreenController implements Observer, RemotePropertyListener, I
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
-                if ("GameOver".equals(evt.getNewValue())) {
-                    lblRound.setText("Game Over");
-                } else if (evt.getOldValue() == "Points") // If it is a arraylist of points
+                if("Start".equals(evt.getOldValue())){
+                     GraphicsContext gc = gameCanvas.getGraphicsContext2D();
+                    gc.setFill(Color.BLACK);
+                    gc.clearRect(gameCanvas.getLayoutX(), gameCanvas.getLayoutY(), gameCanvas.getWidth(), gameCanvas.getHeight());
+                }
+                else if ("GameOver".equals(evt.getNewValue())) {
+                    GraphicsContext gc = gameCanvas.getGraphicsContext2D();
+                    gc.clearRect(gameCanvas.getLayoutX(), gameCanvas.getLayoutY(), gameCanvas.getWidth(), gameCanvas.getHeight());
+                    gc.setFill(Color.GREEN);
+                    gc.strokeText("Round Over", 200, 200);                    
+                } else if ("Points".equals((String) evt.getOldValue())) // If it is a arraylist of points
                 {
                     //ArrayList<Point> oldPoints = (ArrayList<Point>) evt.getOldValue();
                     ArrayList<Point> newPoints = (ArrayList<Point>) evt.getNewValue();
@@ -228,13 +241,33 @@ public class GameScreenController implements Observer, RemotePropertyListener, I
                         draw(np);
                         //}
                     }
+
                     // }
-                } else if (evt.getOldValue() == "Powerup") {
-                    ArrayList<DrawablePowerup> powerups = (ArrayList<DrawablePowerup>) evt.getNewValue();
-                    drawPowerups(powerups);
+                } else if ("Powerup".equals((String) evt.getOldValue())) {
+
+                    if (evt.getNewValue() instanceof DrawablePowerup) {
+                        drawPowerup((DrawablePowerup) evt.getNewValue());
+                    } else if (evt.getNewValue() instanceof String) {
+                        if ("ClearBoard".equals((String) evt.getNewValue())) {
+                            Platform.runLater(new Runnable() {
+
+                                @Override
+                                public void run() {
+                                    GraphicsContext gc = gameCanvas.getGraphicsContext2D();
+                                    gc.clearRect(0, 0, gc.getCanvas().getWidth(), gc.getCanvas().getHeight());
+                                    powerups.clear();
+                                }
+                            });
+                        }
+                    } else {
+                        ArrayList<DrawablePowerup> powerups = (ArrayList<DrawablePowerup>) evt.getNewValue();
+                        GraphicsContext gc = gameCanvas.getGraphicsContext2D();
+                        gc.clearRect(0, 0, gc.getCanvas().getWidth(), gc.getCanvas().getHeight());
+                        redrawPoints();
+                        drawPowerups(powerups);
+                    }
                 }
             }
-
         });
 
     }
@@ -246,85 +279,35 @@ public class GameScreenController implements Observer, RemotePropertyListener, I
         gc.strokeOval(p.X, p.Y, 1, 1);
     }
 
+    public void drawPowerup(DrawablePowerup powerup) {
+        GraphicsContext gc = gameCanvas.getGraphicsContext2D();
+        gc.setStroke(Color.CRIMSON);
+        gc.setFill(Color.CRIMSON);
+        gc.fillOval(powerup.minX, powerup.minY, powerup.maxX - powerup.minX, powerup.maxY - powerup.minY);
+        gc.strokeOval(powerup.minX, powerup.minY, powerup.maxX - powerup.minX, powerup.maxY - powerup.minY);
+
+    }
+
     public void drawPowerups(ArrayList<DrawablePowerup> powerups) {
+        GraphicsContext gc = gameCanvas.getGraphicsContext2D();
         for (DrawablePowerup p : powerups) {
-            GraphicsContext gc = gameCanvas.getGraphicsContext2D();
             gc.setStroke(Color.CRIMSON);
             gc.setFill(Color.CRIMSON);
             gc.fillOval(p.minX, p.minY, p.maxX - p.minX, p.maxY - p.minY);
             gc.strokeOval(p.minX, p.minY, p.maxX - p.minX, p.maxY - p.minY);
         }
     }
+
+    public void redrawPoints() {
+        GraphicsContext gc = gameCanvas.getGraphicsContext2D();
+        for (Point p : positions) {
+            gc.setLineWidth(p.size);
+            gc.setStroke(Color.color(p.red, p.green, p.blue));
+            gc.strokeOval(p.X, p.Y, 1, 1);
+        }
+    }
 }
-//     /**
-//     * Eventhandeler for button toggle sound. Currently start button of the game
-//     * Consider changing name?
-//     *
-//     * @param envt
-//     */
-//    public void btnToggleSoundPress(Event envt) {
-//        setup();
-//        gameArea.selectAll();
-//        AnimationTimer t;
-//        t = new AnimationTimer() {
-//
-//            @Override
-//            public void handle(long now) {
-//                Point previousPoint = c.getPoint();
-//                //The normal rotation angle of 0 is right
-//                //0 is Up
-//                if (c.getDirection() == 0) {
-//                    c.setY(c.Y() - c.speed());
-//                    imgview.setRotate(270);
-//                    //1 is Right
-//                } else if (c.getDirection() == 1) {
-//                    c.setX(c.X() + c.speed());
-//                    imgview.setRotate(0);
-//                    //2 is Bottom
-//                } else if (c.getDirection() == 2) {
-//                    c.setY(c.Y() + c.speed());
-//                    imgview.setRotate(90);
-//                    //3 is Left
-//                } else if (c.getDirection() == 3) {
-//                    c.setX(c.X() - c.speed());
-//                    imgview.setRotate(180);
-//                }
-//                draw();
-//                Point currentPoint = c.getPoint();
-//                if (player1) {
-//                    if (!moveToPoint(previousPoint, currentPoint)) {
-//                        imgview.relocate(c.X(), c.Y());
-//                    } else {
-//                        endGame(this);
-//                    }
-//                }
-//                DrawablePowerup hitdpu = checkPointPowerup(currentPoint);
-//                if (hitdpu != null) {
-//                    redraw();
-//                    applyPowerup(hitdpu.powerup);
-//                }
-//                DrawablePowerup dpu = spawnPowerUp();
-//                if (dpu != null) {
-//                    drawPowerup(dpu);
-//                }
-//            }
-//
-//            @Override
-//            public void start() {
-//
-//                imgview.relocate(50, 20);
-//                c.setX(imgview.getLayoutX());
-//                c.setY(imgview.getLayoutY());
-//                super.start();
-//                c.setDirection(2);
-//                c.setSpeed(2);
-//                HandleKeyPress(null);
-//            }
-//        };
-//        t.start();
-//        PLAY.setDisable(true);
-//    }
-//
+
 //private ArrayList<Point> moveToPoint(Point previousPosition, Point currentPosition) {
 //        ArrayList<Point> points = new ArrayList<Point>();
 //        Point point;
@@ -375,266 +358,3 @@ public class GameScreenController implements Observer, RemotePropertyListener, I
 //        }
 //        return points;
 //    }
-//
-//    private boolean checkPoint(Point loc) {
-//        if (loc.Y >= gameCanvas.getHeight() || loc.Y <= 0 || loc.X >= gameCanvas.getWidth() || loc.X <= 0) {
-//            return true;
-//        }
-//        if (!invincible) {
-//            lblRound.setText("NORMAL");
-//            for (Point p : positions) {
-//                if (p.X == loc.X && p.Y == loc.Y) {
-//                    return true;
-//                }
-//            }
-//        } else {
-//            lblRound.setText("INVINCIBLE");
-//        }
-//        return false;
-//    }
-//
-//private boolean moveToPoint(Point previousPosition, Point currentPosition) {
-//        Point point;
-//        if (previousPosition.X <= currentPosition.X) {
-//            if (previousPosition.Y <= currentPosition.Y) {
-//                for (int y = previousPosition.Y; y < currentPosition.Y; y++) {
-//                    for (int x = previousPosition.X; x < currentPosition.X; x++) {
-//                        point = new Point(x, y, previousPosition.color);
-//                        if (checkPoint(point)) {
-//                            return false;
-//                        }
-//                        positions.add(point);
-//                    }
-//                }
-//            } else {
-//                for (int y = currentPosition.Y; y < previousPosition.Y; y++) {
-//                    for (int x = previousPosition.X; x < currentPosition.X; x++) {
-//                        point = new Point(x, y, previousPosition.color);
-//                        if (checkPoint(point)) {
-//                            return false;
-//                        }
-//                        positions.add(point);
-//                    }
-//                }
-//            }
-//        } else {
-//            if (previousPosition.Y <= currentPosition.Y) {
-//                for (int y = previousPosition.Y; y < currentPosition.Y; y++) {
-//                    for (int x = currentPosition.X; x < previousPosition.X; x++) {
-//                        point = new Point(x, y, previousPosition.color);
-//                        if (checkPoint(point)) {
-//                            return false;
-//                        }
-//                        positions.add(point);
-//                    }
-//                }
-//            } else {
-//                for (int y = currentPosition.Y; y < previousPosition.Y; y++) {
-//                    for (int x = currentPosition.X; x < previousPosition.X; x++) {
-//                        point = new Point(x, y, previousPosition.color);
-//                        if (checkPoint(point)) {
-//                            return false;
-//                        }
-//                        positions.add(point);
-//                    }
-//                }
-//            }
-//        }
-//        return true;
-//    }
-//
-//    private DrawablePowerup checkPointPowerup(Point loc) {
-//        for (DrawablePowerup p : powerups) {
-//            if (p.minX <= loc.X && p.maxX >= loc.X && p.minY <= loc.Y && p.maxY >= loc.Y) {
-//                powerups.remove(p);
-//                return p;
-//            }
-//        }
-//        return null;
-//    }
-//
-//    private void endGame(AnimationTimer t) {
-//        GraphicsContext gc = gameCanvas.getGraphicsContext2D();
-//        if (!player1) {
-//            //Stop timer
-//            t.stop();
-//            //Clear board for new round
-//            lblRound.setText("AF");
-//            gc.clearRect(0, 0, gc.getCanvas().getWidth(), gc.getCanvas().getHeight());
-//            positions.clear();
-//            powerups.clear();
-//            PLAY.setDisable(false);
-//            player1 = true;
-//        }
-//    }
-//
-//    /**
-//     * Draw line player leaves behind
-//     */
-//    public void draw() {
-//        GraphicsContext gc = gameCanvas.getGraphicsContext2D();
-//        gc.setLineWidth(2);
-//        if (player1) {
-//            gc.setStroke(Color.ORANGE);
-//            gc.strokeOval(c.X(), c.Y(), 1, 1);
-//        }
-//    }
-//
-//    /**
-//     * Draw powerup
-//     *
-//     * @param dpu the powerup to be drawn
-//     */
-//    public void drawPowerup(DrawablePowerup dpu) {
-//        GraphicsContext gc = gameCanvas.getGraphicsContext2D();
-//        this.powerups.add(dpu);
-//        gc.setStroke(Color.CRIMSON);
-//        gc.setFill(Color.CRIMSON);
-//        gc.fillOval(dpu.minX, dpu.minY, dpu.maxX - dpu.minX, dpu.maxY - dpu.minY);
-//        gc.strokeOval(dpu.minX, dpu.minY, dpu.maxX - dpu.minX, dpu.maxY - dpu.minY);
-//    }
-//
-//    public void redraw() {
-//        GraphicsContext gc = gameCanvas.getGraphicsContext2D();
-//        gc.clearRect(0, 0, gc.getCanvas().getWidth(), gc.getCanvas().getHeight());
-//        //gc.setStroke(Color.ORANGE);
-//        gc.setLineWidth(2);
-//        for (Point p : positions) {
-//            gc.setStroke(p.color);
-//            gc.strokeOval(p.X, p.Y, 1, 1);
-//        }
-//        gc.setStroke(Color.CRIMSON);
-//        gc.setFill(Color.CRIMSON);
-//        for (DrawablePowerup p : powerups) {
-//            gc.fillOval(p.minX, p.minY, p.maxX - p.minX, p.maxY - p.minY);
-//            gc.strokeOval(p.minX, p.minY, p.maxX - p.minX, p.maxY - p.minY);
-//        }
-//    }
-//
-//    /**
-//     * Makes the character of the player move to the left or right
-//     *
-//     * @param evt
-//     */
-//    
-//
-//    /**
-//     * Spawn a powerup on a random position on playfield of a random poweruptype
-//     *
-//     * @return null if no powerup spawns, return the powerup if spawned
-//     */
-//    public DrawablePowerup spawnPowerUp() {
-//        Random random = new Random();
-//
-//        if (random.nextInt(10000) < spawnChancePowerUp) {
-//            Powerup powerup;
-//            int tijdsduur = 2 + random.nextInt(5);
-//            //Get a random powerup
-//            switch (random.nextInt(6) + 1) {
-//                case 1: //Speed up
-//                    powerup = new Powerup(PowerupType.INCREASESPEED, tijdsduur, (float) 1.5, 1);
-//                    break;
-//                case 2: //Speed down
-//                    powerup = new Powerup(PowerupType.DECREASESPEED, tijdsduur, (float) 0.5, 1);
-//                    break;
-//                /*case 3: //Size up
-//                 powerup = new Powerup(PowerupType.INCREASESIZE, tijdsduur, (float) 2, 1);
-//                 break;
-//                 case 4: //Size down
-//                 powerup = new Powerup(PowerupType.DECREASESIZE, tijdsduur, (float) 0.5, 1);
-//                 break;*/
-//                case 5: //ClearBoard
-//                    powerup = new Powerup(PowerupType.CLEARBOARD, 0, 0, 1);
-//                    break;
-//                case 6: //Invincible
-//                    powerup = new Powerup(PowerupType.INVINCIBLE, tijdsduur, 0, 1);
-//                    break;
-//                default:
-//                    return null;
-//            }
-//            GraphicsContext gc = gameCanvas.getGraphicsContext2D();
-//            DrawablePowerup dpu = new DrawablePowerup(
-//                    powerup,
-//                    random.nextInt((int) gc.getCanvas().getWidth()),
-//                    random.nextInt((int) gc.getCanvas().getHeight()));
-//            return dpu;
-//        }
-//        return null;
-//    }
-//
-//    /**
-//     * Apply the effect of the picked up powerup to the player
-//     *
-//     * @param powerup
-//     */
-//    public void applyPowerup(Powerup powerup) {
-//        if (powerup.type == PowerupType.INCREASESPEED) {
-//            (new Thread() {
-//                @Override
-//                public void run() {
-//                    c.setSpeed(c.speed() * powerup.modifier);
-//                    try {
-//                        Thread.sleep(powerup.tijdsduur * 1000);
-//                    } catch (Exception ex) {
-//                        System.out.println(ex.getMessage());
-//                    }
-//                    c.setSpeed(c.speed() / powerup.modifier);
-//                }
-//            }).start();
-//        } else if (powerup.type == PowerupType.DECREASESPEED) {
-//            (new Thread() {
-//                @Override
-//                public void run() {
-//                    c.setSpeed(c.speed() * powerup.modifier);
-//                    try {
-//                        Thread.sleep(powerup.tijdsduur * 1000);
-//                    } catch (Exception ex) {
-//                        System.out.println(ex.getMessage());
-//                    }
-//                    c.setSpeed(c.speed() / powerup.modifier);
-//                }
-//            }).start();
-//        } else if (powerup.type == PowerupType.INCREASESIZE) {
-//
-//        } else if (powerup.type == PowerupType.DECREASESIZE) {
-//
-//        } else if (powerup.type == PowerupType.INVINCIBLE) {
-//            (new Thread() {
-//                @Override
-//                public void run() {
-//                    invincible = true;
-//                    try {
-//                        Thread.sleep(powerup.tijdsduur * 1000);
-//                    } catch (Exception ex) {
-//                        System.out.println(ex.getMessage());
-//                    }
-//                    invincible = false;
-//                }
-//            }).start();
-//        } else if (powerup.type == PowerupType.CLEARBOARD) {
-//            GraphicsContext gc = gameCanvas.getGraphicsContext2D();
-//            gc.clearRect(0, 0, gc.getCanvas().getWidth(), gc.getCanvas().getHeight());
-//            positions.clear();
-//            powerups.clear();
-//        }
-//    }
-//
-//    private void setup() {
-//        Player p = new Player(1, "jeroen", 2, "jeroenh13@live.nl");
-//        c = new dontcrash.Character(p, 1);
-//    }
-//
-
-//
-//    @Override
-//    public void propertyChange(PropertyChangeEvent evt) throws RemoteException {
-//        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-//    }
-//
-//    @Override
-//    public void update(Observable o, Object arg) {
-//        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-//    }
-//}
-//
-// 

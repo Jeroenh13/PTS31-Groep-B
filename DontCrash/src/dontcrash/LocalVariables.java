@@ -36,7 +36,7 @@ public class LocalVariables {
      * TODO JAVADOC
      *
      */
-    public static int curPlayerID = 0;
+    public static int curPlayerID;
 
     /**
      * Gets the player of the client
@@ -54,6 +54,8 @@ public class LocalVariables {
      */
     public static void setPlayer(Player player) {
         LocalVariables.player = player;
+        curPlayerID = player.playerID;
+        LocalVariables.player.character =  player.character;
     }
 
     /**
@@ -62,7 +64,7 @@ public class LocalVariables {
      * @return roomID where the player is in
      */
     public static int getRoomID() {
-        System.out.println(roomID);
+        //System.out.println(roomID);
         return roomID;
     }
 
@@ -73,7 +75,7 @@ public class LocalVariables {
      */
     public static void setRoomID(int aRoomID) {
         roomID = aRoomID;
-        System.out.println(aRoomID);
+        //System.out.println(aRoomID);
     }
 
     public static int getScore() {

@@ -30,16 +30,14 @@
                <font>
                   <Font name="NeuropolXRg-Regular" size="15.0" />
                </font></Label>
-            <Label fx:id="lblScore" layoutX="20.0" layoutY="145.0" text="Rounds to go: 1">
-               <font>
-                  <Font name="NeuropolXRg-Regular" size="15.0" />
-               </font></Label>
             <Label fx:id="lblPlayer4" layoutX="20.0" layoutY="93.0" text="Player4 : 0">
                <font>
                   <Font name="NeuropolXRg-Regular" size="15.0" />
                </font></Label>
-            <TextArea fx:id="taChat"layoutY="429.0" prefHeight="206.0" prefWidth="169.0"  />
-            <TextField fx:id="txtChat"layoutY="643.0" prefHeight="25.0" prefWidth="169.0" style="-fx-background-color: c1c1c1;" />
+            <Label fx:id="lblScore" layoutX="20.0" layoutY="145.0" text="Rounds to go: 1">
+               <font>
+                  <Font name="NeuropolXRg-Regular" size="15.0" />
+               </font></Label>
             <Button layoutY="680.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="169.0" style="-fx-background-color: #c1c1c1;" text="Stuur">
                <font>
                   <Font name="NeuropolXRg-Regular" size="15.0" />
@@ -48,6 +46,8 @@
                <font>
                   <Font name="NeuropolXRg-Regular" size="15.0" />
                </font></Button>
+            <TextArea fx:id="taChat" editable="false" layoutY="429.0" prefHeight="206.0" prefWidth="169.0" />
+            <TextField fx:id="txtChat" layoutY="643.0" onAction="#txtChatSend" prefHeight="25.0" prefWidth="169.0" style="-fx-background-color: c1c1c1;" />
          </children></AnchorPane>
     <AnchorPane id="apGane" minHeight="0.0" minWidth="0.0" prefHeight="434.0" prefWidth="488.0">
          <children>
