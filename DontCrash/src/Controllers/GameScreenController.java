@@ -268,7 +268,6 @@ public class GameScreenController implements Observer, RemotePropertyListener, I
                     }
                 }
             }
-
         });
 
     }
