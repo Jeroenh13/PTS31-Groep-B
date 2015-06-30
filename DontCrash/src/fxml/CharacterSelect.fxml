@@ -9,12 +9,12 @@
 
 <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="734.0" prefWidth="1172.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.CharacterScreenController">
    <children>
-      <Pane fx:id="imgPlayer4" layoutX="283.0" prefHeight="734.0" prefWidth="889.0" style="-fx-background-color: #303030;">
+      <Pane  layoutX="283.0" prefHeight="734.0" prefWidth="889.0" style="-fx-background-color: #303030;">
          <children>
             <ImageView fx:id="imgPlayer1" fitHeight="354.0" fitWidth="419.0" pickOnBounds="true" preserveRatio="true" />
-            <ImageView fitHeight="354.0" fitWidth="419.0" layoutX="464.0" layoutY="380.0" pickOnBounds="true" preserveRatio="true" />
+            <ImageView fx:id="imgPlayer2" fitHeight="354.0" fitWidth="419.0" layoutX="464.0" layoutY="380.0" pickOnBounds="true" preserveRatio="true" />
             <ImageView fx:id="imgPlayer3" fitHeight="354.0" fitWidth="419.0" layoutX="6.0" layoutY="380.0" pickOnBounds="true" preserveRatio="true" />
-            <ImageView fitHeight="347.0" fitWidth="419.0" layoutX="470.0" layoutY="6.0" pickOnBounds="true" preserveRatio="true" />
+            <ImageView fx:id="imgPlayer4" fitHeight="347.0" fitWidth="419.0" layoutX="470.0" layoutY="6.0" pickOnBounds="true" preserveRatio="true" />
             <Button id="btnStart" fx:id="btnstart" layoutX="419.0" layoutY="352.0" mnemonicParsing="false" onAction="#Start" style="-fx-background-color: #c1c1c1;" text="Start">
                <font>
                   <Font name="NeuropolXRg-Regular" size="15.0" />

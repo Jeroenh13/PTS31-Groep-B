@@ -38,8 +38,8 @@
                <font>
                   <Font name="NeuropolXRg-Regular" size="15.0" />
                </font></Label>
-            <TextArea layoutY="429.0" prefHeight="206.0" prefWidth="169.0" />
-            <TextField layoutY="643.0" prefHeight="25.0" prefWidth="169.0" style="-fx-background-color: c1c1c1;" />
+            <TextArea fx:id="taChat"layoutY="429.0" prefHeight="206.0" prefWidth="169.0"  />
+            <TextField fx:id="txtChat"layoutY="643.0" prefHeight="25.0" prefWidth="169.0" style="-fx-background-color: c1c1c1;" />
             <Button layoutY="680.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="169.0" style="-fx-background-color: #c1c1c1;" text="Stuur">
                <font>
                   <Font name="NeuropolXRg-Regular" size="15.0" />

@@ -64,9 +64,15 @@ public class GameScreenController implements Observer, RemotePropertyListener, I
     @FXML
     Label lblPlayer4;
 
+    @FXML
+    TextField txtChat;
+    @FXML
+    TextArea taChat;
+
     private IGame game = null;
     private IRoom room = null;
     private Player player = null;
+    private ActualChat ac = null;
 
     ArrayList<Point> positions = new ArrayList<>();
     ArrayList<DrawablePowerup> powerups = new ArrayList<>();
@@ -91,6 +97,11 @@ public class GameScreenController implements Observer, RemotePropertyListener, I
         try {
             UnicastRemoteObject.exportObject(this, portsAndIps.getNewPort());
 
+            this.ac = new ActualChat(portsAndIps.IP, room.getRoomChatPort(), portsAndIps.getNewPort(), LocalVariables.getPlayer().name, "Chat");
+
+            ac.addObserver(this);
+            admin.addListener(this, "Room" + room.toString());
+
             room = admin.getRoom(LocalVariables.getRoomID());
             isHost = room.getHost().playerID == LocalVariables.getPlayer().playerID;
             if (isHost) {
@@ -101,7 +112,6 @@ public class GameScreenController implements Observer, RemotePropertyListener, I
             } else {
                 room = admin.getRoom(LocalVariables.getRoomID());
                 PLAY.setVisible(false);
-
                 game = room.getCurrentGame();
             }
 
@@ -123,12 +133,12 @@ public class GameScreenController implements Observer, RemotePropertyListener, I
             if (game != null) {
                 game.addListener(this, "Game");
             }
-            for(Player p : room.getPlayers()){
-                if(p.playerID == LocalVariables.curPlayerID)
-                {
+            for (Player p : room.getPlayers()) {
+                if (p.playerID == LocalVariables.curPlayerID) {
                     player = p;
                 }
             }
+            lblScore.setText(String.valueOf(room.getNeededScore()));
             character = admin.newCharacter(LocalVariables.getRoomID(), LocalVariables.getPlayer(), admin.getNextCharacterID());
 
         } catch (RemoteException ex) {
@@ -153,23 +163,23 @@ public class GameScreenController implements Observer, RemotePropertyListener, I
             public void handle(KeyEvent ke) {
                 try {
                     room = admin.getRoom(LocalVariables.getRoomID());
-                        if (player.name.equals(LocalVariables.getPlayer().name)) {
-                            character = player.character;
-                            if (character.getinput) {
-                                if (ke.getCode() == KeyCode.LEFT) {
-                                    if (character.getDirection() == 0) {
-                                        character.setDirection(3);
-                                    } else {
-                                        character.setDirection(character.getDirection() - 1);
-                                    }
-                                } else if (ke.getCode() == KeyCode.RIGHT) {
-                                    if (character.getDirection() == 3) {
-                                        character.setDirection(0);
-                                    } else {
-                                        character.setDirection(character.getDirection() + 1);
-                                    }
+                    if (player.name.equals(LocalVariables.getPlayer().name)) {
+                        character = player.character;
+                        if (character.getinput) {
+                            if (ke.getCode() == KeyCode.LEFT) {
+                                if (character.getDirection() == 0) {
+                                    character.setDirection(3);
+                                } else {
+                                    character.setDirection(character.getDirection() - 1);
                                 }
-                            
+                            } else if (ke.getCode() == KeyCode.RIGHT) {
+                                if (character.getDirection() == 3) {
+                                    character.setDirection(0);
+                                } else {
+                                    character.setDirection(character.getDirection() + 1);
+                                }
+                            }
+
                             admin.UpdateCharacter(LocalVariables.getRoomID(), character, player);
                         }
                     }
@@ -181,8 +191,24 @@ public class GameScreenController implements Observer, RemotePropertyListener, I
     }
 
     @Override
-    public void update(Observable o, Object arg) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void update(Observable o, Object o1) {
+        Platform.runLater(() -> {
+            taChat.appendText(o1.toString() + "\n");
+        });
+    }
+
+    /**
+     * Sends chat message
+     *
+     * @param e
+     * @throws RemoteException
+     */
+    public void txtChatSend(Event e) throws RemoteException {
+        if (txtChat.getText().isEmpty()) {
+            return;
+        }
+        ac.sendMessage(txtChat.getText());
+        txtChat.setText("");
     }
 
     @Override
@@ -192,36 +218,32 @@ public class GameScreenController implements Observer, RemotePropertyListener, I
             public void run() {
                 if ("GameOver".equals(evt.getNewValue())) {
                     lblRound.setText("Game Over");
-                } else {
-                    try {
-                        // If it is a arraylist of points
-                        ArrayList<Point> oldPoints = (ArrayList<Point>) evt.getOldValue();
-                        ArrayList<Point> newPoints = (ArrayList<Point>) evt.getNewValue();
-                        for (Point op : oldPoints) {
-                            for (Point np : newPoints) {
-                                if (op.red == np.red && op.green == np.green && op.blue == np.blue) {
-                                    draw(newPoints);
-                                }
-                            }
-                        }
-                    } catch (Exception ex) {
-                        //If not, it is a arraylist of powerups
-                        ArrayList<DrawablePowerup> powerups = (ArrayList<DrawablePowerup>) evt.getNewValue();
-                        drawPowerups(powerups);
+                } else if (evt.getOldValue() == "Points") // If it is a arraylist of points
+                {
+                    //ArrayList<Point> oldPoints = (ArrayList<Point>) evt.getOldValue();
+                    ArrayList<Point> newPoints = (ArrayList<Point>) evt.getNewValue();
+                    //for (Point op : oldPoints) {
+                    for (Point np : newPoints) {
+                        //if (op.red == np.red && op.green == np.green && op.blue == np.blue) {
+                        draw(np);
+                        //}
                     }
+                    // }
+                } else if (evt.getOldValue() == "Powerup") {
+                    ArrayList<DrawablePowerup> powerups = (ArrayList<DrawablePowerup>) evt.getNewValue();
+                    drawPowerups(powerups);
                 }
             }
+
         });
 
     }
 
-    public void draw(ArrayList<Point> points) {
-        for (Point p : points) {
-            GraphicsContext gc = gameCanvas.getGraphicsContext2D();
-            gc.setLineWidth(p.size);
-            gc.setStroke(Color.color(p.red, p.green, p.blue));
-            gc.strokeOval(p.X, p.Y, 1, 1);
-        }
+    public void draw(Point p) {
+        GraphicsContext gc = gameCanvas.getGraphicsContext2D();
+        gc.setLineWidth(p.size);
+        gc.setStroke(Color.color(p.red, p.green, p.blue));
+        gc.strokeOval(p.X, p.Y, 1, 1);
     }
 
     public void drawPowerups(ArrayList<DrawablePowerup> powerups) {
