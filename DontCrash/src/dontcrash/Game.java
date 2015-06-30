@@ -112,6 +112,7 @@ public class Game extends UnicastRemoteObject implements RemotePublisher, IGame,
     @Override
     public void startRun() {
         try {
+            bp.inform(this, "Game", "Start", null);
             IRoom r = admin.getRoom(roomID);
             Color[] colors = new Color[]{Color.ORANGE, Color.RED, Color.BLUE, Color.BROWN};
             int colorcnt = 0;
@@ -148,9 +149,6 @@ public class Game extends UnicastRemoteObject implements RemotePublisher, IGame,
                 if (!c.gameOver) {
                     c.getinput = false;
                     Point op = c.oldPoint;
-                    if(c.direction != 2){
-                        System.out.println("OK");
-                    }
                     if (op.red == c.red && op.green == c.green && op.blue == c.blue) {
                         //0 i up
                         if (c.getDirection() == 0) {
@@ -210,7 +208,7 @@ public class Game extends UnicastRemoteObject implements RemotePublisher, IGame,
     }
 
     private boolean checkPoint(Point loc) {
-        if (loc.Y <= y || loc.Y >= h || loc.X <= x || loc.X >= h) {
+        if (loc.Y <= 0 || loc.Y >= h || loc.X <= 0 || loc.X >= w) {
             return true;
         }
 
@@ -364,6 +362,7 @@ public class Game extends UnicastRemoteObject implements RemotePublisher, IGame,
                         timer.purge();
                         oldPoints = new ArrayList<>();
                         newPoints = new ArrayList<>();
+                        powerups = new ArrayList<>();
                         Thread.sleep(2000);
                         startRun();
                     } catch (InterruptedException ex) {

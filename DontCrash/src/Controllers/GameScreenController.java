@@ -221,9 +221,16 @@ public class GameScreenController implements Observer, RemotePropertyListener, I
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
-                if ("GameOver".equals(evt.getNewValue())) {
+                if("Start".equals(evt.getOldValue())){
+                     GraphicsContext gc = gameCanvas.getGraphicsContext2D();
+                    gc.setFill(Color.BLACK);
+                    gc.clearRect(gameCanvas.getLayoutX(), gameCanvas.getLayoutY(), gameCanvas.getWidth(), gameCanvas.getHeight());
+                }
+                else if ("GameOver".equals(evt.getNewValue())) {
                     GraphicsContext gc = gameCanvas.getGraphicsContext2D();
                     gc.clearRect(gameCanvas.getLayoutX(), gameCanvas.getLayoutY(), gameCanvas.getWidth(), gameCanvas.getHeight());
+                    gc.setFill(Color.GREEN);
+                    gc.strokeText("Round Over", 200, 200);                    
                 } else if ("Points".equals((String) evt.getOldValue())) // If it is a arraylist of points
                 {
                     //ArrayList<Point> oldPoints = (ArrayList<Point>) evt.getOldValue();
