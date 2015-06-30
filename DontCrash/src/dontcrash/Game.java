@@ -124,6 +124,7 @@ public class Game extends UnicastRemoteObject implements RemotePublisher, IGame,
                 c.curX = x;
                 int y = rnd.nextInt((int) h / 2);
                 c.curY = y;
+                c.setOldPoint(new Point(x, y, colors[colorcnt].getRed(), colors[colorcnt].getGreen(), colors[colorcnt].getBlue(), p.character.size));
                 oldPoints.add(new Point(x, y, colors[colorcnt].getRed(), colors[colorcnt].getGreen(), colors[colorcnt].getBlue(), p.character.size));
                 newPoints.add(new Point(x, y, colors[colorcnt].getRed(), colors[colorcnt].getGreen(), colors[colorcnt].getBlue(), p.character.size));
                 admin.UpdateCharacter(roomID, c, p);
@@ -144,54 +145,54 @@ public class Game extends UnicastRemoteObject implements RemotePublisher, IGame,
             newPoints = new ArrayList<>();
             for (Player p : r.getPlayers()) {
                 dontcrash.Character c = p.character;
-                System.out.println(c.gameOver);
                 if (!c.gameOver) {
                     c.getinput = false;
-                    for (Point op : oldPoints) {
-                        if (op.red == c.red && op.green == c.green && op.blue == c.blue) {
-                            //0 i up
-                            if (c.getDirection() == 0) {
-                                point = new Point(op.X, c.Y() - c.speed(), op.red, op.green, op.blue, c.size);
-                                c.setY(c.Y() - c.speed());
+                    Point op = c.oldPoint;
+                    if (op.red == c.red && op.green == c.green && op.blue == c.blue) {
+                        //0 i up
+                        if (c.getDirection() == 0) {
+                            point = new Point(op.X, c.Y() - c.speed(), op.red, op.green, op.blue, c.size);
+                            c.setY(c.Y() - c.speed());
                                 //imgview.setRotate(270);
 
-                                //1 is Right
-                            } else if (c.getDirection() == 1) {
-                                point = new Point(c.X() + c.speed(), op.Y, op.red, op.green, op.blue, c.size);
-                                c.setX(c.X() + c.speed());
+                            //1 is Right
+                        } else if (c.getDirection() == 1) {
+                            point = new Point(c.X() + c.speed(), op.Y, op.red, op.green, op.blue, c.size);
+                            c.setX(c.X() + c.speed());
                                 //imgview.setRotate(0);
 
-                                //2 is Bottom
-                            } else if (c.getDirection() == 2) {
-                                point = new Point(op.X, c.Y() + c.speed(), op.red, op.green, op.blue, c.size);
-                                c.setY(c.Y() + c.speed());
+                            //2 is Bottom
+                        } else if (c.getDirection() == 2) {
+                            point = new Point(op.X, c.Y() + c.speed(), op.red, op.green, op.blue, c.size);
+                            c.setY(c.Y() + c.speed());
                                 //imgview.setRotate(90);
 
-                                //3 is Left
-                            } else if (c.getDirection() == 3) {
-                                point = new Point(c.X() - c.speed(), op.Y, op.red, op.green, op.blue, c.size);
-                                c.setX(c.X() - c.speed());
-                                //imgview.setRotate(180);
-                            }
-                            if (!checkPoint(point)) {
-                                allPoints.add(point);
-                                newPoints.add(point);
-                            } else {
-                                c.gameOver = true;
-                            }
-                            //Check collision with powerup
-                            DrawablePowerup hitdpu = checkPointPowerup(point);
-                            if (hitdpu != null) {
-                                applyPowerup(hitdpu.powerup, c);
-                            }
-                            //Spawn new powerup
-                            DrawablePowerup dpu = spawnPowerUp();
-                            if (dpu != null) {
-                                powerups.add(dpu);
-                                bp.inform(this, "Game", "Powerup", powerups);
-                            }
+                            //3 is Left
+                        } else if (c.getDirection() == 3) {
+                            point = new Point(c.X() - c.speed(), op.Y, op.red, op.green, op.blue, c.size);
+                            c.setX(c.X() - c.speed());
+                            //imgview.setRotate(180);
+                        }
+                        if (!checkPoint(point)) {
+                            allPoints.add(point);
+                            newPoints.add(point);
+                            c.setOldPoint(point);
+                        } else {
+                            c.gameOver = true;
+                        }
+                        //Check collision with powerup
+                        DrawablePowerup hitdpu = checkPointPowerup(point);
+                        if (hitdpu != null) {
+                            applyPowerup(hitdpu.powerup, c);
+                        }
+                        //Spawn new powerup
+                        DrawablePowerup dpu = spawnPowerUp();
+                        if (dpu != null) {
+                            powerups.add(dpu);
+                            bp.inform(this, "Game", "Powerup", powerups);
                         }
                     }
+
                     c.getinput = true;
                     admin.UpdateCharacter(roomID, c, p);
                 }

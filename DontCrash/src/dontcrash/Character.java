@@ -30,6 +30,7 @@ public class Character implements Serializable
     public boolean getinput = true;
     public boolean invincible;
     public double size = 2;
+    public Point oldPoint;
     
     /**
      * Initializes a new character using a player and a characterid
@@ -44,6 +45,10 @@ public class Character implements Serializable
         direction = 2;
         speed = 2;
         invincible = false;
+    }
+    
+    public void setOldPoint(Point loc){
+        oldPoint = loc;
     }
     
     public void getHit()
