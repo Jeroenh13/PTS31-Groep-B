@@ -66,6 +66,7 @@ public class GameScreenController implements Observer, RemotePropertyListener, I
 
     private IGame game = null;
     private IRoom room = null;
+    private Player player = null;
 
     ArrayList<Point> positions = new ArrayList<>();
     ArrayList<DrawablePowerup> powerups = new ArrayList<>();
@@ -122,6 +123,12 @@ public class GameScreenController implements Observer, RemotePropertyListener, I
             if (game != null) {
                 game.addListener(this, "Game");
             }
+            for(Player p : room.getPlayers()){
+                if(p.playerID == LocalVariables.curPlayerID)
+                {
+                    player = p;
+                }
+            }
             character = admin.newCharacter(LocalVariables.getRoomID(), LocalVariables.getPlayer(), admin.getNextCharacterID());
 
         } catch (RemoteException ex) {
@@ -146,9 +153,8 @@ public class GameScreenController implements Observer, RemotePropertyListener, I
             public void handle(KeyEvent ke) {
                 try {
                     room = admin.getRoom(LocalVariables.getRoomID());
-                    for (Player p : room.getPlayers()) {
-                        if (p.name.equals(LocalVariables.getPlayer().name)) {
-                            character = p.character;
+                        if (player.name.equals(LocalVariables.getPlayer().name)) {
+                            character = player.character;
                             if (character.getinput) {
                                 if (ke.getCode() == KeyCode.LEFT) {
                                     if (character.getDirection() == 0) {
@@ -163,8 +169,8 @@ public class GameScreenController implements Observer, RemotePropertyListener, I
                                         character.setDirection(character.getDirection() + 1);
                                     }
                                 }
-                            }
-                            admin.UpdateCharacter(LocalVariables.getRoomID(), character, p);
+                            
+                            admin.UpdateCharacter(LocalVariables.getRoomID(), character, player);
                         }
                     }
                 } catch (RemoteException ex) {

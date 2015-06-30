@@ -2,7 +2,6 @@
  * Server for creating new chats for rooms.
  */
 package Sockets;
-
 import dontcrash.portsAndIps;
 import java.io.IOException;
 import java.net.ServerSocket;

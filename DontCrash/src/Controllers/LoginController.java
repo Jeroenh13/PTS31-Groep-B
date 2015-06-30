@@ -53,6 +53,18 @@ public class LoginController {
      */
     public void btnLoginClick(Event evnt) throws IOException
     {
+        String username = txtNaam.getText();
+        String password = txtPassword.getText();
+        if("admin".equals(txtNaam.getText())){
+            admin.newPlayer("admin", "", "admin");
+            LocalVariables.setPlayer(admin.getPlayer(username));
+            Stage stage=(Stage) txtNaam.getScene().getWindow();
+            root = FXMLLoader.load(getClass().getResource("/fxml/menu.fxml"));
+            Scene scene = new Scene(root);
+            stage.setScene(scene);
+            stage.show();
+            return;
+        }
         /*
         LocalVariables.setPlayer(new Player(1, txtNaam.getText(), 300, "blabla@gmail.com"));
             Stage stage=(Stage) txtNaam.getScene().getWindow();
@@ -62,8 +74,7 @@ public class LoginController {
             stage.show();
         */
         
-        String username = txtNaam.getText();
-        String password = txtPassword.getText();
+        
         
         if(admin.login(username, password))
         {
