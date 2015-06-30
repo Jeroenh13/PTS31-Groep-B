@@ -164,6 +164,11 @@ public class GameScreenController implements Observer, RemotePropertyListener, I
             public void handle(KeyEvent ke) {
                 try {
                     room = admin.getRoom(LocalVariables.getRoomID());
+                    for (Player p : room.getPlayers()) {
+                        if (p.playerID == LocalVariables.curPlayerID) {
+                            player = p;
+                        }
+                    }
                     if (player.playerID == (LocalVariables.getPlayer().playerID)) {
                         character = player.character;
                         if (character.getinput) {

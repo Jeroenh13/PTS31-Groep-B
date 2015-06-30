@@ -148,6 +148,9 @@ public class Game extends UnicastRemoteObject implements RemotePublisher, IGame,
                 if (!c.gameOver) {
                     c.getinput = false;
                     Point op = c.oldPoint;
+                    if(c.direction != 2){
+                        System.out.println("OK");
+                    }
                     if (op.red == c.red && op.green == c.green && op.blue == c.blue) {
                         //0 i up
                         if (c.getDirection() == 0) {
