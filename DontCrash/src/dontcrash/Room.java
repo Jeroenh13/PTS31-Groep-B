@@ -3,6 +3,7 @@
  */
 package dontcrash;
 
+import RemoteObserver.BasicPublisher;
 import SharedInterfaces.IGame;
 import SharedInterfaces.IRoom;
 import java.io.IOException;
@@ -19,6 +20,7 @@ public class Room implements Serializable, IRoom
     public int chatPort;
     public Player host;
     public int neededScore;
+    BasicPublisher bp;
     
     /**
      * Initializes a new instance of room;
