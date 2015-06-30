@@ -45,7 +45,14 @@ public class PlayerTest {
     public void addFriendTest(){
         Player friend = new Player(2,"Friend", 0, "Friend@email.com");
         
-        assertTrue(player.addFriend(friend));
-        assertFalse(player.addFriend(friend));
+        assertTrue("Can't add friend to list",player.addFriend(friend));
+        assertFalse("Impossibe to  add friend twice", player.addFriend(friend));
+    }
+    
+    @Test
+    public void newCharacterTest(){
+        dontcrash.Character character = player.newCharacter(player, 1);
+        
+        assertNotNull("newCharacter doesnt return character properly", character);
     }
 }

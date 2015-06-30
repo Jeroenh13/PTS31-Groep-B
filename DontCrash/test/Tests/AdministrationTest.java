@@ -6,8 +6,12 @@ package Tests;
  * and open the template in the editor.
  */
 
+import SharedInterfaces.IRoom;
 import dontcrash.*;
+import java.rmi.RemoteException;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -35,62 +39,59 @@ public class AdministrationTest {
     
     @Before
     public void setUp() {
-        admin = new Administration();
+        try {
+            admin = new Administration();
+        } catch (RemoteException ex) {
+            Logger.getLogger(AdministrationTest.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
     @After
     public void tearDown() {
-    }
-
+    }    
+    
     @Test
     public void newPlayerTest(){
-        //TODO emailadres checken als dat bij creatie nodig is.
-        Player player = admin.newPlayer("TestName");
+        Player player = admin.newPlayer("TestPlayer", "1", "1");
         assertEquals("TestName", player.name);
         
-        Player failPlayer = admin.newPlayer("TestName");
+        Player failPlayer = admin.newPlayer("TestPlayer","","");
         assertNull(failPlayer);
     }
     
-    @Test
-    public void newRoomTest(){
-        Room room = admin.newRoom("TestName");
-        assertEquals("TestName",room.name);
-        
-        Room failRoom = admin.newRoom("TestName");
-        assertNull(failRoom);
-    }
     
     @Test
     public void getRoomsTest(){   
+        Player player = admin.newPlayer("admin", "1", "1");
         assertTrue(admin.getRooms().isEmpty());
-        Room room1 = admin.newRoom("TestName");
-        Room room2 = admin.newRoom("Test");
+        IRoom room1 = admin.newRoom(player);
+        IRoom room2 = admin.newRoom(player);
         
-        List<Room> rooms = admin.getRooms();
+        List<IRoom> rooms = admin.getRooms();
         assertTrue(rooms.contains(room1));
         assertTrue(rooms.contains(room2));
     }
     
     @Test
     public void joinRoomTest(){
-        Room room1 = admin.newRoom("TestName");
-        Player player = admin.newPlayer("TestName");
-        
-        assertTrue(admin.joinRoom(player, room1));
-        assertFalse(admin.joinRoom(player, room1));
+        try {
+            Player player = admin.newPlayer("admin", "1", "1");
+            IRoom room1 = admin.newRoom(player);
+            
+            Player player2 = admin.newPlayer("admin", "1", "1");
+            assertTrue(admin.joinRoom(player2, room1.getRoomId()));
+            assertFalse(admin.joinRoom(player2, room1.getRoomId()));
+        } catch (RemoteException ex) {
+            Logger.getLogger(AdministrationTest.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
     @Test 
     public void updateScoreTest(){
-        Player player = admin.newPlayer("TestName");
+        Player player = admin.newPlayer("admin", "1", "1");
         
         admin.updateScore(player, 10);
         assertEquals(10,player.score);
     }
-    
-    @Test
-    public void loginTest(){
-        //TODO
-    }
+
 }
