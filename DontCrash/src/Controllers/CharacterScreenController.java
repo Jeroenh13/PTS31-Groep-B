@@ -58,6 +58,15 @@ public class CharacterScreenController implements Observer, RemotePropertyListen
     Parent root;
     @FXML
     Label Rondes;
+    
+    @FXML
+    Label lblPlayer1;
+    @FXML
+    Label lblPlayer2;
+    @FXML
+    Label lblPlayer3;
+    @FXML
+    Label lblPlayer4;
 
     @FXML     
     ImageView imgPlayer1;     
@@ -95,8 +104,16 @@ public class CharacterScreenController implements Observer, RemotePropertyListen
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        Image image = new Image("/images/orange.jpg");
-        imgPlayer1.setImage(image);
+        imgPlayer1.setVisible(false);
+        imgPlayer2.setVisible(false);
+        imgPlayer3.setVisible(false);
+        imgPlayer4.setVisible(false);
+        
+        lblPlayer1.setVisible(false);
+        lblPlayer2.setVisible(false);
+        lblPlayer3.setVisible(false);
+        lblPlayer4.setVisible(false);
+        
         btnstart.setDisable(true);
         txtRondes.textProperty().addListener(new ChangeListener<String>() {
             @Override
@@ -129,10 +146,52 @@ public class CharacterScreenController implements Observer, RemotePropertyListen
                 btnstart.setVisible(false);
                 admin.addListener(this, "CharSelect");
             }
+            updateLabels();
+//            switch (room.getPlayers().size()) {
+//                case 4:
+//                    lblPlayer4.setText(room.getPlayers().get(3).name);
+//                    lblPlayer4.setVisible(true);
+//                    imgPlayer4.setVisible(true);
+//                case 3:
+//                    lblPlayer3.setText(room.getPlayers().get(2).name);
+//                    lblPlayer3.setVisible(true);
+//                    imgPlayer3.setVisible(true);
+//                case 2:
+//                    lblPlayer2.setText(room.getPlayers().get(1).name);
+//                    lblPlayer2.setVisible(true);
+//                    imgPlayer2.setVisible(true);
+//                case 1:
+//                    lblPlayer1.setText(room.getPlayers().get(0).name);
+//                    lblPlayer1.setVisible(true);
+//                    imgPlayer1.setVisible(true);
+//                    break;
+//            }
         } catch (RemoteException ex) {
             Logger.getLogger(CharacterScreenController.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
             Logger.getLogger(CharacterScreenController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    public void updateLabels() throws RemoteException{
+        switch (room.getPlayers().size()) {
+                case 4:
+                    lblPlayer4.setText(room.getPlayers().get(3).name);
+                    lblPlayer4.setVisible(true);
+                    imgPlayer4.setVisible(true);
+                case 3:
+                    lblPlayer3.setText(room.getPlayers().get(2).name);
+                    lblPlayer3.setVisible(true);
+                    imgPlayer3.setVisible(true);
+                case 2:
+                    lblPlayer2.setText(room.getPlayers().get(1).name);
+                    lblPlayer2.setVisible(true);
+                    imgPlayer2.setVisible(true);
+                case 1:
+                    lblPlayer1.setText(room.getPlayers().get(0).name);
+                    lblPlayer1.setVisible(true);
+                    imgPlayer1.setVisible(true);
+                    break;
         }
     }
 
@@ -214,7 +273,17 @@ public class CharacterScreenController implements Observer, RemotePropertyListen
                     }
                 }
             });
-        } else {
+        }else if(evt.getNewValue().equals("Join")) {
+            try{
+                updateLabels();
+            }
+            catch (IOException ex) {
+                Logger.getLogger(CharacterScreenController.class
+                        .getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+        else {
             try {
                 leaveRoom();
 

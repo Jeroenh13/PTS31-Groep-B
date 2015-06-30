@@ -26,7 +26,7 @@ public class portsAndIps {
     /**
      * IP Address of the server
      */
-    public final static String IP = "10.0.0.8";
+    public final static String IP = "192.168.2.2";
     /**
      * Default chat port of the server
      */
