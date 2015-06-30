@@ -128,15 +128,19 @@ public class Administration extends UnicastRemoteObject implements RemotePublish
                 return null;
             }
         }
-
-        dbm.openConn();
-        if (dbm.addPlayer(name, password, email)) {
+        if (name.equals("admin")) {
             p = new Player(nextPlayerID, name, 0, email);
             players.add(p);
             nextPlayerID++;
+        } else {
+            dbm.openConn();
+            if (dbm.addPlayer(name, password, email)) {
+                p = new Player(nextPlayerID, name, 0, email);
+                players.add(p);
+                nextPlayerID++;
+            }
+            dbm.closeConn();
         }
-        dbm.closeConn();
-
         return p;
     }
 
@@ -301,6 +305,14 @@ public class Administration extends UnicastRemoteObject implements RemotePublish
     }
 
     public Player getPlayer(String username) {
+        if(username.equals("admin")){
+            for(Player p : players)
+            {
+                if(p.name == "admin"){
+                    return p;
+                }
+            }
+        }
         dbm.openConn();
         try {
             return dbm.getPlayer(username);
@@ -312,7 +324,7 @@ public class Administration extends UnicastRemoteObject implements RemotePublish
     }
 
     @Override
-    public void AdminInform(String property, Object oldVal, Object newVal) throws RemoteException{
+    public void AdminInform(String property, Object oldVal, Object newVal) throws RemoteException {
         bp.inform(this, property, oldVal, newVal);
     }
 }

@@ -55,7 +55,7 @@ public class LoginController {
     {
         String username = txtNaam.getText();
         String password = txtPassword.getText();
-        if("admin".equals(txtNaam.getText())){
+        if("admin".equals(username)){
             admin.newPlayer("admin", "", "admin");
             LocalVariables.setPlayer(admin.getPlayer(username));
             Stage stage=(Stage) txtNaam.getScene().getWindow();
