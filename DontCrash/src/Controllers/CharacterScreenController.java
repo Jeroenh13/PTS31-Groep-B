@@ -38,6 +38,9 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import static javafx.scene.input.KeyCode.R;
 import javafx.stage.Stage;
 import javax.swing.JOptionPane;
 
@@ -56,6 +59,15 @@ public class CharacterScreenController implements Observer, RemotePropertyListen
     @FXML
     Label Rondes;
 
+    @FXML     
+    ImageView imgPlayer1;     
+    @FXML     
+    ImageView imgPlayer2;     
+    @FXML     
+    ImageView imgPlayer3;     
+    @FXML     
+    ImageView imgPlayer4;
+    
     @FXML
     TextArea taChat;
     @FXML
@@ -83,6 +95,8 @@ public class CharacterScreenController implements Observer, RemotePropertyListen
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        Image image = new Image("/images/orange.jpg");
+        imgPlayer1.setImage(image);
         btnstart.setDisable(true);
         txtRondes.textProperty().addListener(new ChangeListener<String>() {
             @Override
