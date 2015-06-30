@@ -120,9 +120,9 @@ public class Game extends UnicastRemoteObject implements RemotePublisher, IGame,
                 c.gameOver = false;
                 c.setColor(colors[colorcnt]);
                 Random rnd = new Random();
-                int x = rnd.nextInt((int) w);
+                int x = rnd.nextInt((int) w / 2);
                 c.curX = x;
-                int y = rnd.nextInt((int) h/2);
+                int y = rnd.nextInt((int) h / 2);
                 c.curY = y;
                 oldPoints.add(new Point(x, y, colors[colorcnt].getRed(), colors[colorcnt].getGreen(), colors[colorcnt].getBlue(), p.character.size));
                 newPoints.add(new Point(x, y, colors[colorcnt].getRed(), colors[colorcnt].getGreen(), colors[colorcnt].getBlue(), p.character.size));
@@ -144,6 +144,7 @@ public class Game extends UnicastRemoteObject implements RemotePublisher, IGame,
             newPoints = new ArrayList<>();
             for (Player p : r.getPlayers()) {
                 dontcrash.Character c = p.character;
+                System.out.println(c.gameOver);
                 if (!c.gameOver) {
                     c.getinput = false;
                     for (Point op : oldPoints) {
@@ -347,7 +348,6 @@ public class Game extends UnicastRemoteObject implements RemotePublisher, IGame,
                     cnt++;
                 }
             }
-            
             if (cnt == players.size()) {
                 try {
                     bp.inform(this, "Game", "GameOver", "GameOver");
