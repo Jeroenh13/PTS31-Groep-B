@@ -7,6 +7,10 @@ package Tests;
  */
 
 import dontcrash.*;
+import java.io.IOException;
+import java.rmi.RemoteException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -23,6 +27,7 @@ public class RoomTest {
     public RoomTest() {
     }
     Room room;
+    Player player;
     
     @BeforeClass
     public static void setUpClass() {
@@ -34,7 +39,12 @@ public class RoomTest {
     
     @Before
     public void setUp() {
-        room = new Room("TestRoom", 1);
+        player = new Player(1, "Test", 0, "Test@email.com");
+        try {
+            room = new Room(1, player);
+        } catch (IOException ex) {
+            Logger.getLogger(RoomTest.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
     @After
@@ -50,21 +60,40 @@ public class RoomTest {
     }
     
     @Test
-    public void verlaatRoomTest(){
+    public void exitRoomRoomTest(){
         Player player = new Player(1, "Test", 0, "Test@email.com");
         assertTrue(room.addPlayer(player));
         
-        room.verlaatRoom(player);
-        assertTrue(room.addPlayer(player));
+        room.exitRoom(player);
+        assertFalse("Player not removed from players", room.players.contains(player));
     }
     
     @Test
-    public void startGameTest(){
-        assertNull(room.startGame());
+    public void removePlayerTest(){
         Player player = new Player(1, "Test", 0, "Test@email.com");
-        room.addPlayer(player);
-        Game game = room.startGame();
-        assertEquals(game, room.currentGame);
-        assertNull(room.startGame());
+        assertTrue(room.addPlayer(player));
+        
+        assertTrue("Unable to remove player",room.removePlayer(player));
+        assertFalse("Player not removed from players", room.players.contains(player));
+    }
+    
+    @Test
+    public void getRoomIDTest(){
+        try {
+            assertEquals("Returned value differs from actual value",room.getRoomId(), 1);
+        } catch (RemoteException ex) {
+            Logger.getLogger(RoomTest.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    @Test
+    public void getHostTest(){
+        assertEquals("Returned value differs from actual value", room.getHost(), this.player);
+    }
+    
+    @Test
+    public void ScoreTest(){
+        room.setNeededScore(5);
+        assertEquals("Returned value differs from actual value", room.getNeededScore(), 5);
     }
 }
