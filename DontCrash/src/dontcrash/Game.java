@@ -248,12 +248,12 @@ public class Game extends UnicastRemoteObject implements RemotePublisher, IGame,
 //                case 2: //Speed down
 //                    powerup = new Powerup(PowerupType.DECREASESPEED, tijdsduur, (float) 0.5, 1);
 //                    break;
-                case 3: //Size up
-                    powerup = new Powerup(PowerupType.INCREASESIZE, tijdsduur, (float) 2, 1);
-                    break;
-                case 4: //Size down
-                    powerup = new Powerup(PowerupType.DECREASESIZE, tijdsduur, (float) 0.5, 1);
-                    break;
+//                case 3: //Size up
+//                    powerup = new Powerup(PowerupType.INCREASESIZE, tijdsduur, (float) 2, 1);
+//                    break;
+//                case 4: //Size down
+//                    powerup = new Powerup(PowerupType.DECREASESIZE, tijdsduur, (float) 0.5, 1);
+//                    break;
                 case 5: //ClearBoard
                     powerup = new Powerup(PowerupType.CLEARBOARD, 0, 0, 1);
                     break;

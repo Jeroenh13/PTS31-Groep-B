@@ -18,19 +18,19 @@
                <font>
                   <Font name="NeuropolXRg-Regular" size="18.0" />
                </font></Label>
-            <Label fx:id="lblPlayer1" layoutX="20.0" layoutY="35.0" text="Player1 : 0" textFill="FFA500" >
+            <Label fx:id="lblPlayer1" layoutX="20.0" layoutY="35.0" text="Player1 : 0" textFill="FFA500">
                <font>
                   <Font name="NeuropolXRg-Regular" size="15.0" />
                </font></Label>
-            <Label fx:id="lblPlayer2" layoutX="20.0" layoutY="55.0" text="Player2 : 0" textFill="FF0000" >
+            <Label fx:id="lblPlayer2" layoutX="20.0" layoutY="55.0" text="Player2 : 0" textFill="FF0000">
                <font>
                   <Font name="NeuropolXRg-Regular" size="15.0" />
                </font></Label>
-            <Label fx:id="lblPlayer3" layoutX="20.0" layoutY="75.0" text="Player3 : 0" textFill="0000FF" >
+            <Label fx:id="lblPlayer3" layoutX="20.0" layoutY="75.0" text="Player3 : 0" textFill="0000FF">
                <font>
                   <Font name="NeuropolXRg-Regular" size="15.0" />
                </font></Label>
-            <Label fx:id="lblPlayer4" layoutX="20.0" layoutY="93.0" text="Player4 : 0" textFill="A52A2A" >
+            <Label fx:id="lblPlayer4" layoutX="20.0" layoutY="93.0" text="Player4 : 0" textFill="A52A2A">
                <font>
                   <Font name="NeuropolXRg-Regular" size="15.0" />
                </font></Label>
@@ -38,10 +38,6 @@
                <font>
                   <Font name="NeuropolXRg-Regular" size="15.0" />
                </font></Label>
-            <Button layoutY="680.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="169.0" style="-fx-background-color: #c1c1c1;" text="Stuur">
-               <font>
-                  <Font name="NeuropolXRg-Regular" size="15.0" />
-               </font></Button>
             <Button id="btnToggle" fx:id="PLAY" layoutY="274.0" mnemonicParsing="false" onAction="#btnToggleSoundPress" prefHeight="25.0" prefWidth="169.0" style="-fx-background-color: #c1c1c1;" text="Start">
                <font>
                   <Font name="NeuropolXRg-Regular" size="15.0" />

@@ -17,7 +17,7 @@ public class portsAndIps {
     /**
      * IP Address of the database
      */
-    public final static String databaseIP="10.0.0.11";
+    public final static String databaseIP="145.93.96.19";
     
     public static int RMIPort = 1095;
     public static int ServerPort = 1096;
@@ -26,7 +26,7 @@ public class portsAndIps {
     /**
      * IP Address of the server
      */
-    public final static String IP = "10.0.0.11";
+    public final static String IP = "169.254.133.1";
     /**
      * Default chat port of the server
      */

@@ -9,12 +9,6 @@
    <children>
       <Pane prefHeight="734.0" prefWidth="249.0" style="-fx-background-color: #7da7d9;">
          <children>
-            <ChoiceBox fx:id="cbRoomSort" layoutX="55.0" layoutY="234.0" prefHeight="31.0" prefWidth="140.0" style="-fx-background-color: #c1c1c1;" />
-            <Label layoutX="57.0" layoutY="215.0" text="Sort rooms on:">
-               <font>
-                  <Font name="NeuropolXRg-Regular" size="15.0" />
-               </font>
-            </Label>
             <Slider fx:id="slrEffect" layoutX="55.0" layoutY="170.0" minorTickCount="1" showTickLabels="true" showTickMarks="true" value="100.0" />
             <Label layoutX="57.0" layoutY="151.0" text="Effecten">
                <font>

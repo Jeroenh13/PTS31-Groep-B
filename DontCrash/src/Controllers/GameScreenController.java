@@ -85,6 +85,7 @@ public class GameScreenController implements Observer, RemotePropertyListener, I
     ArrayList<Point> positions = new ArrayList<>();
     ArrayList<DrawablePowerup> powerups = new ArrayList<>();
     boolean player1 = true;
+    private int round = 0;
 
     private IAdministator admin;
     dontcrash.Character character = null;
@@ -166,8 +167,14 @@ public class GameScreenController implements Observer, RemotePropertyListener, I
                 case 1:
                     lblPlayer1.setText(room.getPlayers().get(0).name + "  ---  " + room.getPlayers().get(0).score);
                     break;
+                default:
+                    break;
             }
+            
+            lblRound.setText("Round " +String.valueOf(round++));
         } catch (RemoteException ex) {
+            Logger.getLogger(GameScreenController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
             Logger.getLogger(GameScreenController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
@@ -280,12 +287,12 @@ public class GameScreenController implements Observer, RemotePropertyListener, I
             public void run() {
                 if ("Start".equals(evt.getOldValue())) {
                     GraphicsContext gc = gameCanvas.getGraphicsContext2D();
-                    gc.clearRect(gameCanvas.getLayoutX(), gameCanvas.getLayoutY(), gameCanvas.getWidth() + 10, gameCanvas.getHeight()+10);
+                    gc.clearRect(gameCanvas.getLayoutX(), gameCanvas.getLayoutY(), gameCanvas.getWidth() + 10, gameCanvas.getHeight() + 10);
                 } else if ("GameOver".equals(evt.getNewValue())) {
                     try {
                         UpdateLabels(admin.getRoom(LocalVariables.getRoomID()));
                         GraphicsContext gc = gameCanvas.getGraphicsContext2D();
-                        gc.clearRect(gameCanvas.getLayoutX(), gameCanvas.getLayoutY(), gameCanvas.getWidth() + 10, gameCanvas.getHeight()+10);
+                        gc.clearRect(gameCanvas.getLayoutX(), gameCanvas.getLayoutY(), gameCanvas.getWidth() + 10, gameCanvas.getHeight() + 10);
                         gc.setFill(Color.GREEN);
                         gc.strokeText("Round Over", 200, 200);
                     } catch (RemoteException ex) {
@@ -324,7 +331,7 @@ public class GameScreenController implements Observer, RemotePropertyListener, I
                         redrawPoints();
                         drawPowerups(powerups);
                     }
-                } else if ("Left".equals(evt.getOldValue())){
+                } else if ("Left".equals(evt.getOldValue())) {
                     try {
                         leaveRoom();
                     } catch (IOException ex) {

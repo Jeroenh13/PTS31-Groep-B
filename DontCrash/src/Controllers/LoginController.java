@@ -55,7 +55,7 @@ public class LoginController {
     {
         String username = txtNaam.getText();
         String password = txtPassword.getText();
-        if("admin".equals(username)){
+        /*if("admin".equals(username)){
             admin.newPlayer("admin", "", "admin");
             LocalVariables.setPlayer(admin.getPlayer(username));
             Stage stage=(Stage) txtNaam.getScene().getWindow();
@@ -64,7 +64,7 @@ public class LoginController {
             stage.setScene(scene);
             stage.show();
             return;
-        }
+        }*/
         /*
         LocalVariables.setPlayer(new Player(1, txtNaam.getText(), 300, "blabla@gmail.com"));
             Stage stage=(Stage) txtNaam.getScene().getWindow();
@@ -73,9 +73,7 @@ public class LoginController {
             stage.setScene(scene);
             stage.show();
         */
-        
-        
-        
+               
         if(admin.login(username, password))
         {
             LocalVariables.setPlayer(admin.getPlayer(username));
