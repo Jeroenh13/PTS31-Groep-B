@@ -24,7 +24,7 @@
                   <GridPane prefHeight="350.0" prefWidth="410.0">
                     <columnConstraints>
                         <ColumnConstraints hgrow="SOMETIMES" maxWidth="65.0" minWidth="10.0" prefWidth="65.0" />
-                      <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="276.0" minWidth="10.0" prefWidth="276.0" />
+                      <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" maxWidth="276.0" minWidth="10.0" prefWidth="276.0" />
                       <ColumnConstraints hgrow="SOMETIMES" maxWidth="65.0" minWidth="10.0" prefWidth="65.0" />
                     </columnConstraints>
                     <rowConstraints>
@@ -41,40 +41,40 @@
                       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                      <children>
-                        <Button fx:id="btnBack" mnemonicParsing="false" onAction="#btnBackClick" style="-fx-background-color: #c1c1c1;" text="Back" textFill="#303030" GridPane.columnIndex="1" GridPane.rowIndex="10">
-                           <font>
-                              <Font name="NeuropolXRg-Regular" size="15.0" />
-                           </font>
-                        </Button>
-                        <Button id="btnRegister" fx:id="btnRegister" mnemonicParsing="false" onAction="#btnRegisterClick" style="-fx-background-color: #c1c1c1;" text="Register" textFill="#303030" GridPane.columnIndex="1" GridPane.rowIndex="9">
-                           <font>
-                              <Font name="NeuropolXRg-Regular" size="15.0" />
-                           </font>
-                        </Button>
-                        <TextField id="txtWachtwoordRepeat" fx:id="txtPasswordRepeat" style="-fx-background-color: #c1c1c1;" GridPane.columnIndex="1" GridPane.rowIndex="7" />
-                        <TextField id="txtWachtwoord" fx:id="txtPassword" style="-fx-background-color: #c1c1c1;" GridPane.columnIndex="1" GridPane.rowIndex="5" />
-                        <TextField id="txtEmail" fx:id="txtEmail" style="-fx-background-color: #c1c1c1;" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-                        <TextField id="txtNaam" fx:id="txtUsername" style="-fx-background-color: #c1c1c1;" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                         <Label text="Username" textFill="#303030" GridPane.columnIndex="1" GridPane.halignment="LEFT">
                            <font>
                               <Font name="NeuropolXRg-Regular" size="16.0" />
                            </font>
                         </Label>
+                        <TextField id="txtNaam" fx:id="txtUsername" style="-fx-background-color: #c1c1c1;" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                        <Label text="Email" textFill="#303030" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                           <font>
+                              <Font name="NeuropolXRg-Regular" size="16.0" />
+                           </font>
+                        </Label>
+                        <TextField id="txtEmail" fx:id="txtEmail" style="-fx-background-color: #c1c1c1;" GridPane.columnIndex="1" GridPane.rowIndex="3" />
                         <Label text="Password" textFill="#303030" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="4">
                            <font>
                               <Font name="NeuropolXRg-Regular" size="16.0" />
                            </font>
                         </Label>
-                        <Label text="Email" textFill="#303030" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="2">
-                           <font>
-                              <Font name="NeuropolXRg-Regular" size="16.0" />
-                           </font>
-                        </Label>
+                        <TextField id="txtWachtwoord" fx:id="txtPassword" style="-fx-background-color: #c1c1c1;" GridPane.columnIndex="1" GridPane.rowIndex="5" />
                         <Label text="Repeat Password" textFill="#303030" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="6">
                            <font>
                               <Font name="NeuropolXRg-Regular" size="16.0" />
                            </font>
                         </Label>
+                        <TextField id="txtWachtwoordRepeat" fx:id="txtPasswordRepeat" style="-fx-background-color: #c1c1c1;" GridPane.columnIndex="1" GridPane.rowIndex="7" />
+                        <Button id="btnRegister" fx:id="btnRegister" mnemonicParsing="false" onAction="#btnRegisterClick" style="-fx-background-color: #c1c1c1;" text="Register" textFill="#303030" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="9">
+                           <font>
+                              <Font name="NeuropolXRg-Regular" size="15.0" />
+                           </font>
+                        </Button>
+                        <Button fx:id="btnBack" mnemonicParsing="false" onAction="#btnBackClick" style="-fx-background-color: #c1c1c1;" text="Back" textFill="#303030" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="10">
+                           <font>
+                              <Font name="NeuropolXRg-Regular" size="15.0" />
+                           </font>
+                        </Button>
                      </children>
                   </GridPane>
                </children>
